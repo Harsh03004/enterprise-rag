@@ -10,7 +10,7 @@ client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
 )
 
-MODEL = "openai/gpt-oss-20b:free"
+MODEL = "openrouter/free"
 
 
 def generate_response(prompt: str) -> str:

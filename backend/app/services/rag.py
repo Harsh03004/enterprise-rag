@@ -92,12 +92,24 @@ def resolve_conversation(
     user_id: int,
     conversation_id: int | None,
     question: str,
+    document_id: int | None = None,
 ):
     """
-    If conversation_id exists, verify that it belongs to the user.
+    Resolve an existing conversation or create a new one.
 
-    Otherwise create a new conversation.
+    Rules:
+
+    - Existing conversation must belong to the current user.
+    - If an existing conversation is tied to a document,
+      the requested document must match it.
+    - A new conversation stores the selected document_id.
+    - document_id=None means the conversation searches
+      across all documents.
     """
+
+    # ---------------------------------------------------------
+    # Existing conversation
+    # ---------------------------------------------------------
 
     if conversation_id is not None:
         conversation = get_conversation(
@@ -111,20 +123,43 @@ def resolve_conversation(
                 "Conversation not found or does not belong to the user."
             )
 
-        return conversation
+        # -----------------------------------------------------
+        # Protect conversation/document consistency
+        # -----------------------------------------------------
 
-    # Create a simple initial title.
+        if (
+            conversation.document_id is not None
+            and document_id is not None
+            and conversation.document_id != document_id
+        ):
+            raise ValueError(
+                "This conversation belongs to a different document."
+            )
+
+        # If the conversation already has a document,
+        # always use that document.
+        if conversation.document_id is not None:
+            document_id = conversation.document_id
+
+        return conversation, document_id
+
+    # ---------------------------------------------------------
+    # Create new conversation
+    # ---------------------------------------------------------
+
     title = question[:80].strip()
 
     if not title:
         title = "New conversation"
 
-    return create_conversation(
+    conversation = create_conversation(
         db=db,
         user_id=user_id,
         title=title,
+        document_id=document_id,
     )
 
+    return conversation, document_id
 
 def answer_question(
     db: Session,
@@ -137,14 +172,13 @@ def answer_question(
     # ---------------------------------------------------------
     # 1. Resolve/create conversation
     # ---------------------------------------------------------
-
-    conversation = resolve_conversation(
+    conversation, document_id = resolve_conversation(
         db=db,
         user_id=user_id,
         conversation_id=conversation_id,
         question=question,
-    )
-
+        document_id=document_id,
+        )
     conversation_id = conversation.id
 
     # ---------------------------------------------------------
@@ -334,14 +368,32 @@ def stream_answer(
     # 1. Resolve/create conversation
     # ---------------------------------------------------------
 
-    conversation = resolve_conversation(
+    conversation,document_id = resolve_conversation(
         db=db,
         user_id=user_id,
         conversation_id=conversation_id,
         question=question,
+        document_id=document_id,
     )
 
     conversation_id = conversation.id
+
+        # ---------------------------------------------------------
+    # 1.5 Send conversation information to frontend
+    # ---------------------------------------------------------
+
+    yield {
+        "type": "conversation",
+        "conversation": {
+            "id": conversation.id,
+            "user_id": conversation.user_id,
+            "document_id": conversation.document_id,
+            "title": conversation.title,
+            "created_at": conversation.created_at.isoformat(),
+            "updated_at": conversation.updated_at.isoformat(),
+        },
+    }
+
 
     # ---------------------------------------------------------
     # 2. Save user message
@@ -510,5 +562,10 @@ Answer:
             results,
             document_id,
         ),
+        "conversation_id": conversation_id,
+    }
+
+    yield {
+        "type": "complete",
         "conversation_id": conversation_id,
     }
