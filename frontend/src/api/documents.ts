@@ -40,6 +40,22 @@ export async function uploadDocument(
   return response.json();
 }
 
+export async function addWebsite(
+  url: string,
+): Promise<Document> {
+  const response = await apiFetch(
+    "/documents/url",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        url,
+      }),
+    },
+  );
+
+  return response.json();
+}
+
 
 export async function renameDocument(
   documentId: number,

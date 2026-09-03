@@ -1,7 +1,8 @@
+import json
+
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
-import json
 
 from app.api.dependencies import get_current_user
 from app.db.dependencies import get_db
@@ -30,6 +31,7 @@ def chat(
         user_id=current_user.id,
         question=request.question,
         document_id=request.document_id,
+        collection_id=request.collection_id,
         conversation_id=request.conversation_id,
     )
 
@@ -46,6 +48,7 @@ def chat_stream(
             user_id=current_user.id,
             question=request.question,
             document_id=request.document_id,
+            collection_id=request.collection_id,
             conversation_id=request.conversation_id,
         ):
             yield f"data: {json.dumps(event)}\n\n"

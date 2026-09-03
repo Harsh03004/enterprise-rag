@@ -7,6 +7,7 @@ import {
 import {
   getDocuments,
   uploadDocument,
+  addWebsite,
   renameDocument,
   deleteDocument,
   type Document,
@@ -67,6 +68,18 @@ export default function Sidebar({
 
   const [uploading, setUploading] =
     useState(false);
+  
+const [addingWebsite, setAddingWebsite] =
+  useState(false);
+
+const [addingWebsiteLoading, setAddingWebsiteLoading] =
+  useState(false);
+
+const [websiteUrl, setWebsiteUrl] =
+  useState("");
+
+const [websiteError, setWebsiteError] =
+  useState("");
 
   const [uploadError, setUploadError] =
     useState("");
@@ -222,6 +235,50 @@ export default function Sidebar({
       setUploading(false);
     }
   }
+
+  async function handleAddWebsite(
+  event: React.FormEvent,
+) {
+  event.preventDefault();
+
+  const url = websiteUrl.trim();
+
+  if (!url) {
+    setWebsiteError(
+      "Please enter a website URL.",
+    );
+    return;
+  }
+
+  try {
+    setAddingWebsiteLoading(true);
+    setWebsiteError("");
+    setError("");
+
+    const website =
+      await addWebsite(url);
+
+    setDocuments((previous) => [
+      website,
+      ...previous,
+    ]);
+
+setWebsiteUrl("");
+setWebsiteError("");
+setAddingWebsite(false);
+
+onSelectDocument(website.id);
+onSelectConversation(null);
+  } catch (err) {
+    setWebsiteError(
+      err instanceof Error
+        ? err.message
+        : "Failed to add website.",
+    );
+  } finally {
+    setAddingWebsiteLoading(false);
+  }
+}
 
   /*
    * Delete conversation.
@@ -684,7 +741,68 @@ export default function Sidebar({
               hidden
             />
           </label>
+          <button
+  type="button"
+  className="website-button"
+  onClick={() =>
+    setAddingWebsite(
+      (previous) => !previous,
+    )
+  }
+>
+  + Add Website
+</button>
         </div>
+        {addingWebsite && (
+  <form
+    className="website-form"
+    onSubmit={handleAddWebsite}
+  >
+    <input
+      type="url"
+      placeholder="https://example.com"
+      value={websiteUrl}
+      onChange={(event) =>
+        setWebsiteUrl(
+          event.target.value,
+        )
+      }
+      disabled={addingWebsiteLoading}
+      autoFocus
+    />
+
+    <div className="website-form-actions">
+      <button
+        type="button"
+        onClick={() => {
+          setAddingWebsite(false);
+          setWebsiteUrl("");
+          setWebsiteError("");
+        }}
+      >
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        disabled={
+         addingWebsiteLoading ||
+          !websiteUrl.trim()
+        }
+      >
+        {addingWebsiteLoading
+          ? "Adding..."
+          : "Add Website"}
+      </button>
+    </div>
+
+    {websiteError && (
+      <p className="upload-error">
+        {websiteError}
+      </p>
+    )}
+  </form>
+)}
 
         {uploadError && (
           <p className="upload-error">

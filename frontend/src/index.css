@@ -1244,3 +1244,97 @@ button {
   border-color: #9ca3af;
   background: white;
 }
+
+.website-button {
+  width: 100%;
+  padding: 9px 12px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+
+  background: white;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.website-button:hover {
+  background: #f3f4f6;
+}
+
+.website-form {
+  position: relative;
+  z-index: 10;
+
+  margin-top: 10px;
+  padding: 12px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  background: #f9fafb;
+}
+
+.website-form input {
+  display: block;
+
+  width: 100%;
+  min-width: 0;
+
+  padding: 9px 10px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+
+  outline: none;
+
+  background: white;
+  color: #111827;
+
+  box-sizing: border-box;
+
+  pointer-events: auto;
+  user-select: text;
+}
+
+.website-form input:focus {
+  border-color: #6b7280;
+  outline: 2px solid #e5e7eb;
+  outline-offset: 0;
+}
+
+.website-form input:focus {
+  border-color: #6b7280;
+}
+
+.website-form-actions {
+  display: flex;
+
+  gap: 8px;
+
+  margin-top: 10px;
+}
+
+.website-form-actions button {
+  flex: 1;
+
+  padding: 8px 10px;
+
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+
+  background: white;
+}
+
+.website-form-actions button[type="submit"] {
+  background: #111827;
+  color: white;
+
+  border-color: #111827;
+}
+
+.website-form-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

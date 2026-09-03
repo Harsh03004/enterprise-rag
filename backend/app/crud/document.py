@@ -9,13 +9,17 @@ def create_document(
     user_id: int,
     filename: str,
     content_type: str,
-    file_path: str,
+    file_path: str | None = None,
+    source_url: str | None = None,
+    collection_id: int | None = None,
 ) -> Document:
     document = Document(
         user_id=user_id,
         filename=filename,
         content_type=content_type,
         file_path=file_path,
+        source_url=source_url,
+        collection_id=collection_id,
         status="uploaded",
     )
 

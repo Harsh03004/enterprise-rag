@@ -7,8 +7,12 @@ from app.api.routes.auth import router as auth_router
 from app.api.routes.users import router as users_router
 from app.api.routes.documents import router as documents_router
 from app.api.routes.chat import router as chat_router
+
 from app.api.routes.conversations import (
     router as conversations_router,
+)
+from app.api.routes.collections import (
+    router as collections_router,
 )
 
 
@@ -35,6 +39,7 @@ app.include_router(users_router)
 app.include_router(documents_router)
 app.include_router(chat_router)
 app.include_router(conversations_router)
+app.include_router(collections_router)
 
 
 @app.get("/")

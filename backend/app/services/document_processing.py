@@ -5,7 +5,7 @@ from app.models.document import Document
 from app.services.chunking import chunk_text
 from app.services.embedding import generate_embedding
 from app.services.text_extraction import extract_text
-
+from app.services.web_extraction import extract_webpage_text
 
 def process_document(
     db: Session,
@@ -15,7 +15,19 @@ def process_document(
     db.commit()
 
     try:
-        text = extract_text(document.file_path)
+        if document.source_url:
+            text = extract_webpage_text(
+                document.source_url
+            )
+        else:
+            if not document.file_path:
+                raise ValueError(
+                    "Document has no file path or source URL."
+                )
+
+            text = extract_text(
+                document.file_path
+            )
 
         if not text.strip():
             raise ValueError(

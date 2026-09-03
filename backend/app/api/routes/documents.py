@@ -1,3 +1,12 @@
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+from app.api.dependencies import get_current_user
+from app.crud.collection import get_collection
+from app.db.dependencies import get_db
+from app.models.document import Document
+from app.services.document_processing import process_document
+from app.services.document_service import save_uploaded_file
+
 from fastapi import (
     APIRouter,
     Depends,
@@ -6,25 +15,19 @@ from fastapi import (
     UploadFile,
     status,
 )
-from sqlalchemy import select
-from sqlalchemy.orm import Session
 
-from app.api.dependencies import get_current_user
 from app.crud.document import (
     create_document,
     delete_document,
     update_document_filename,
 )
-from app.db.dependencies import get_db
-from app.models.document import Document
+
 from app.models.user import User
 from app.schemas.document import (
     DocumentResponse,
     DocumentUpdate,
+    DocumentURLCreate,
 )
-from app.services.document_processing import process_document
-from app.services.document_service import save_uploaded_file
-
 
 router = APIRouter(
     prefix="/documents",
@@ -39,9 +42,23 @@ router = APIRouter(
 )
 async def upload_document(
     file: UploadFile = File(...),
+    collection_id: int | None = None,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    if collection_id is not None:
+        collection = get_collection(
+            db=db,
+            collection_id=collection_id,
+            user_id=current_user.id,
+        )
+
+        if collection is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Collection not found.",
+            )
+        
     file_path = await save_uploaded_file(
         file=file,
         user_id=current_user.id,
@@ -53,6 +70,7 @@ async def upload_document(
         filename=file.filename,
         content_type=file.content_type,
         file_path=file_path,
+        collection_id=collection_id,
     )
 
     process_document(
@@ -62,6 +80,54 @@ async def upload_document(
 
     return document
 
+@router.post(
+    "/url",
+    response_model=DocumentResponse,
+    status_code=status.HTTP_201_CREATED,
+)
+def ingest_url(
+    request: DocumentURLCreate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+    collection_id: int | None = None,
+):
+    url = request.url.strip()
+
+    if not url:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="URL cannot be empty.",
+        )
+
+    if collection_id is not None:
+        collection = get_collection(
+            db=db,
+            collection_id=collection_id,
+            user_id=current_user.id,
+        )
+
+        if collection is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Collection not found.",
+            )
+
+    document = create_document(
+        db=db,
+        user_id=current_user.id,
+        filename=url,
+        content_type="text/html",
+        file_path=None,
+        source_url=url,
+        collection_id=collection_id,
+    )
+
+    process_document(
+        db=db,
+        document=document,
+    )
+
+    return document
 
 @router.get(
     "",

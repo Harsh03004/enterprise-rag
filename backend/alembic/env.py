@@ -5,9 +5,13 @@ from sqlalchemy import pool
 
 from app.db.base import Base
 from app.core.config import settings
-from app.db.base import Base
-from app.core.config import settings
-from app.models import User, Document
+
+from app.models.user import User
+from app.models.document import Document
+from app.models.document_chunk import DocumentChunk
+from app.models.conversation import Conversation
+from app.models.message import Message
+from app.models.collection import Collection
 
 from alembic import context
 
