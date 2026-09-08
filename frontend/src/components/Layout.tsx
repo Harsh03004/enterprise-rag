@@ -183,9 +183,7 @@ export default function Layout({
 
         const data =
   await getConversations(
-    selectedCollectionId !== null
-      ? null
-      : selectedDocumentId,
+    selectedDocumentId,
     selectedCollectionId,
   );
         setConversations(data);

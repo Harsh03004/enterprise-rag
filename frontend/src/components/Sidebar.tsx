@@ -8,6 +8,7 @@ import {
   deleteDocument,
   assignDocumentToCollection,
   removeDocumentFromCollection,
+  retryDocumentProcessing,
   type Document,
 } from "../api/documents";
 
@@ -108,6 +109,10 @@ export default function Sidebar({
   );
 
   const [renamingDocumentId, setRenamingDocumentId] = useState<number | null>(
+    null,
+  );
+
+  const [retryingDocumentId, setRetryingDocumentId] = useState<number | null>(
     null,
   );
 
@@ -212,7 +217,11 @@ export default function Sidebar({
       setUploadError("");
       setError("");
 
-      const uploadedDocument = await uploadDocument(file, selectedCollectionId);
+      const uploadedDocument =
+  await uploadDocument(
+    file,
+    selectedCollectionId,
+  );
 
       setDocuments((previous) => [uploadedDocument, ...previous]);
 
@@ -250,7 +259,11 @@ export default function Sidebar({
       setWebsiteError("");
       setError("");
 
-      const website = await addWebsite(url, selectedCollectionId);
+      const website =
+  await addWebsite(
+    url,
+    selectedCollectionId,
+  );
 
       setDocuments((previous) => [website, ...previous]);
 
@@ -454,6 +467,34 @@ export default function Sidebar({
       setError(
         err instanceof Error ? err.message : "Failed to rename conversation.",
       );
+    }
+  }
+
+  async function handleRetryDocument(
+    event: React.MouseEvent,
+    documentId: number,
+  ) {
+    event.stopPropagation();
+
+    try {
+      setRetryingDocumentId(documentId);
+      setError("");
+
+      const updated = await retryDocumentProcessing(documentId);
+
+      setDocuments((previous) =>
+        previous.map((document) =>
+          document.id === updated.id ? updated : document,
+        ),
+      );
+
+      setOpenDocumentMenuId(null);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to retry document.",
+      );
+    } finally {
+      setRetryingDocumentId(null);
     }
   }
 
@@ -1048,6 +1089,12 @@ export default function Sidebar({
 
                       <span
                         className={`document-status document-status-${document.status}`}
+                        title={
+                          document.status === "failed" &&
+                          document.processing_error
+                            ? document.processing_error
+                            : undefined
+                        }
                       >
                         {document.status === "processing" && "Processing"}
 
@@ -1059,6 +1106,12 @@ export default function Sidebar({
                           document.status,
                         ) && document.status}
                       </span>
+                      {document.status === "failed" &&
+                        document.processing_error && (
+                          <span className="document-processing-error">
+                            {document.processing_error}
+                          </span>
+                        )}
                     </button>
 
                     <div className="sidebar-menu-wrapper">
@@ -1090,6 +1143,19 @@ export default function Sidebar({
                           >
                             Rename
                           </button>
+                          {document.status === "failed" && (
+                            <button
+                              type="button"
+                              disabled={retryingDocumentId === document.id}
+                              onClick={(event) =>
+                                void handleRetryDocument(event, document.id)
+                              }
+                            >
+                              {retryingDocumentId === document.id
+                                ? "Retrying..."
+                                : "Retry Processing"}
+                            </button>
+                          )}
 
                           {collections.length > 0 && (
                             <>

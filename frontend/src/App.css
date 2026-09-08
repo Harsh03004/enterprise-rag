@@ -1397,6 +1397,17 @@
   background: #f3f4f6;
 }
 
+.document-processing-error {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 1.4;
+  opacity: 0.75;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
 /* =========================================================
    KNOWLEDGE SOURCE PROCESSING STATE
    ========================================================= */

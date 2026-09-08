@@ -33,15 +33,13 @@ export async function uploadDocument(
     file,
   );
 
-  if (collectionId !== null) {
-    formData.append(
-      "collection_id",
-      String(collectionId),
-    );
-  }
+  const query =
+    collectionId !== null
+      ? `?collection_id=${collectionId}`
+      : "";
 
   const response = await apiFetch(
-    "/documents/upload",
+    `/documents/upload${query}`,
     {
       method: "POST",
       body: formData,
@@ -51,15 +49,14 @@ export async function uploadDocument(
   return response.json();
 }
 
-
 export async function addWebsite(
   url: string,
   collectionId: number | null = null,
 ): Promise<Document> {
   const query =
-    collectionId === null
-      ? ""
-      : `?collection_id=${collectionId}`;
+    collectionId !== null
+      ? `?collection_id=${collectionId}`
+      : "";
 
   const response = await apiFetch(
     `/documents/url${query}`,
@@ -74,6 +71,7 @@ export async function addWebsite(
   return response.json();
 }
 
+  
 
 export async function retryDocumentProcessing(
   documentId: number,
@@ -152,3 +150,4 @@ export async function deleteDocument(
     },
   );
 }
+

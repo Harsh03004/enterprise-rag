@@ -276,6 +276,26 @@ def rename_document(
     "/{document_id}",
     status_code=status.HTTP_204_NO_CONTENT,
 )
+def remove_document(
+    document_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    deleted = delete_document(
+        db=db,
+        document_id=document_id,
+        user_id=current_user.id,
+    )
+
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Document not found.",
+        )
+
+    return None
+
+
 
 @router.patch(
     "/{document_id}/collection",
@@ -328,21 +348,4 @@ def update_document_collection_route(
 
     return updated_document
 
-def remove_document(
-    document_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    deleted = delete_document(
-        db=db,
-        document_id=document_id,
-        user_id=current_user.id,
-    )
 
-    if not deleted:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Document not found.",
-        )
-
-    return None
