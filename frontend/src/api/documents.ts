@@ -6,6 +6,9 @@ export interface Document {
   filename: string;
   content_type: string;
   status: string;
+  source_url: string | null;
+  processing_error: string | null;
+  collection_id: number | null;
   created_at: string;
 }
 
@@ -21,6 +24,7 @@ export async function getDocuments(): Promise<Document[]> {
 
 export async function uploadDocument(
   file: File,
+  collectionId: number | null = null,
 ): Promise<Document> {
   const formData = new FormData();
 
@@ -28,6 +32,13 @@ export async function uploadDocument(
     "file",
     file,
   );
+
+  if (collectionId !== null) {
+    formData.append(
+      "collection_id",
+      String(collectionId),
+    );
+  }
 
   const response = await apiFetch(
     "/documents/upload",
@@ -40,16 +51,37 @@ export async function uploadDocument(
   return response.json();
 }
 
+
 export async function addWebsite(
   url: string,
+  collectionId: number | null = null,
 ): Promise<Document> {
+  const query =
+    collectionId === null
+      ? ""
+      : `?collection_id=${collectionId}`;
+
   const response = await apiFetch(
-    "/documents/url",
+    `/documents/url${query}`,
     {
       method: "POST",
       body: JSON.stringify({
         url,
       }),
+    },
+  );
+
+  return response.json();
+}
+
+
+export async function retryDocumentProcessing(
+  documentId: number,
+): Promise<Document> {
+  const response = await apiFetch(
+    `/documents/${documentId}/retry`,
+    {
+      method: "POST",
     },
   );
 
@@ -67,6 +99,41 @@ export async function renameDocument(
       method: "PATCH",
       body: JSON.stringify({
         filename,
+      }),
+    },
+  );
+
+  return response.json();
+}
+
+
+export async function assignDocumentToCollection(
+  documentId: number,
+  collectionId: number,
+): Promise<Document> {
+  const response = await apiFetch(
+    `/documents/${documentId}/collection`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({
+        collection_id: collectionId,
+      }),
+    },
+  );
+
+  return response.json();
+}
+
+
+export async function removeDocumentFromCollection(
+  documentId: number,
+): Promise<Document> {
+  const response = await apiFetch(
+    `/documents/${documentId}/collection`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({
+        collection_id: null,
       }),
     },
   );

@@ -9,6 +9,7 @@ class DocumentResponse(BaseModel):
     content_type: str
     status: str
     source_url: str | None
+    processing_error: str | None
     collection_id: int | None
     created_at: datetime
 
@@ -23,3 +24,7 @@ class DocumentUpdate(BaseModel):
 
 class DocumentURLCreate(BaseModel):
     url: str
+
+
+class DocumentCollectionUpdate(BaseModel):
+    collection_id: int | None

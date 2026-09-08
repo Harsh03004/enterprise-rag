@@ -1,0 +1,101 @@
+.
+├── alembic
+│   ├── env.py
+│   ├── README
+│   ├── script.py.mako
+│   └── versions
+│       ├── 6248d579c460_create_users_table.py
+│       ├── 69c5c96be012_add_updated_at_to_conversations.py
+│       ├── 8a0afa9bb6f4_create_document_chunks_table.py
+│       ├── 999b90bc9af6_create_documents_table.py
+│       ├── 9f6316708db3_add_embeddings_to_document_chunks.py
+│       ├── a18d5c70bed4_add_collections.py
+│       ├── a1d7ad146126_make_document_file_path_nullable.py
+│       ├── a977ff19951d_add_source_url_to_documents.py
+│       ├── b1260ec03343_add_file_path_to_documents.py
+│       ├── b7527c34f6f9_create_conversation_history_tables.py
+│       ├── d3509d8670ed_add_updated_at_to_conversations.py
+│       ├── db0380c2f0d5_change_embedding_dimension_to_384.py
+│       └── f04c8f21b733_add_document_to_conversations.py
+├── alembic.ini
+├── app
+│   ├── api
+│   │   ├── dependencies.py
+│   │   ├── __init__.py
+│   │   └── routes
+│   │       ├── auth.py
+│   │       ├── chat.py
+│   │       ├── collections.py
+│   │       ├── conversations.py
+│   │       ├── documents.py
+│   │       ├── __init__.py
+│   │       └── users.py
+│   ├── core
+│   │   ├── config.py
+│   │   ├── __init__.py
+│   │   ├── jwt.py
+│   │   └── security.py
+│   ├── crud
+│   │   ├── collection.py
+│   │   ├── conversation.py
+│   │   ├── document_chunk.py
+│   │   ├── document.py
+│   │   ├── __init__.py
+│   │   └── user.py
+│   ├── db
+│   │   ├── base.py
+│   │   ├── dependencies.py
+│   │   ├── __init__.py
+│   │   └── session.py
+│   ├── __init__.py
+│   ├── main.py
+│   ├── models
+│   │   ├── collection.py
+│   │   ├── conversation.py
+│   │   ├── document_chunk.py
+│   │   ├── document.py
+│   │   ├── __init__.py
+│   │   ├── message.py
+│   │   └── user.py
+│   ├── schemas
+│   │   ├── auth.py
+│   │   ├── chat.py
+│   │   ├── collection.py
+│   │   ├── conversation.py
+│   │   ├── document.py
+│   │   ├── __init__.py
+│   │   └── user.py
+│   ├── services
+│   │   ├── chunking.py
+│   │   ├── citation_verifier.py
+│   │   ├── document_processing.py
+│   │   ├── document_search.py
+│   │   ├── document_service.py
+│   │   ├── embedding.py
+│   │   ├── embedding_service.py
+│   │   ├── __init__.py
+│   │   ├── llm.py
+│   │   ├── query_rewriting.py
+│   │   ├── rag.py
+│   │   ├── reranking.py
+│   │   ├── retrieval.py
+│   │   ├── text_extraction.py
+│   │   └── web_extraction.py
+│   └── utils
+│       └── __init__.py
+├── backend_structure.txt
+├── .env
+├── pyproject.toml
+├── .python-version
+├── rag_test_results.txt
+├── README.md
+├── .ruff_cache
+│   ├── 0.15.22
+│   │   └── 13894438461052155485
+│   ├── CACHEDIR.TAG
+│   └── .gitignore
+├── test_rag_suite.py
+├── test_reranker.py
+└── uv.lock
+
+15 directories, 84 files

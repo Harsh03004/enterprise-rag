@@ -13,3 +13,17 @@ def generate_embedding(text: str) -> list[float]:
     )
 
     return embedding.tolist()
+
+
+def generate_embeddings(
+    texts: list[str],
+) -> list[list[float]]:
+    if not texts:
+        return []
+
+    embeddings = model.encode(
+        texts,
+        normalize_embeddings=True,
+    )
+
+    return embeddings.tolist()

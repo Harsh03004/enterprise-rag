@@ -4,6 +4,7 @@ export interface Conversation {
   id: number;
   user_id: number;
   document_id: number | null;
+  collection_id: number | null;
   title: string;
   created_at: string;
 }
@@ -24,14 +25,30 @@ export interface ConversationDetail
 
 export async function getConversations(
   documentId: number | null,
+  collectionId: number | null = null,
 ): Promise<Conversation[]> {
   const params =
-    documentId === null
-      ? ""
-      : `?document_id=${documentId}`;
+    new URLSearchParams();
+
+  if (documentId !== null) {
+    params.set(
+      "document_id",
+      String(documentId),
+    );
+  } else if (collectionId !== null) {
+    params.set(
+      "collection_id",
+      String(collectionId),
+    );
+  }
+
+  const query =
+    params.toString();
 
   const response = await apiFetch(
-    `/conversations${params}`,
+    `/conversations${
+      query ? `?${query}` : ""
+    }`,
   );
 
   return response.json();
@@ -52,6 +69,7 @@ export async function getConversation(
 export async function createConversation(
   title: string,
   documentId: number | null,
+  collectionId: number | null = null,
 ): Promise<Conversation> {
   const response = await apiFetch(
     "/conversations",
@@ -60,6 +78,7 @@ export async function createConversation(
       body: JSON.stringify({
         title,
         document_id: documentId,
+        collection_id: collectionId,
       }),
     },
   );

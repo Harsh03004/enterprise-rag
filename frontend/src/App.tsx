@@ -16,7 +16,6 @@ import Layout from "./components/Layout";
 function App() {
   return (
     <Routes>
-
       {/* ============================== */}
       {/* Authentication */}
       {/* ============================== */}
@@ -31,7 +30,6 @@ function App() {
         element={<Register />}
       />
 
-
       {/* ============================== */}
       {/* Protected Chat */}
       {/* ============================== */}
@@ -44,32 +42,29 @@ function App() {
               {(
                 selectedDocumentId,
                 selectedDocument,
+                selectedCollectionId,
+                selectedCollection,
                 selectedConversationId,
                 chatResetKey,
                 onConversationCreated,
                 onConversationUpdated,
-              ) => (
-                <Chat
-                  selectedDocumentId={
-                    selectedDocumentId
-                  }
-                  selectedDocument={
-                    selectedDocument
-                  }
-                  selectedConversationId={
-                    selectedConversationId
-                  }
-                  chatResetKey={
-                    chatResetKey
-                  }
-                  onConversationCreated={
-                    onConversationCreated
-                  }
-                  onConversationUpdated={
-                    onConversationUpdated
-                  }
-                />
-              )}
+                onDocumentStatusChange,
+              ) => {
+                void selectedCollection;
+
+                return (
+                  <Chat
+                    selectedDocumentId={selectedDocumentId}
+                    selectedDocument={selectedDocument}
+                    collectionId={selectedCollectionId}
+                    selectedConversationId={selectedConversationId}
+                    chatResetKey={chatResetKey}
+                    onConversationCreated={onConversationCreated}
+                    onConversationUpdated={onConversationUpdated}
+                    onDocumentStatusChange={onDocumentStatusChange}
+                  />
+                );
+              }}
             </Layout>
           </ProtectedRoute>
         }
@@ -88,7 +83,6 @@ function App() {
           />
         }
       />
-
     </Routes>
   );
 }

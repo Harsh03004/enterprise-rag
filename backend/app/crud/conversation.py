@@ -10,10 +10,12 @@ def create_conversation(
     user_id: int,
     title: str = "New conversation",
     document_id: int | None = None,
+    collection_id: int | None = None,
 ) -> Conversation:
     conversation = Conversation(
         user_id=user_id,
         document_id=document_id,
+        collection_id=collection_id,
         title=title,
     )
 
@@ -41,18 +43,24 @@ def get_conversations(
     db: Session,
     user_id: int,
     document_id: int | None = None,
+    collection_id: int | None = None,
 ) -> list[Conversation]:
     statement = select(Conversation).where(
         Conversation.user_id == user_id,
     )
 
-    if document_id is None:
+    if document_id is not None:
         statement = statement.where(
-            Conversation.document_id.is_(None)
+            Conversation.document_id == document_id,
+        )
+    elif collection_id is not None:
+        statement = statement.where(
+            Conversation.collection_id == collection_id,
         )
     else:
         statement = statement.where(
-            Conversation.document_id == document_id
+            Conversation.document_id.is_(None),
+            Conversation.collection_id.is_(None),
         )
 
     statement = statement.order_by(

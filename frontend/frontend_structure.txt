@@ -1,0 +1,47 @@
+.
+├── .env
+├── eslint.config.js
+├── frontend_structure.txt
+├── .gitignore
+├── index.html
+├── package.json
+├── package-lock.json
+├── public
+│   ├── favicon.svg
+│   └── icons.svg
+├── README.md
+├── src
+│   ├── api
+│   │   ├── auth.ts
+│   │   ├── chat.ts
+│   │   ├── client.ts
+│   │   ├── conversations.ts
+│   │   └── documents.ts
+│   ├── App.css
+│   ├── App.tsx
+│   ├── assets
+│   │   ├── hero.png
+│   │   ├── react.svg
+│   │   └── vite.svg
+│   ├── components
+│   │   ├── Header.tsx
+│   │   ├── Layout.tsx
+│   │   ├── ProtectedRoute.tsx
+│   │   └── Sidebar.tsx
+│   ├── context
+│   │   └── AuthContext.tsx
+│   ├── hooks
+│   ├── index.css
+│   ├── main.tsx
+│   ├── pages
+│   │   ├── Chat.tsx
+│   │   ├── Login.tsx
+│   │   └── Register.tsx
+│   └── types
+│       └── auth.ts
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+
+10 directories, 35 files

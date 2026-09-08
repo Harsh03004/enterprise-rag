@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict
 class ConversationCreate(BaseModel):
     title: str = "New conversation"
     document_id: int | None = None
+    collection_id: int | None = None
 
 
 class ConversationUpdate(BaseModel):
@@ -16,6 +17,7 @@ class ConversationResponse(BaseModel):
     id: int
     user_id: int
     document_id: int | None
+    collection_id: int | None
     title: str
     created_at: datetime
 
@@ -36,6 +38,7 @@ class ConversationDetailResponse(BaseModel):
     id: int
     user_id: int
     document_id: int | None
+    collection_id: int | None
     title: str
     created_at: datetime
     messages: list[MessageResponse]

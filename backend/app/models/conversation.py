@@ -1,7 +1,19 @@
 from datetime import datetime
-from sqlalchemy import ForeignKey, String, DateTime, func
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from sqlalchemy import (
+    ForeignKey,
+    String,
+    DateTime,
+    func,
+)
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_column,
+    relationship,
+)
+
 from app.db.base import Base
+
 
 class Conversation(Base):
     __tablename__ = "conversations"
@@ -12,13 +24,28 @@ class Conversation(Base):
     )
 
     user_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id", ondelete="CASCADE"),
+        ForeignKey(
+            "users.id",
+            ondelete="CASCADE",
+        ),
         nullable=False,
         index=True,
     )
 
     document_id: Mapped[int | None] = mapped_column(
-        ForeignKey("documents.id", ondelete="CASCADE"),
+        ForeignKey(
+            "documents.id",
+            ondelete="CASCADE",
+        ),
+        nullable=True,
+        index=True,
+    )
+
+    collection_id: Mapped[int | None] = mapped_column(
+        ForeignKey(
+            "collections.id",
+            ondelete="SET NULL",
+        ),
         nullable=True,
         index=True,
     )
@@ -50,4 +77,8 @@ class Conversation(Base):
 
     document = relationship(
         "Document",
+    )
+
+    collection = relationship(
+        "Collection",
     )

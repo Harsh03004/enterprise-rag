@@ -28,19 +28,40 @@ def generate_response(prompt: str) -> str:
 
 
 def stream_response(prompt: str) -> Generator[str, None, None]:
-    stream = client.chat.completions.create(
-        model=MODEL,
-        messages=[
-            {
-                "role": "user",
-                "content": prompt,
-            }
-        ],
-        stream=True,
-    )
+    """
+    Stream an LLM response token by token.
 
-    for chunk in stream:
-        content = chunk.choices[0].delta.content
+    The function yields only non-empty text content so callers
+    can forward the chunks directly to the frontend.
+    """
 
-        if content:
-            yield content
+    try:
+        stream = client.chat.completions.create(
+            model=MODEL,
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
+            stream=True,
+        )
+
+        for chunk in stream:
+            if not chunk.choices:
+                continue
+
+            delta = chunk.choices[0].delta
+
+            if delta is None:
+                continue
+
+            content = delta.content
+
+            if content:
+                yield content
+
+    except Exception as exc:
+        raise RuntimeError(
+            f"LLM streaming failed: {exc}"
+        ) from exc

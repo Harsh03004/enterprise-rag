@@ -66,6 +66,29 @@ def update_document_filename(
     return document
 
 
+def update_document_collection(
+    db: Session,
+    document_id: int,
+    user_id: int,
+    collection_id: int | None,
+) -> Document | None:
+    document = get_document(
+        db=db,
+        document_id=document_id,
+        user_id=user_id,
+    )
+
+    if document is None:
+        return None
+
+    document.collection_id = collection_id
+
+    db.commit()
+    db.refresh(document)
+
+    return document
+
+
 def delete_document(
     db: Session,
     document_id: int,

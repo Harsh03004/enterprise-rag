@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, String, Integer ,func
+from sqlalchemy import DateTime, ForeignKey, String, Integer, Text ,func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
@@ -49,6 +49,11 @@ class Document(Base):
         String(50),
         default="uploaded",
         nullable=False,
+    )
+
+    processing_error: Mapped[str | None] = mapped_column(
+        Text,
+         nullable=True,
     )
 
     created_at: Mapped[datetime] = mapped_column(

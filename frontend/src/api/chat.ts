@@ -16,11 +16,11 @@ export interface ChatSource {
 
 export interface ChatStreamEvent {
   type:
-  | "token"
-  | "sources"
-  | "conversation"
-  | "complete"
-  | "error";
+    | "token"
+    | "sources"
+    | "conversation"
+    | "complete"
+    | "error";
 
   content?: string;
 
@@ -31,7 +31,11 @@ export interface ChatStreamEvent {
 
 interface StreamChatOptions {
   question: string;
+
   documentId: number | null;
+
+  collectionId: number | null;
+
   conversationId?: number | null;
 
   signal?: AbortSignal;
@@ -52,6 +56,7 @@ interface StreamChatOptions {
 export async function streamChat({
   question,
   documentId,
+  collectionId,
   conversationId = null,
   signal,
   onToken,
@@ -82,6 +87,7 @@ export async function streamChat({
       body: JSON.stringify({
         question,
         document_id: documentId,
+        collection_id: collectionId,
         conversation_id: conversationId,
       }),
 
@@ -151,9 +157,7 @@ export async function streamChat({
       const line = event
         .split("\n")
         .find((line) =>
-          line.startsWith(
-            "data: ",
-          ),
+          line.startsWith("data: "),
         );
 
       if (!line) {
@@ -169,9 +173,6 @@ export async function streamChat({
             json,
           ) as ChatStreamEvent;
 
-        /*
-         * Streaming token.
-         */
         if (
           parsed.type ===
           "token"
@@ -181,10 +182,6 @@ export async function streamChat({
           );
         }
 
-        /*
-         * Sources sent after
-         * the answer.
-         */
         if (
           parsed.type ===
           "sources"
@@ -194,10 +191,6 @@ export async function streamChat({
           );
         }
 
-        /*
-         * Conversation created
-         * or updated.
-         */
         if (
           parsed.type ===
           "conversation"
@@ -210,10 +203,7 @@ export async function streamChat({
             );
           }
         }
-        /*
- * Backend has finished generating
- * and has saved the assistant message.
- */
+
         if (
           parsed.type ===
           "complete"
@@ -221,16 +211,13 @@ export async function streamChat({
           onComplete?.();
         }
 
-        /*
-         * Backend error.
-         */
         if (
           parsed.type ===
           "error"
         ) {
           throw new Error(
             parsed.content ??
-            "An error occurred while generating the answer.",
+              "An error occurred while generating the answer.",
           );
         }
       } catch (error) {

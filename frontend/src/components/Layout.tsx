@@ -14,10 +14,18 @@ import {
   type Document,
 } from "../api/documents";
 
+import {
+  getCollections,
+  type Collection,
+} from "../api/collections";
+
+
 interface LayoutProps {
   children: (
     selectedDocumentId: number | null,
     selectedDocument: Document | null,
+    selectedCollectionId: number | null,
+    selectedCollection: Collection | null,
     selectedConversationId: number | null,
     chatResetKey: number,
     onConversationCreated: (
@@ -26,8 +34,12 @@ interface LayoutProps {
     onConversationUpdated: (
       conversation: Conversation,
     ) => void,
+    onDocumentStatusChange: (
+      document: Document,
+    ) => void,
   ) => ReactNode;
 }
+
 
 export default function Layout({
   children,
@@ -35,6 +47,11 @@ export default function Layout({
   const [
     selectedDocumentId,
     setSelectedDocumentId,
+  ] = useState<number | null>(null);
+
+  const [
+    selectedCollectionId,
+    setSelectedCollectionId,
   ] = useState<number | null>(null);
 
   const [
@@ -46,6 +63,11 @@ export default function Layout({
     documents,
     setDocuments,
   ] = useState<Document[]>([]);
+
+  const [
+    collections,
+    setCollections,
+  ] = useState<Collection[]>([]);
 
   const [
     conversations,
@@ -63,10 +85,10 @@ export default function Layout({
   ] = useState(0);
 
 
-
   /*
-   * Load documents once.
+   * Load documents.
    */
+
   useEffect(() => {
     async function loadDocuments() {
       try {
@@ -83,11 +105,46 @@ export default function Layout({
     }
 
     loadDocuments();
+
+    const interval =
+      setInterval(
+        loadDocuments,
+        3000,
+      );
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
+
   /*
-   * Find the complete selected document.
+   * Load collections.
    */
+
+  useEffect(() => {
+    async function loadCollections() {
+      try {
+        const data =
+          await getCollections();
+
+        setCollections(data);
+      } catch (error) {
+        console.error(
+          "Failed to load collections:",
+          error,
+        );
+      }
+    }
+
+    loadCollections();
+  }, []);
+
+
+  /*
+   * Resolve selected document.
+   */
+
   const selectedDocument =
     documents.find(
       (document) =>
@@ -95,31 +152,54 @@ export default function Layout({
         selectedDocumentId,
     ) ?? null;
 
+
   /*
-   * Load conversations whenever
-   * the selected document changes.
+   * Resolve selected collection.
    */
+
+  const selectedCollection =
+    collections.find(
+      (collection) =>
+        collection.id ===
+        selectedCollectionId,
+    ) ?? null;
+
+
+  /*
+   * Load conversations according
+   * to the current scope.
+   *
+   * Priority:
+   *
+   * Document
+   * Collection
+   * All Documents
+   */
+
   useEffect(() => {
     async function loadConversations() {
       try {
         setLoadingConversations(true);
 
         const data =
-          await getConversations(
-            selectedDocumentId,
-          );
-
+  await getConversations(
+    selectedCollectionId !== null
+      ? null
+      : selectedDocumentId,
+    selectedCollectionId,
+  );
         setConversations(data);
 
         if (
           selectedConversationId !==
           null
         ) {
-          const exists = data.some(
-            (conversation) =>
-              conversation.id ===
-              selectedConversationId,
-          );
+          const exists =
+            data.some(
+              (conversation) =>
+                conversation.id ===
+                selectedConversationId,
+            );
 
           if (!exists) {
             setSelectedConversationId(
@@ -132,17 +212,25 @@ export default function Layout({
           "Failed to load conversations:",
           error,
         );
+
+        setConversations([]);
+        setSelectedConversationId(null);
       } finally {
         setLoadingConversations(false);
       }
     }
 
     loadConversations();
-  }, [selectedDocumentId]);
+  }, [
+    selectedDocumentId,
+    selectedCollectionId,
+  ]);
+
 
   /*
-   * Document selection.
+   * Select a document.
    */
+
   function handleSelectDocument(
     documentId: number | null,
   ) {
@@ -150,9 +238,13 @@ export default function Layout({
       documentId,
     );
 
-    setSelectedConversationId(
-      null,
-    );
+    /*
+     * Selecting a document leaves
+     * project scope.
+     */
+   
+
+    setSelectedConversationId(null);
 
     setChatResetKey(
       (previous) =>
@@ -160,9 +252,37 @@ export default function Layout({
     );
   }
 
+
   /*
-   * Conversation selection.
+   * Select a collection/project.
    */
+
+  function handleSelectCollection(
+    collectionId: number | null,
+  ) {
+    setSelectedCollectionId(
+      collectionId,
+    );
+
+    /*
+     * Project chat is not tied to
+     * an individual document.
+     */
+    setSelectedDocumentId(null);
+
+    setSelectedConversationId(null);
+
+    setChatResetKey(
+      (previous) =>
+        previous + 1,
+    );
+  }
+
+
+  /*
+   * Select conversation.
+   */
+
   function handleSelectConversation(
     conversationId: number | null,
   ) {
@@ -171,13 +291,13 @@ export default function Layout({
     );
   }
 
+
   /*
-   * Start a completely new chat.
+   * Start new chat.
    */
+
   function handleNewChat() {
-    setSelectedConversationId(
-      null,
-    );
+    setSelectedConversationId(null);
 
     setChatResetKey(
       (previous) =>
@@ -185,49 +305,99 @@ export default function Layout({
     );
   }
 
+
   /*
    * Conversation created.
    */
-  function handleConversationCreated(
-    conversation: Conversation,
-  ) {
-    setConversations(
-      (previous) => [
-        conversation,
-        ...previous.filter(
-          (item) =>
-            item.id !==
-            conversation.id,
-        ),
-      ],
-    );
 
+  function handleConversationCreated(
+  conversation: Conversation,
+) {
+  setConversations(
+    (previous) => [
+      conversation,
+      ...previous.filter(
+        (item) =>
+          item.id !==
+          conversation.id,
+      ),
+    ],
+  );
+
+  /*
+   * Only select the newly created conversation
+   * if it belongs to the scope that is currently
+   * visible in the UI.
+   */
+  const belongsToCurrentScope =
+    selectedCollectionId !== null
+      ? conversation.collection_id ===
+        selectedCollectionId
+      : selectedDocumentId !== null
+        ? conversation.document_id ===
+          selectedDocumentId
+        : conversation.collection_id === null &&
+          conversation.document_id === null;
+
+  if (belongsToCurrentScope) {
     setSelectedConversationId(
       conversation.id,
     );
   }
+}
+
 
   /*
    * Conversation updated.
    */
+
   function handleConversationUpdated(
-    conversation: Conversation,
+  conversation: Conversation,
+) {
+  setConversations(
+    (previous) => [
+      conversation,
+      ...previous.filter(
+        (item) =>
+          item.id !==
+          conversation.id,
+      ),
+    ],
+  );
+
+  /*
+   * Never keep an incompatible conversation
+   * selected after a scope change.
+   */
+  const belongsToCurrentScope =
+    selectedCollectionId !== null
+      ? conversation.collection_id ===
+        selectedCollectionId
+      : selectedDocumentId !== null
+        ? conversation.document_id ===
+          selectedDocumentId
+        : conversation.collection_id === null &&
+          conversation.document_id === null;
+
+  if (
+    !belongsToCurrentScope &&
+    selectedConversationId ===
+      conversation.id
   ) {
-    setConversations(
-      (previous) => [
-        conversation,
-        ...previous.filter(
-          (item) =>
-            item.id !==
-            conversation.id,
-        ),
-      ],
+    setSelectedConversationId(null);
+
+    setChatResetKey(
+      (previous) =>
+        previous + 1,
     );
   }
+}
+
 
   /*
    * Conversation deleted.
    */
+
   function handleConversationDeleted(
     conversationId: number,
   ) {
@@ -240,15 +410,11 @@ export default function Layout({
         ),
     );
 
-  
-
     if (
       selectedConversationId ===
       conversationId
     ) {
-      setSelectedConversationId(
-        null,
-      );
+      setSelectedConversationId(null);
 
       setChatResetKey(
         (previous) =>
@@ -257,17 +423,112 @@ export default function Layout({
     }
   }
 
- 
+
+  /*
+   * Document processing status.
+   */
+
+  function handleDocumentStatusChange(
+    document: Document,
+  ) {
+    setDocuments(
+      (previous) =>
+        previous.map(
+          (item) =>
+            item.id === document.id
+              ? document
+              : item,
+        ),
+    );
+  }
+
+
+  /*
+   * Collection created.
+   */
+
+  function handleCollectionCreated(
+    collection: Collection,
+  ) {
+    setCollections(
+      (previous) => [
+        collection,
+        ...previous.filter(
+          (item) =>
+            item.id !==
+            collection.id,
+        ),
+      ],
+    );
+
+    handleSelectCollection(
+      collection.id,
+    );
+  }
+
+
+  /*
+   * Collection updated.
+   */
+
+  function handleCollectionUpdated(
+    collection: Collection,
+  ) {
+    setCollections(
+      (previous) =>
+        previous.map(
+          (item) =>
+            item.id === collection.id
+              ? collection
+              : item,
+        ),
+    );
+  }
+
+
+  /*
+   * Collection deleted.
+   */
+
+  function handleCollectionDeleted(
+    collectionId: number,
+  ) {
+    setCollections(
+      (previous) =>
+        previous.filter(
+          (collection) =>
+            collection.id !==
+            collectionId,
+        ),
+    );
+
+    if (
+      selectedCollectionId ===
+      collectionId
+    ) {
+      setSelectedCollectionId(null);
+      setSelectedConversationId(null);
+
+      setChatResetKey(
+        (previous) =>
+          previous + 1,
+      );
+    }
+  }
+
 
   return (
     <div className="app">
       <Header />
 
       <div className="app-body">
-
         <Sidebar
           selectedDocumentId={
             selectedDocumentId
+          }
+
+          selectedCollectionId={
+            selectedCollectionId
           }
 
           selectedConversationId={
@@ -276,6 +537,10 @@ export default function Layout({
 
           onSelectDocument={
             handleSelectDocument
+          }
+
+          onSelectCollection={
+            handleSelectCollection
           }
 
           onSelectConversation={
@@ -294,6 +559,22 @@ export default function Layout({
             loadingConversations
           }
 
+          collections={
+            collections
+          }
+
+          onCollectionCreated={
+            handleCollectionCreated
+          }
+
+          onCollectionUpdated={
+            handleCollectionUpdated
+          }
+
+          onCollectionDeleted={
+            handleCollectionDeleted
+          }
+
           onConversationDeleted={
             handleConversationDeleted
           }
@@ -307,13 +588,15 @@ export default function Layout({
           {children(
             selectedDocumentId,
             selectedDocument,
+            selectedCollectionId,
+            selectedCollection,
             selectedConversationId,
             chatResetKey,
             handleConversationCreated,
             handleConversationUpdated,
+            handleDocumentStatusChange,
           )}
         </main>
-
       </div>
     </div>
   );

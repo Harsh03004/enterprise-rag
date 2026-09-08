@@ -1,4 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    status,
+)
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_current_user
@@ -19,6 +24,7 @@ from app.schemas.conversation import (
     ConversationUpdate,
     MessageResponse,
 )
+from app.crud.collection import get_collection
 
 
 router = APIRouter(
@@ -37,11 +43,37 @@ def create_new_conversation(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    if (
+        request.document_id is not None
+        and request.collection_id is not None
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "A conversation cannot be scoped to both "
+                "a document and a collection."
+            ),
+        )
+
+    if request.collection_id is not None:
+        collection = get_collection(
+            db=db,
+            collection_id=request.collection_id,
+            user_id=current_user.id,
+        )
+
+        if collection is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Collection not found.",
+            )
+
     conversation = create_conversation(
         db=db,
         user_id=current_user.id,
-        title=request.title,
+        title=request.title.strip() or "New conversation",
         document_id=request.document_id,
+        collection_id=request.collection_id,
     )
 
     return conversation
@@ -53,13 +85,37 @@ def create_new_conversation(
 )
 def list_user_conversations(
     document_id: int | None = None,
+    collection_id: int | None = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    if document_id is not None and collection_id is not None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                "A conversation list cannot be scoped to both "
+                "a document and a collection."
+            ),
+        )
+
+    if collection_id is not None:
+        collection = get_collection(
+            db=db,
+            collection_id=collection_id,
+            user_id=current_user.id,
+        )
+
+        if collection is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Collection not found.",
+            )
+
     return get_conversations(
         db=db,
         user_id=current_user.id,
         document_id=document_id,
+        collection_id=collection_id,
     )
 
 
@@ -93,6 +149,7 @@ def get_conversation_detail(
         id=conversation.id,
         user_id=conversation.user_id,
         document_id=conversation.document_id,
+        collection_id=conversation.collection_id,
         title=conversation.title,
         created_at=conversation.created_at,
         messages=[

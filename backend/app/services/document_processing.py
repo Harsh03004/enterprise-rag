@@ -7,11 +7,13 @@ from app.services.embedding import generate_embedding
 from app.services.text_extraction import extract_text
 from app.services.web_extraction import extract_webpage_text
 
+
 def process_document(
     db: Session,
     document: Document,
 ) -> int:
     document.status = "processing"
+    document.processing_error = None
     db.commit()
 
     try:
@@ -54,13 +56,15 @@ def process_document(
         db.commit()
 
         document.status = "processed"
+        document.processing_error = None
         db.commit()
 
         print(f"Embedded {embedded_count} chunks")
 
         return len(db_chunks)
 
-    except Exception:
+    except Exception as exc:
         document.status = "failed"
+        document.processing_error = str(exc)
         db.commit()
         raise
