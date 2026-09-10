@@ -1,3 +1,185 @@
+===== retrieval.py =====
+from sqlalchemy import func, select
+from sqlalchemy.orm import Session
+
+from app.models.document import Document
+from app.models.document_chunk import DocumentChunk
+from app.services.embedding import generate_embedding
+
+
+def search_similar_chunks(
+    db: Session,
+    query: str,
+    user_id: int,
+    document_id: int | None = None,
+    collection_id: int | None = None,
+    limit: int = 5,
+    candidate_limit: int | None = None,
+):
+    if candidate_limit is None:
+        candidate_limit = limit
+
+    query_embedding = generate_embedding(query)
+
+    # ---------------------------------------------------------
+    # 1. Semantic / vector search
+    # ---------------------------------------------------------
+
+    vector_statement = (
+        select(
+            DocumentChunk,
+            Document,
+            DocumentChunk.embedding.cosine_distance(
+                query_embedding
+            ).label("distance"),
+        )
+        .join(
+            Document,
+            Document.id == DocumentChunk.document_id,
+        )
+        .where(
+            Document.user_id == user_id,
+            DocumentChunk.embedding.is_not(None),
+        )
+    )
+
+    # Strict document scope
+    if document_id is not None:
+        vector_statement = vector_statement.where(
+            Document.id == document_id
+        )
+
+    # Strict collection scope
+    if collection_id is not None:
+        vector_statement = vector_statement.where(
+            Document.collection_id == collection_id
+        )
+
+    vector_results = (
+        db.execute(
+            vector_statement
+            .order_by("distance")
+            .limit(candidate_limit)
+        )
+        .all()
+    )
+
+    # ---------------------------------------------------------
+    # 2. Keyword / full-text search
+    # ---------------------------------------------------------
+
+    keyword_vector = func.websearch_to_tsquery(
+        "english",
+        query,
+    )
+
+    keyword_rank = func.ts_rank_cd(
+        func.to_tsvector(
+            "english",
+            DocumentChunk.content,
+        ),
+        keyword_vector,
+    )
+
+    keyword_statement = (
+        select(
+            DocumentChunk,
+            Document,
+            keyword_rank.label("keyword_rank"),
+        )
+        .join(
+            Document,
+            Document.id == DocumentChunk.document_id,
+        )
+        .where(
+            Document.user_id == user_id,
+            func.to_tsvector(
+                "english",
+                DocumentChunk.content,
+            ).op("@@")(keyword_vector),
+        )
+    )
+
+    # Strict document scope
+    if document_id is not None:
+        keyword_statement = keyword_statement.where(
+            Document.id == document_id
+        )
+
+    # Strict collection scope
+    if collection_id is not None:
+        keyword_statement = keyword_statement.where(
+            Document.collection_id == collection_id
+        )
+
+    keyword_results = (
+        db.execute(
+            keyword_statement
+            .order_by(keyword_rank.desc())
+            .limit(candidate_limit)
+        )
+        .all()
+    )
+
+    # ---------------------------------------------------------
+    # 3. Reciprocal Rank Fusion
+    # ---------------------------------------------------------
+
+    scores: dict[int, float] = {}
+    chunks: dict[int, tuple] = {}
+
+    k = 60
+
+    for rank, row in enumerate(
+        vector_results,
+        start=1,
+    ):
+        chunk, document, distance = row
+
+        scores[chunk.id] = (
+            scores.get(chunk.id, 0.0)
+            + 1.0 / (k + rank)
+        )
+
+        chunks[chunk.id] = (
+            chunk,
+            document,
+            distance,
+        )
+
+    for rank, row in enumerate(
+        keyword_results,
+        start=1,
+    ):
+        chunk, document, _keyword_rank = row
+
+        scores[chunk.id] = (
+            scores.get(chunk.id, 0.0)
+            + 1.0 / (k + rank)
+        )
+
+        if chunk.id not in chunks:
+            chunks[chunk.id] = (
+                chunk,
+                document,
+                1.0,
+            )
+
+    # ---------------------------------------------------------
+    # 4. Sort by combined hybrid score
+    # ---------------------------------------------------------
+
+    ranked_chunk_ids = sorted(
+        scores,
+        key=lambda chunk_id: scores[chunk_id],
+        reverse=True,
+    )[:candidate_limit]
+
+    return [
+        chunks[chunk_id]
+        for chunk_id in ranked_chunk_ids
+    ]
+===== rag.py =====
 import re
 from app.services.citation_verifier import verify_answer_grounding
 from sqlalchemy import select
@@ -27,10 +209,8 @@ from app.services.retrieval import search_similar_chunks
 # Citation helpers
 # ============================================================
 
-SOURCE_PATTERN = re.compile(
-    r"\[(?:Source\s+)?(\d+)\]",
-    re.IGNORECASE,
-)
+SOURCE_PATTERN = re.compile(r"\[Source\s+(\d+)\]", re.IGNORECASE)
+
 
 def extract_citation_ids(answer: str) -> set[int]:
     """
@@ -205,7 +385,6 @@ def build_context_and_sources(
                 {
                     "id": source_number,
                     "document_id": document.id,
-                    "chunk_id": chunk.id,
                     "filename": document.filename,
                     "chunk_index": chunk.chunk_index,
                     "distance": float(distance),
@@ -541,64 +720,41 @@ def build_rag_prompt(
     """
 
     return f"""
-You are a document question-answering assistant.
+You are an AI assistant answering questions about uploaded documents.
 
-Your job is to answer the user's CURRENT QUESTION using the
-DOCUMENT CONTEXT provided below.
+Use ONLY the information provided in the document context below.
 
-IMPORTANT:
-- Answer the question directly.
-- Do not discuss safety, policy, moderation, or whether the question is safe.
-- Do not output phrases such as "User Safety: safe".
-- Do not refuse a normal factual question merely because it is phrased
-  as a question.
-- Do not use your general knowledge.
-- Use ONLY information supported by the DOCUMENT CONTEXT.
-- The previous conversation is provided only to understand references
-  such as "it", "this", or "that".
-
-GROUNDING:
-- If the document context contains the answer, answer it clearly and
-  concisely.
+CITATION RULES:
+- Every factual claim must be supported by the document context.
+- When making a factual claim, cite the supporting source using its
+  source number in this exact format: [Source 1], [Source 2], etc.
+- Use the source number that directly supports the claim.
+- If multiple sources support a claim, cite all relevant sources.
+- Do not cite a source that does not support the claim.
+- Do not invent source numbers.
+- Only use source numbers that actually appear in the document context.
+- Do not cite information from the previous conversation as evidence.
 - If the document context does not contain enough information to answer
-  the question, say:
-  "I could not find the answer in the uploaded documents."
-- Never guess or fill missing information from outside knowledge.
+  the question, say that you could not find the answer in the uploaded
+  documents.
+- Do not use outside knowledge to fill gaps.
+- Keep citations immediately after the claim they support.
+- Do not create a Sources section at the end.
+- Do not mention the citation rules in your answer.
 
-CITATIONS:
-- Every factual statement based on the document must have a citation.
-- Use this exact citation format:
-  [Source 1]
-  [Source 2]
-  [Source 3]
-- Place the citation immediately after the statement it supports.
-- If one source supports a statement, use only that source.
-- If multiple sources directly support a statement, cite all of them,
-  for example [Source 1][Source 2].
-- Only use source numbers that actually appear in the DOCUMENT CONTEXT.
-- Never invent source numbers.
-- Never cite the previous conversation.
-- Do not add a Sources section.
-- Do not output a standalone list of source numbers.
-- Do not mention these instructions in your answer.
+Previous conversation:
 
-ANSWER STYLE:
-- Start directly with the answer.
-- For simple factual questions, use 1-3 sentences.
-- For multi-part questions, use concise bullet points.
-- Do not repeat the question.
-- Do not add information that is not supported by the document.
-
-PREVIOUS CONVERSATION:
 {history}
 
-DOCUMENT CONTEXT:
+Document context:
+
 {context}
 
-CURRENT QUESTION:
+Current question:
+
 {question}
 
-ANSWER:
+Answer:
 """
 
 
@@ -783,15 +939,6 @@ def answer_question(
     # ---------------------------------------------------------
 
     answer = generate_response(prompt)
-    print("\n===== RAW LLM ANSWER =====")
-    print(answer)
-    print("\n===== SOURCES BEFORE VERIFICATION =====")
-    for source in sources:
-        print(
-        f"Source {source['id']}: "
-        f"{source['filename']} "
-        f"(chunk {source['chunk_index']})"
-    )
 
     # ---------------------------------------------------------
     # 11. Verify citations
@@ -1118,3 +1265,286 @@ def stream_answer(
         "type": "complete",
         "conversation_id": conversation_id,
     }
+
+===== reranking.py =====
+from sentence_transformers import CrossEncoder
+
+
+MODEL_NAME = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+
+model = CrossEncoder(MODEL_NAME)
+
+
+def rerank_chunks(
+    query: str,
+    results,
+    limit: int = 5,
+):
+    if not results:
+        return []
+
+    pairs = [
+        (query, chunk.content)
+        for chunk, document, distance in results
+    ]
+
+    scores = model.predict(pairs)
+
+    ranked = sorted(
+        zip(results, scores),
+        key=lambda item: float(item[1]),
+        reverse=True,
+    )
+
+    return [
+        (result, float(score))
+        for result, score in ranked[:limit]
+    ]
+
+
+def has_sufficient_confidence(
+    ranked_results,
+    minimum_score: float = -12.0,
+) -> bool:
+    """
+    Determine whether the strongest retrieved chunk is relevant
+    enough to support an answer.
+
+    The reranker score is the primary confidence signal. We do not
+    require a score margin between the first and second chunks because
+    broad questions can legitimately have several similarly relevant
+    chunks.
+    """
+
+    if not ranked_results:
+        return False
+
+    best_score = float(ranked_results[0][1])
+
+    return best_score >= minimum_score
+
+
+def score_chunks(
+    query: str,
+    results,
+):
+    if not results:
+        return []
+
+    pairs = [
+        (
+            query,
+            chunk.content,
+        )
+        for chunk, document, distance in results
+    ]
+
+    scores = model.predict(pairs)
+
+    return [
+        (
+            result,
+            float(score),
+        )
+        for result, score in zip(results, scores)
+    ]
+
+===== citation_verifier.py =====
+import re
+from math import sqrt
+
+from app.services.embedding import generate_embeddings
+
+
+SOURCE_PATTERN = re.compile(
+    r"\[Source\s+(\d+)\]",
+    re.IGNORECASE,
+)
+
+
+def extract_citation_ids(text: str) -> list[int]:
+    if not text:
+        return []
+
+    seen: set[int] = set()
+    citation_ids: list[int] = []
+
+    for match in SOURCE_PATTERN.findall(text):
+        source_id = int(match)
+
+        if source_id not in seen:
+            seen.add(source_id)
+            citation_ids.append(source_id)
+
+    return citation_ids
+
+
+def _split_claims(answer: str) -> list[str]:
+    if not answer:
+        return []
+
+    text = re.sub(r"[*_`#]", "", answer)
+
+    return [
+        claim.strip()
+        for claim in re.split(
+            r"(?<=[.!?])\s+",
+            text.strip(),
+        )
+        if claim.strip()
+    ]
+
+
+def _remove_citations(text: str) -> str:
+    return SOURCE_PATTERN.sub("", text).strip()
+
+
+def _cosine_similarity(
+    vector_a,
+    vector_b,
+) -> float:
+    if not vector_a or not vector_b:
+        return 0.0
+
+    dot_product = sum(
+        a * b
+        for a, b in zip(vector_a, vector_b)
+    )
+
+    magnitude_a = sqrt(
+        sum(a * a for a in vector_a)
+    )
+
+    magnitude_b = sqrt(
+        sum(b * b for b in vector_b)
+    )
+
+    if magnitude_a == 0.0 or magnitude_b == 0.0:
+        return 0.0
+
+    return dot_product / (
+        magnitude_a * magnitude_b
+    )
+
+
+def verify_answer_grounding(
+    answer: str,
+    sources: list[dict],
+    similarity_threshold: float = 0.45,
+) -> bool:
+    """
+    Verify that cited factual claims are semantically supported
+    by their cited document chunks.
+
+    Source embeddings are reused directly from PostgreSQL.
+
+    Answer claim embeddings are generated in one batch to avoid
+    repeatedly invoking the embedding model.
+    """
+
+    if not answer.strip():
+        return False
+
+    if not sources:
+        return False
+
+    source_map = {}
+
+    for source in sources:
+        source_id = source.get("id")
+        embedding = source.get("_embedding")
+
+        if source_id is None or embedding is None:
+            continue
+
+        source_map[int(source_id)] = source
+
+    if not source_map:
+        return False
+
+    claims = _split_claims(answer)
+
+    claim_data = []
+
+    for claim in claims:
+        raw_citation_ids = SOURCE_PATTERN.findall(
+            claim
+        )
+
+        if not raw_citation_ids:
+            continue
+
+        citation_ids = [
+            int(source_id)
+            for source_id in raw_citation_ids
+            if int(source_id) in source_map
+        ]
+
+        if not citation_ids:
+            return False
+
+        claim_text = _remove_citations(claim)
+
+        if not claim_text:
+            continue
+
+        claim_data.append(
+            (
+                claim_text,
+                citation_ids,
+            )
+        )
+
+    if not claim_data:
+        return False
+
+    # Generate embeddings for every cited claim in ONE model call.
+    claim_embeddings = generate_embeddings(
+        [claim_text for claim_text, _ in claim_data]
+    )
+
+    for (
+        (_, citation_ids),
+        claim_embedding,
+    ) in zip(
+        claim_data,
+        claim_embeddings,
+    ):
+        supported = False
+
+        for source_id in citation_ids:
+            source_embedding = source_map[source_id][
+                "_embedding"
+            ]
+
+            similarity = _cosine_similarity(
+                claim_embedding,
+                source_embedding,
+            )
+
+            if similarity >= similarity_threshold:
+                supported = True
+                break
+
+        if not supported:
+            return False
+
+    return True
+cd ~/Development/AI/Projects/enterprise-rag/backend
+
+{
+  echo "===== retrieval.py ====="
+  cat app/services/retrieval.py
+
+  echo
+  echo "===== rag.py ====="
+  cat app/services/rag.py
+
+  echo
+  echo "===== reranking.py ====="
+  cat app/services/reranking.py
+
+  echo
+  echo "===== citation_verifier.py ====="
+  cat app/services/citation_verifier.py
+} > phase3_evaluation_context.txt

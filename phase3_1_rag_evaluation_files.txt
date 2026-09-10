@@ -1,0 +1,551 @@
+PHASE 3.1 — RAG EVALUATION COMPLETE FILE BUNDLE
+
+These files are designed around the existing retrieval, reranking, RAG, and citation pipeline.
+
+================================================================================
+backend/app/evaluation/__init__.py
+================================================================================
+"""RAG evaluation package."""
+
+================================================================================
+backend/app/evaluation/dataset.py
+================================================================================
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass, field
+from pathlib import Path
+
+
+@dataclass
+class EvaluationCase:
+    id: str
+    category: str
+    question: str
+    expected_answer: str | None = None
+    expected_keywords: list[str] = field(default_factory=list)
+    relevant_chunk_ids: list[int] = field(default_factory=list)
+    should_fallback: bool = False
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "EvaluationCase":
+        return cls(
+            id=str(data["id"]),
+            category=str(data["category"]),
+            question=str(data["question"]),
+            expected_answer=data.get("expected_answer"),
+            expected_keywords=[str(x) for x in data.get("expected_keywords", [])],
+            relevant_chunk_ids=[int(x) for x in data.get("relevant_chunk_ids", [])],
+            should_fallback=bool(data.get("should_fallback", False)),
+        )
+
+
+def load_dataset(path: str | Path) -> list[EvaluationCase]:
+    with Path(path).open("r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    if not isinstance(data, list):
+        raise ValueError("Evaluation dataset must contain a JSON list.")
+
+    return [EvaluationCase.from_dict(item) for item in data]
+
+================================================================================
+backend/app/evaluation/metrics.py
+================================================================================
+from __future__ import annotations
+
+import re
+from collections import Counter
+
+
+def normalize_text(text: str) -> str:
+    text = text.lower()
+    text = re.sub(r"[^a-z0-9\s]", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def token_f1(prediction: str, reference: str) -> float:
+    prediction_tokens = normalize_text(prediction).split()
+    reference_tokens = normalize_text(reference).split()
+
+    if not prediction_tokens or not reference_tokens:
+        return 0.0
+
+    overlap = sum((Counter(prediction_tokens) & Counter(reference_tokens)).values())
+
+    if overlap == 0:
+        return 0.0
+
+    precision = overlap / len(prediction_tokens)
+    recall = overlap / len(reference_tokens)
+
+    return 2 * precision * recall / (precision + recall)
+
+
+def keyword_recall(answer: str, expected_keywords: list[str]) -> float:
+    if not expected_keywords:
+        return 1.0
+
+    normalized_answer = normalize_text(answer)
+
+    matched = sum(
+        1 for keyword in expected_keywords
+        if normalize_text(keyword) in normalized_answer
+    )
+
+    return matched / len(expected_keywords)
+
+
+def retrieval_recall(
+    retrieved_chunk_ids: list[int],
+    relevant_chunk_ids: list[int],
+) -> float | None:
+    if not relevant_chunk_ids:
+        return None
+
+    retrieved = set(retrieved_chunk_ids)
+    relevant = set(relevant_chunk_ids)
+
+    return len(retrieved & relevant) / len(relevant)
+
+
+def retrieval_precision(
+    retrieved_chunk_ids: list[int],
+    relevant_chunk_ids: list[int],
+) -> float | None:
+    if not relevant_chunk_ids:
+        return None
+
+    retrieved = set(retrieved_chunk_ids)
+    relevant = set(relevant_chunk_ids)
+
+    if not retrieved:
+        return 0.0
+
+    return len(retrieved & relevant) / len(retrieved)
+
+
+def fallback_accuracy(should_fallback: bool, actual_fallback: bool) -> float:
+    return 1.0 if should_fallback == actual_fallback else 0.0
+
+
+def average(values: list[float]) -> float:
+    return sum(values) / len(values) if values else 0.0
+
+================================================================================
+backend/app/evaluation/evaluator.py
+================================================================================
+from __future__ import annotations
+
+import re
+from dataclasses import asdict, dataclass
+from typing import Any
+
+from sqlalchemy.orm import Session
+
+from app.evaluation.dataset import EvaluationCase
+from app.evaluation.metrics import (
+    average,
+    fallback_accuracy,
+    keyword_recall,
+    retrieval_precision,
+    retrieval_recall,
+    token_f1,
+)
+from app.services.rag import answer_question
+from app.services.retrieval import search_similar_chunks
+from app.services.reranking import rerank_chunks
+
+
+SOURCE_PATTERN = re.compile(r"\[Source\s+(\d+)\]", re.IGNORECASE)
+
+FALLBACK_PHRASES = (
+    "i could not find relevant information",
+    "i couldn't find relevant information",
+    "could not find relevant information",
+    "couldn't find relevant information",
+    "i could not verify that the generated answer is fully supported",
+    "i couldn't verify that the generated answer is fully supported",
+)
+
+
+@dataclass
+class EvaluationResult:
+    case_id: str
+    category: str
+    question: str
+    answer: str
+    retrieval_recall: float | None
+    retrieval_precision: float | None
+    answer_f1: float | None
+    keyword_recall: float
+    citation_count: int
+    fallback_accuracy: float
+    actual_fallback: bool
+    expected_fallback: bool
+    retrieved_chunk_ids: list[int]
+    cited_source_ids: list[int]
+    passed: bool
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+def _extract_answer(result: Any) -> str:
+    if isinstance(result, str):
+        return result
+
+    if isinstance(result, dict):
+        return (
+            result.get("answer")
+            or result.get("content")
+            or result.get("response")
+            or str(result)
+        )
+
+    return str(result)
+
+
+def _extract_citation_ids(answer: str) -> list[int]:
+    seen: set[int] = set()
+    ids: list[int] = []
+
+    for match in SOURCE_PATTERN.findall(answer):
+        source_id = int(match)
+        if source_id not in seen:
+            seen.add(source_id)
+            ids.append(source_id)
+
+    return ids
+
+
+def _is_fallback(answer: str) -> bool:
+    lowered = answer.lower()
+    return any(phrase in lowered for phrase in FALLBACK_PHRASES)
+
+
+def evaluate_case(
+    db: Session,
+    case: EvaluationCase,
+    user_id: int,
+    document_id: int | None = None,
+    collection_id: int | None = None,
+    retrieval_limit: int = 5,
+    candidate_limit: int = 20,
+) -> EvaluationResult:
+    candidates = search_similar_chunks(
+        db=db,
+        query=case.question,
+        user_id=user_id,
+        document_id=document_id,
+        collection_id=collection_id,
+        limit=retrieval_limit,
+        candidate_limit=candidate_limit,
+    )
+
+    ranked_results = rerank_chunks(
+        query=case.question,
+        results=candidates,
+        limit=retrieval_limit,
+    )
+
+    retrieved_chunk_ids = [
+        int(result[0][0].id)
+        for result in ranked_results
+    ]
+
+    result = answer_question(
+        db=db,
+        user_id=user_id,
+        question=case.question,
+        document_id=document_id,
+        collection_id=collection_id,
+        conversation_id=None,
+        limit=retrieval_limit,
+    )
+
+    answer = _extract_answer(result)
+    cited_source_ids = _extract_citation_ids(answer)
+
+    retrieval_recall_score = retrieval_recall(
+        retrieved_chunk_ids,
+        case.relevant_chunk_ids,
+    )
+
+    retrieval_precision_score = retrieval_precision(
+        retrieved_chunk_ids,
+        case.relevant_chunk_ids,
+    )
+
+    answer_f1_score = (
+        token_f1(answer, case.expected_answer)
+        if case.expected_answer
+        else None
+    )
+
+    keyword_score = keyword_recall(
+        answer,
+        case.expected_keywords,
+    )
+
+    actual_fallback = _is_fallback(answer)
+
+    fallback_score = fallback_accuracy(
+        case.should_fallback,
+        actual_fallback,
+    )
+
+    checks = [fallback_score == 1.0]
+
+    if retrieval_recall_score is not None:
+        checks.append(retrieval_recall_score > 0.0)
+
+    if case.expected_answer:
+        checks.append(
+            answer_f1_score is not None and answer_f1_score >= 0.30
+        )
+
+    if case.expected_keywords:
+        checks.append(keyword_score >= 0.50)
+
+    passed = all(checks)
+
+    return EvaluationResult(
+        case_id=case.id,
+        category=case.category,
+        question=case.question,
+        answer=answer,
+        retrieval_recall=retrieval_recall_score,
+        retrieval_precision=retrieval_precision_score,
+        answer_f1=answer_f1_score,
+        keyword_recall=keyword_score,
+        citation_count=len(cited_source_ids),
+        fallback_accuracy=fallback_score,
+        actual_fallback=actual_fallback,
+        expected_fallback=case.should_fallback,
+        retrieved_chunk_ids=retrieved_chunk_ids,
+        cited_source_ids=cited_source_ids,
+        passed=passed,
+    )
+
+
+def summarize_results(results: list[EvaluationResult]) -> dict[str, Any]:
+    if not results:
+        return {
+            "total": 0,
+            "passed": 0,
+            "failed": 0,
+            "pass_rate": 0.0,
+        }
+
+    retrieval_recalls = [
+        x.retrieval_recall for x in results
+        if x.retrieval_recall is not None
+    ]
+
+    retrieval_precisions = [
+        x.retrieval_precision for x in results
+        if x.retrieval_precision is not None
+    ]
+
+    answer_f1_scores = [
+        x.answer_f1 for x in results
+        if x.answer_f1 is not None
+    ]
+
+    passed = sum(x.passed for x in results)
+    total = len(results)
+
+    return {
+        "total": total,
+        "passed": passed,
+        "failed": total - passed,
+        "pass_rate": passed / total,
+        "retrieval_recall": average(retrieval_recalls),
+        "retrieval_precision": average(retrieval_precisions),
+        "answer_f1": average(answer_f1_scores),
+        "keyword_recall": average([x.keyword_recall for x in results]),
+        "fallback_accuracy": average([x.fallback_accuracy for x in results]),
+        "citation_count": average([float(x.citation_count) for x in results]),
+    }
+
+================================================================================
+backend/app/evaluation/runner.py
+================================================================================
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+
+from app.db.session import SessionLocal
+from app.evaluation.dataset import load_dataset
+from app.evaluation.evaluator import evaluate_case, summarize_results
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Run Enterprise RAG evaluation.")
+
+    parser.add_argument("--dataset", default="evaluation_dataset.json")
+    parser.add_argument("--user-id", type=int, required=True)
+    parser.add_argument("--document-id", type=int, default=None)
+    parser.add_argument("--collection-id", type=int, default=None)
+    parser.add_argument("--output", default="evaluation_results.json")
+
+    args = parser.parse_args()
+    dataset = load_dataset(args.dataset)
+
+    db = SessionLocal()
+    results = []
+
+    try:
+        print("=" * 80)
+        print("ENTERPRISE RAG EVALUATION")
+        print("=" * 80)
+        print(f"Dataset:       {args.dataset}")
+        print(f"User ID:       {args.user_id}")
+        print(f"Document ID:   {args.document_id}")
+        print(f"Collection ID: {args.collection_id}")
+        print(f"Total cases:   {len(dataset)}")
+        print("=" * 80)
+
+        for number, case in enumerate(dataset, start=1):
+            print()
+            print("=" * 80)
+            print(f"CASE {number}/{len(dataset)}")
+            print(f"ID:       {case.id}")
+            print(f"CATEGORY: {case.category}")
+            print(f"QUESTION: {case.question}")
+            print("=" * 80)
+
+            try:
+                result = evaluate_case(
+                    db=db,
+                    case=case,
+                    user_id=args.user_id,
+                    document_id=args.document_id,
+                    collection_id=args.collection_id,
+                )
+
+                results.append(result)
+
+                print(f"Fallback:            {result.actual_fallback}")
+                print(f"Retrieval recall:    {result.retrieval_recall}")
+                print(f"Retrieval precision: {result.retrieval_precision}")
+                print(f"Answer F1:           {result.answer_f1}")
+                print(f"Keyword recall:      {result.keyword_recall}")
+                print(f"Citations:           {result.cited_source_ids}")
+                print(f"RESULT:              {'PASS' if result.passed else 'FAIL'}")
+
+            except Exception as exc:
+                print(f"ERROR: {exc}")
+                print("RESULT: FAIL")
+
+        summary = summarize_results(results)
+
+        payload = {
+            "summary": summary,
+            "results": [result.to_dict() for result in results],
+        }
+
+        output_path = Path(args.output)
+        output_path.write_text(
+            json.dumps(payload, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+
+        print()
+        print("=" * 80)
+        print("FINAL EVALUATION SUMMARY")
+        print("=" * 80)
+        print(f"TOTAL:               {summary['total']}")
+        print(f"PASSED:              {summary['passed']}")
+        print(f"FAILED:              {summary['failed']}")
+        print(f"PASS RATE:           {summary['pass_rate']:.2%}")
+        print(f"RETRIEVAL RECALL:    {summary['retrieval_recall']:.4f}")
+        print(f"RETRIEVAL PRECISION: {summary['retrieval_precision']:.4f}")
+        print(f"ANSWER F1:           {summary['answer_f1']:.4f}")
+        print(f"KEYWORD RECALL:      {summary['keyword_recall']:.4f}")
+        print(f"FALLBACK ACCURACY:   {summary['fallback_accuracy']:.4f}")
+        print(f"CITATION COUNT:      {summary['citation_count']:.2f}")
+        print("=" * 80)
+        print(f"Results written to: {output_path}")
+
+    finally:
+        db.close()
+
+
+if __name__ == "__main__":
+    main()
+
+================================================================================
+backend/evaluation_dataset.json
+================================================================================
+[
+  {
+    "id": "basic-001",
+    "category": "Basic",
+    "question": "What is StuMeet?",
+    "expected_keywords": ["StuMeet"],
+    "should_fallback": false
+  },
+  {
+    "id": "basic-002",
+    "category": "Basic",
+    "question": "What are the main features of StuMeet?",
+    "expected_keywords": ["meeting", "rooms"],
+    "should_fallback": false
+  },
+  {
+    "id": "basic-003",
+    "category": "Basic",
+    "question": "What problem is StuMeet designed to solve?",
+    "expected_keywords": ["meeting"],
+    "should_fallback": false
+  },
+  {
+    "id": "specific-001",
+    "category": "Specific",
+    "question": "What is WebRTC used for in StuMeet?",
+    "expected_keywords": ["WebRTC"],
+    "should_fallback": false
+  },
+  {
+    "id": "specific-002",
+    "category": "Specific",
+    "question": "What is Socket.IO used for in StuMeet?",
+    "expected_keywords": ["Socket.IO"],
+    "should_fallback": false
+  },
+  {
+    "id": "specific-003",
+    "category": "Specific",
+    "question": "What authentication mechanisms are used?",
+    "expected_keywords": ["OAuth", "JWT"],
+    "should_fallback": false
+  },
+  {
+    "id": "grounding-001",
+    "category": "Grounding",
+    "question": "According to the document, what cloud provider hosts StuMeet?",
+    "should_fallback": true
+  },
+  {
+    "id": "grounding-002",
+    "category": "Grounding",
+    "question": "According to the document, what was the exact deployment date of StuMeet?",
+    "should_fallback": true
+  },
+  {
+    "id": "negative-001",
+    "category": "Negative",
+    "question": "What is the capital of Japan?",
+    "should_fallback": true
+  },
+  {
+    "id": "negative-002",
+    "category": "Negative",
+    "question": "Explain nuclear fusion according to the document.",
+    "should_fallback": true
+  }
+]

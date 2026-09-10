@@ -1,0 +1,204 @@
+[
+  {
+    "id": "basic-001",
+    "category": "Basic",
+    "question": "What is StuMeet?",
+    "expected_answer": "StuMeet is a secure, customizable, and feature-rich online meeting platform designed for students, educators, and collaborative professional teams.",
+    "expected_keywords": [
+      "StuMeet",
+      "meeting",
+      "students",
+      "educators"
+    ],
+    "relevant_chunk_ids": [14, 17]
+  },
+  {
+    "id": "basic-002",
+    "category": "Basic",
+    "question": "What are the main features of StuMeet?",
+    "expected_answer": "The main features of StuMeet include instant meetings, customizable rooms, real-time chat, role-based access control, secure authentication, meeting logs, and engagement tracking.",
+    "expected_keywords": [
+      "meeting",
+      "rooms",
+      "chat",
+      "role-based",
+      "authentication"
+    ],
+    "relevant_chunk_ids": [14, 16, 17, 18]
+  },
+  {
+    "id": "basic-003",
+    "category": "Basic",
+    "question": "What problem is StuMeet designed to solve?",
+    "expected_answer": "StuMeet addresses limitations of existing video conferencing platforms including lack of customization, limited moderator and access controls, weak real-time engagement tools, weak access security, and lack of activity logs and meeting insights.",
+    "expected_keywords": [
+      "customization",
+      "moderator",
+      "access",
+      "security",
+      "logs"
+    ],
+    "relevant_chunk_ids": [14, 16, 17]
+  },
+  {
+    "id": "specific-001",
+    "category": "Specific",
+    "question": "What is WebRTC used for in StuMeet?",
+    "expected_answer": "WebRTC is used for high-quality real-time video and audio streaming in StuMeet.",
+    "expected_keywords": [
+      "WebRTC",
+      "video",
+      "audio",
+      "streaming"
+    ],
+    "relevant_chunk_ids": [19]
+  },
+  {
+    "id": "specific-002",
+    "category": "Specific",
+    "question": "What is Socket.IO used for in StuMeet?",
+    "expected_answer": "Socket.IO is used for real-time messaging, notifications, chat communication, emoji reactions, and instant delivery of messages during meetings.",
+    "expected_keywords": [
+      "Socket.IO",
+      "real-time",
+      "messaging",
+      "chat"
+    ],
+    "relevant_chunk_ids": [15, 16, 17, 19]
+  },
+  {
+    "id": "specific-003",
+    "category": "Specific",
+    "question": "What authentication mechanisms are used?",
+    "expected_answer": "StuMeet uses OAuth and JWT-based authentication to protect user identities and provide secure access and role-specific controls.",
+    "expected_keywords": [
+      "OAuth",
+      "JWT",
+      "authentication",
+      "secure"
+    ],
+    "relevant_chunk_ids": [16, 17, 18, 19]
+  },
+  {
+    "id": "specific-004",
+    "category": "Specific",
+    "question": "What database does StuMeet use?",
+    "expected_answer": "The document states that StuMeet uses MongoDB, specifically MongoDB Atlas, to store user data, meeting sessions, chat logs, and room details.",
+    "expected_keywords": [
+      "MongoDB",
+      "MongoDB Atlas",
+      "database"
+    ],
+    "relevant_chunk_ids": [19]
+  },
+  {
+    "id": "specific-005",
+    "category": "Specific",
+    "question": "What frontend and backend technologies are used?",
+    "expected_answer": "StuMeet uses React.js for the frontend and Node.js with Express.js for the backend. Tailwind CSS and Magic UI are used for frontend styling.",
+    "expected_keywords": [
+      "React.js",
+      "Node.js",
+      "Express.js"
+    ],
+    "relevant_chunk_ids": [18, 19]
+  },
+  {
+    "id": "synthesis-001",
+    "category": "Synthesis",
+    "question": "How does StuMeet improve virtual collaboration compared with existing platforms?",
+    "expected_answer": "StuMeet improves virtual collaboration through instant meetings and custom rooms, stronger moderator and role-based controls, real-time communication, secure authentication, and meeting logs and engagement tracking, with a focus on students, educators, and collaborative teams.",
+    "expected_keywords": [
+      "instant",
+      "rooms",
+      "role-based",
+      "real-time",
+      "security",
+      "logs"
+    ],
+    "relevant_chunk_ids": [14, 15, 16, 17, 18]
+  },
+  {
+    "id": "synthesis-002",
+    "category": "Synthesis",
+    "question": "Why is StuMeet particularly suited to educational and professional teams?",
+    "expected_answer": "StuMeet is designed specifically for students, educators, and collaborative teams and combines usability, customization, security, moderator controls, real-time engagement, and meeting insights for structured collaboration.",
+    "expected_keywords": [
+      "students",
+      "educators",
+      "teams",
+      "security",
+      "collaboration"
+    ],
+    "relevant_chunk_ids": [14, 15, 16, 17]
+  },
+  {
+    "id": "reasoning-001",
+    "category": "Reasoning",
+    "question": "Why are custom rooms and moderator controls important for StuMeet's target users?",
+    "expected_answer": "Custom rooms provide flexible spaces for recurring or topic-specific sessions, while moderator controls help hosts manage participants, permissions, disruptions, and meeting security, which is especially useful in educational and structured team environments.",
+    "expected_keywords": [
+      "custom rooms",
+      "moderator",
+      "participants",
+      "security"
+    ],
+    "relevant_chunk_ids": [14, 16, 17, 18]
+  },
+  {
+    "id": "reasoning-002",
+    "category": "Reasoning",
+    "question": "How do WebRTC and Socket.IO contribute to StuMeet's real-time experience?",
+    "expected_answer": "WebRTC provides real-time video and audio streaming, while Socket.IO provides real-time messaging and notifications, together supporting interactive communication during meetings.",
+    "expected_keywords": [
+      "WebRTC",
+      "Socket.IO",
+      "video",
+      "audio",
+      "messaging"
+    ],
+    "relevant_chunk_ids": [17, 19]
+  },
+  {
+    "id": "grounding-001",
+    "category": "Grounding",
+    "question": "According to the document, what cloud provider hosts StuMeet?",
+    "expected_keywords": [
+      "AWS",
+      "Google Cloud",
+      "Vercel"
+    ],
+    "should_fallback": true,
+    "relevant_chunk_ids": []
+  },
+  {
+    "id": "grounding-002",
+    "category": "Grounding",
+    "question": "According to the document, what was the exact deployment date of StuMeet?",
+    "expected_keywords": [
+      "deployment date"
+    ],
+    "should_fallback": true,
+    "relevant_chunk_ids": []
+  },
+  {
+    "id": "negative-001",
+    "category": "Negative",
+    "question": "What is the capital of Japan?",
+    "expected_keywords": [
+      "Tokyo"
+    ],
+    "should_fallback": true,
+    "relevant_chunk_ids": []
+  },
+  {
+    "id": "negative-002",
+    "category": "Negative",
+    "question": "Explain nuclear fusion according to the document.",
+    "expected_keywords": [
+      "nuclear fusion"
+    ],
+    "should_fallback": true,
+    "relevant_chunk_ids": []
+  }
+]

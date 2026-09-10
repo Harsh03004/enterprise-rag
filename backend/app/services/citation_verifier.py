@@ -5,7 +5,7 @@ from app.services.embedding import generate_embeddings
 
 
 SOURCE_PATTERN = re.compile(
-    r"\[Source\s+(\d+)\]",
+    r"\[(?:Source\s+)?(\d+)\]",
     re.IGNORECASE,
 )
 
@@ -168,6 +168,11 @@ def verify_answer_grounding(
             similarity = _cosine_similarity(
                 claim_embedding,
                 source_embedding,
+            )
+            
+            print(
+                f"\n[GROUNDING] Source {source_id} "
+                f"similarity = {similarity:.4f}"
             )
 
             if similarity >= similarity_threshold:

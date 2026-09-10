@@ -1,0 +1,77 @@
+{
+  "summary": {
+    "total": 3,
+    "passed": 0,
+    "failed": 3,
+    "pass_rate": 0.0,
+    "retrieval_recall": 1.0,
+    "retrieval_precision": 0.5333333333333333,
+    "answer_f1": 0.2974741869303467,
+    "keyword_recall": 0.6166666666666667,
+    "citation_recall": 1.0,
+    "citation_precision": 0.8333333333333333,
+    "fallback_accuracy": 1.0,
+    "citation_count": 2.6666666666666665
+  },
+  "results": [
+    {
+      "case_id": "basic-003",
+      "category": "Basic",
+      "question": "What problem is StuMeet designed to solve?",
+      "answer": "StuMeet is designed to solve several limitations associated with existing video conferencing platforms:\n\n* **Lack of instant meetings and custom rooms:** Most platforms lack quick-access instant meeting options and customizable, topic-specific room setups [Source 1][Source 3].\n* **Limited moderator and host controls:** Existing platforms offer basic host features, making it difficult to manage participants effectively, maintain order, and control access [Source 1][Source 3].\n* **Absence of integrated real-time collaboration tools:** Current tools often rely on basic or delayed chat features and lack built-in real-time engagement and interactive tools [Source 1][Source 3].\n* **Inadequate security and access management:** Mainstream platforms frequently utilize basic login systems with limited visibility into user activity and insufficient access control [Source 1][Source 3].\n* **Insufficient educational focus:** Generic platforms are primarily designed for general business or casual use, lacking the tailored structure and features required for virtual classrooms and student-teacher workflows [Source 2][Source 3].",
+      "fallback": false,
+      "retrieval_recall": 1.0,
+      "retrieval_precision": 0.6,
+      "answer_f1": 0.26737967914438504,
+      "keyword_recall": 0.6,
+      "citation_ids": [
+        1,
+        3,
+        2
+      ],
+      "citation_recall": 1.0,
+      "citation_precision": 0.6666666666666666,
+      "fallback_accuracy": 1.0,
+      "passed": false
+    },
+    {
+      "case_id": "specific-001",
+      "category": "Specific",
+      "question": "What is WebRTC used for in StuMeet?",
+      "answer": "By integrating technologies like WebRTC and Socket.IO, StuMeet aims to provide a seamless, interactive, and secure virtual experience with instant meeting access, real-time chat, and role-based access control to manage participation effectively [Source 1][Source 2].",
+      "fallback": false,
+      "retrieval_recall": 1.0,
+      "retrieval_precision": 0.2,
+      "answer_f1": 0.18867924528301885,
+      "keyword_recall": 0.25,
+      "citation_ids": [
+        1,
+        2
+      ],
+      "citation_recall": null,
+      "citation_precision": null,
+      "fallback_accuracy": 1.0,
+      "passed": false
+    },
+    {
+      "case_id": "specific-002",
+      "category": "Specific",
+      "question": "What is Socket.IO used for in StuMeet?",
+      "answer": "StuMeet uses Socket.IO for real-time messaging and chat integration, enabling smooth and uninterrupted communication during meetings [Source 1][Source 2]. This enables live conversation, media sharing, and reactions to enhance engagement [Source 3].",
+      "fallback": false,
+      "retrieval_recall": 1.0,
+      "retrieval_precision": 0.8,
+      "answer_f1": 0.43636363636363634,
+      "keyword_recall": 1.0,
+      "citation_ids": [
+        1,
+        2,
+        3
+      ],
+      "citation_recall": 1.0,
+      "citation_precision": 1.0,
+      "fallback_accuracy": 1.0,
+      "passed": false
+    }
+  ]
+}

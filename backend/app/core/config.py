@@ -7,7 +7,14 @@ class Settings(BaseSettings):
     secret_key: str
     algorithm: str
     access_token_expire_minutes: int
+
     openrouter_api_key: str
+
+    gemini_api_key: str
+    gemini_model: str
+
+    llm_provider: str
+    ollama_model: str
 
     model_config = SettingsConfigDict(
         env_file=".env",

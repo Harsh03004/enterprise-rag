@@ -5,17 +5,52 @@ from openai import OpenAI
 from app.core.config import settings
 
 
-client = OpenAI(
-    api_key=settings.openrouter_api_key,
-    base_url="https://openrouter.ai/api/v1",
+GEMINI_BASE_URL = (
+    "https://generativelanguage.googleapis.com/v1beta/openai/"
 )
 
-MODEL = "openrouter/free"
+OLLAMA_BASE_URL = "http://localhost:11434/v1"
+
+
+def _get_client() -> tuple[OpenAI, str]:
+    """
+    Return the configured LLM client and model.
+
+    Supported providers:
+    - gemini
+    - ollama
+    """
+
+    provider = settings.llm_provider.lower()
+
+    if provider == "ollama":
+        return (
+            OpenAI(
+                api_key="ollama",
+                base_url=OLLAMA_BASE_URL,
+            ),
+            settings.ollama_model,
+        )
+
+    if provider == "gemini":
+        return (
+            OpenAI(
+                api_key=settings.gemini_api_key,
+                base_url=GEMINI_BASE_URL,
+            ),
+            settings.gemini_model,
+        )
+
+    raise ValueError(
+        f"Unsupported LLM provider: {settings.llm_provider}"
+    )
 
 
 def generate_response(prompt: str) -> str:
+    client, model = _get_client()
+
     response = client.chat.completions.create(
-        model=MODEL,
+        model=model,
         messages=[
             {
                 "role": "user",
@@ -36,8 +71,10 @@ def stream_response(prompt: str) -> Generator[str, None, None]:
     """
 
     try:
+        client, model = _get_client()
+
         stream = client.chat.completions.create(
-            model=MODEL,
+            model=model,
             messages=[
                 {
                     "role": "user",
