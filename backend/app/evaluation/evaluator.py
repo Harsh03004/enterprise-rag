@@ -34,12 +34,13 @@ FALLBACK_PHRASES = (
     "not provided in the document",
 )
 
+
 def _extract_citation_ids(answer: str) -> list[int]:
     matches = re.findall(
-        r"\[Source\s+(\d+)\]",
-        answer,
-        flags=re.IGNORECASE,
-    )
+    r"\[(?:Source\s+)?(\d+)\]",
+    answer,
+    flags=re.IGNORECASE,
+)
 
     citation_ids: list[int] = []
 
@@ -97,10 +98,7 @@ class EvaluationResult:
 def _is_fallback(answer: str) -> bool:
     normalized = answer.lower().strip()
 
-    return any(
-        phrase in normalized
-        for phrase in FALLBACK_PHRASES
-    )
+    return any(phrase in normalized for phrase in FALLBACK_PHRASES)
 
 
 def evaluate_case(
@@ -144,10 +142,7 @@ def evaluate_case(
     # 3. Retrieval metrics
     # ---------------------------------------------------------
 
-    retrieved_chunk_ids = [
-        result[0].id
-        for result, _score in ranked_results
-    ]
+    retrieved_chunk_ids = [result[0].id for result, _score in ranked_results]
 
     retrieval_recall_score = None
     retrieval_precision_score = None
@@ -168,21 +163,18 @@ def evaluate_case(
     # ---------------------------------------------------------
 
     context, sources = build_context_and_sources(
-    [
-        result
-        for result, _score in ranked_results
-    ]
-)
+        [result for result, _score in ranked_results]
+    )
 
     # ---------------------------------------------------------
     # 5. Build prompt
     # ---------------------------------------------------------
 
     prompt = build_rag_prompt(
-    question=case.question,
-    history="",
-    context=context,
-)
+        question=case.question,
+        history="",
+        context=context,
+    )
 
     # ---------------------------------------------------------
     # 6. Generate answer
@@ -221,9 +213,7 @@ def evaluate_case(
                 source_id = source.get("id")
 
                 if source_id is not None:
-                    expected_source_ids.append(
-                        int(source_id)
-                    )
+                    expected_source_ids.append(int(source_id))
 
     citation_ids = _extract_citation_ids(answer)
 
@@ -276,43 +266,34 @@ def evaluate_case(
     # 11. Pass criteria
     # ---------------------------------------------------------
 
-    checks: list[bool] = []
-
-    if retrieval_recall_score is not None:
-        checks.append(
-            retrieval_recall_score >= 0.5
-        )
-
-    if retrieval_precision_score is not None:
-        checks.append(
-            retrieval_precision_score >= 0.2
-        )
-
-    if answer_f1_score is not None:
-        checks.append(
-            answer_f1_score >= 0.5
-        )
-
-    if keyword_recall_score is not None:
-        checks.append(
-            keyword_recall_score >= 0.5
-        )
-
-    if citation_recall_score is not None:
-        checks.append(
-            citation_recall_score >= 0.5
-        )
-
     if case.should_fallback:
-        checks.append(
-            fallback_accuracy_score == 1.0
-        )
-    else:
-        checks.append(
-            not fallback
-        )
+        # For negative / grounding cases, the primary requirement
+        # is that the system correctly refuses to answer when the
+        # document does not contain sufficient information.
+        passed = fallback_accuracy_score == 1.0
 
-    passed = all(checks) if checks else False
+    else:
+        # Normal answerable cases must satisfy the quality gates.
+        checks: list[bool] = []
+
+        if retrieval_recall_score is not None:
+            checks.append(retrieval_recall_score >= 0.5)
+
+        if retrieval_precision_score is not None:
+            checks.append(retrieval_precision_score >= 0.2)
+
+        if answer_f1_score is not None:
+            checks.append(answer_f1_score >= 0.5)
+
+        if keyword_recall_score is not None:
+            checks.append(keyword_recall_score >= 0.5)
+
+        if citation_recall_score is not None:
+            checks.append(citation_recall_score >= 0.5)
+
+        checks.append(not fallback)
+
+        passed = all(checks) if checks else False
 
     return EvaluationResult(
         case_id=case.id,
@@ -353,71 +334,37 @@ def summarize_results(
 
     return {
         "total": len(results),
-
-        "passed": sum(
-            1
-            for result in results
-            if result.passed
-        ),
-
-        "failed": sum(
-            1
-            for result in results
-            if not result.passed
-        ),
-
-        "pass_rate": (
-            sum(
-                1
-                for result in results
-                if result.passed
-            )
-            / len(results)
-        ),
-
+        "passed": sum(1 for result in results if result.passed),
+        "failed": sum(1 for result in results if not result.passed),
+        "pass_rate": (sum(1 for result in results if result.passed) / len(results)),
         "retrieval_recall": average(
             result.retrieval_recall
             for result in results
             if result.retrieval_recall is not None
         ),
-
         "retrieval_precision": average(
             result.retrieval_precision
             for result in results
             if result.retrieval_precision is not None
         ),
-
         "answer_f1": average(
-            result.answer_f1
-            for result in results
-            if result.answer_f1 is not None
+            result.answer_f1 for result in results if result.answer_f1 is not None
         ),
-
         "keyword_recall": average(
             result.keyword_recall
             for result in results
             if result.keyword_recall is not None
         ),
-
         "citation_recall": average(
             result.citation_recall
             for result in results
             if result.citation_recall is not None
         ),
-
         "citation_precision": average(
             result.citation_precision
             for result in results
             if result.citation_precision is not None
         ),
-
-        "fallback_accuracy": average(
-            result.fallback_accuracy
-            for result in results
-        ),
-
-        "citation_count": average(
-            len(result.citation_ids)
-            for result in results
-        ),
+        "fallback_accuracy": average(result.fallback_accuracy for result in results),
+        "citation_count": average(len(result.citation_ids) for result in results),
     }

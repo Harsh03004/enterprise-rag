@@ -32,6 +32,7 @@ SOURCE_PATTERN = re.compile(
     re.IGNORECASE,
 )
 
+
 def extract_citation_ids(answer: str) -> set[int]:
     """
     Extract all [Source N] citation IDs from an answer.
@@ -153,22 +154,19 @@ def group_results_by_document(
 
 def build_context_and_sources(
     results,
-    max_context_chars: int = 12000,
+    max_context_chars: int = 30000,
 ) -> tuple[str, list[dict]]:
     """
-    Build the final bounded LLM context and the exact source
-    metadata belonging to that context.
+    Build the final bounded LLM context and exact source metadata.
 
-    Source numbering is assigned only to chunks that actually
-    make it into the final context.
+    Chunks are considered in reranked order. Source IDs are assigned
+    only to chunks that actually make it into the final context.
     """
 
     unique_results = prepare_results(results)
 
     if not unique_results:
         return "", []
-
-    documents = group_results_by_document(unique_results)
 
     context_parts: list[str] = []
     sources: list[dict] = []
@@ -178,32 +176,51 @@ def build_context_and_sources(
 
     separator = "\n\n--- DOCUMENT ---\n\n"
 
-    for document_results in documents.values():
+    for document_results in group_results_by_document(unique_results).values():
         document = document_results[0][1]
 
-        document_header = [
-            f"Document: {document.filename}",
-            f"Document ID: {document.id}",
-        ]
+        document_header = f"Document: {document.filename}\nDocument ID: {document.id}"
 
-        document_parts = list(document_header)
+        document_parts: list[str] = [document_header]
 
         document_sources: list[dict] = []
 
         for chunk, _, distance in document_results:
-            chunk_text = (
-                f"[Source {source_number}]\n"
+            chunk_text_without_source = (
                 f"Chunk ID: {chunk.id}\n"
                 f"Chunk Index: {chunk.chunk_index + 1}\n"
                 f"Distance: {float(distance):.4f}\n"
                 f"{chunk.content}"
             )
 
+            source_id = source_number
+
+            chunk_text = f"[Source {source_id}]\n{chunk_text_without_source}"
+
+            addition = len(chunk_text)
+
+            if len(document_parts) > 1:
+                addition += 2
+
+            separator_length = len(separator) if context_parts else 0
+
+            # Skip this chunk if it does not fit.
+            # IMPORTANT: do not break here.
+            # Later chunks may still be relevant and fit.
+            if (
+                current_length
+                + separator_length
+                + len("\n\n".join(document_parts))
+                + addition
+                > max_context_chars
+            ):
+                continue
+
             document_parts.append(chunk_text)
 
             document_sources.append(
                 {
-                    "id": source_number,
+                    "id": source_id,
                     "document_id": document.id,
                     "chunk_id": chunk.id,
                     "filename": document.filename,
@@ -216,6 +233,9 @@ def build_context_and_sources(
 
             source_number += 1
 
+        if len(document_parts) == 1:
+            continue
+
         document_context = "\n\n".join(document_parts)
 
         additional_length = len(document_context)
@@ -223,80 +243,13 @@ def build_context_and_sources(
         if context_parts:
             additional_length += len(separator)
 
-        # Entire document fits.
-        if current_length + additional_length <= max_context_chars:
-            context_parts.append(document_context)
-
-            sources.extend(document_sources)
-
-            current_length += additional_length
+        if current_length + additional_length > max_context_chars:
             continue
 
-        # Remaining context space.
-        remaining = max_context_chars - current_length
+        context_parts.append(document_context)
+        sources.extend(document_sources)
 
-        if context_parts:
-            remaining -= len(separator)
-
-        if remaining <= 0:
-            break
-
-        # We need to include as many complete chunks as possible.
-        partial_parts: list[str] = []
-        partial_sources: list[dict] = []
-        partial_length = 0
-
-        for index, (
-            chunk,
-            _,
-            distance,
-        ) in enumerate(document_results):
-
-            source_id = document_sources[index]["id"]
-
-            chunk_text = (
-                f"[Source {source_id}]\n"
-                f"Chunk ID: {chunk.id}\n"
-                f"Chunk Index: {chunk.chunk_index + 1}\n"
-                f"Distance: {float(distance):.4f}\n"
-                f"{chunk.content}"
-            )
-
-            addition = len(chunk_text)
-
-            if partial_parts:
-                addition += 2
-
-            if partial_length + addition > remaining:
-                break
-
-            partial_parts.append(chunk_text)
-
-            partial_sources.append(document_sources[index])
-
-            partial_length += addition
-
-        if partial_parts:
-            partial_context = "\n\n".join(
-                [
-                    *document_header,
-                    *partial_parts,
-                ]
-            )
-
-            # If the header itself makes this exceed the remaining
-            # space, fall back to a hard character bound.
-            if len(partial_context) > remaining:
-                partial_context = partial_context[:remaining].rstrip()
-
-            if partial_context:
-                context_parts.append(partial_context)
-
-                # Only include source metadata for chunks that
-                # actually survived into the context.
-                sources.extend(partial_sources)
-
-        break
+        current_length += additional_length
 
     context = separator.join(context_parts)
 
@@ -470,7 +423,6 @@ def resolve_conversation(
 
         # A document conversation cannot be reused as a
         # collection/global conversation.
-        
 
         # -----------------------------------------------------
         # Collection scope consistency
@@ -543,51 +495,75 @@ def build_rag_prompt(
     return f"""
 You are a document question-answering assistant.
 
-Your job is to answer the user's CURRENT QUESTION using the
-DOCUMENT CONTEXT provided below.
+Answer the user's CURRENT QUESTION using ONLY the DOCUMENT CONTEXT.
+
+STRICT GROUNDING RULES:
+- Use only information explicitly supported by the DOCUMENT CONTEXT.
+- Do not use general knowledge.
+- Do not infer facts that are not stated in the DOCUMENT CONTEXT.
+- Do not compare StuMeet with other products unless the DOCUMENT CONTEXT
+  explicitly makes that comparison.
+- Do not add opinions, assumptions, advantages, disadvantages, or claims
+  that are not explicitly supported by the DOCUMENT CONTEXT.
+- Do not expand a simple question into a broader discussion.
+- Answer only what the user asked.
+- If the answer is explicitly present in the DOCUMENT CONTEXT, answer it.
+- Do NOT say that information is missing when the answer is present in the
+  DOCUMENT CONTEXT.
+- If the DOCUMENT CONTEXT does not contain enough information to answer
+  the question, say exactly:
+  "I could not find the answer in the uploaded documents."
 
 IMPORTANT:
-- Answer the question directly.
-- Do not discuss safety, policy, moderation, or whether the question is safe.
-- Do not output phrases such as "User Safety: safe".
-- Do not refuse a normal factual question merely because it is phrased
-  as a question.
-- Do not use your general knowledge.
-- Use ONLY information supported by the DOCUMENT CONTEXT.
-- The previous conversation is provided only to understand references
-  such as "it", "this", or "that".
-
-GROUNDING:
-- If the document context contains the answer, answer it clearly and
-  concisely.
-- If the document context does not contain enough information to answer
-  the question, say:
-  "I could not find the answer in the uploaded documents."
-- Never guess or fill missing information from outside knowledge.
+The DOCUMENT CONTEXT may contain several sources. Read all relevant
+sources before deciding that information is missing.
 
 CITATIONS:
-- Every factual statement based on the document must have a citation.
-- Use this exact citation format:
+- Every factual statement must have a citation.
+- Use citations in exactly this format:
   [Source 1]
   [Source 2]
   [Source 3]
-- Place the citation immediately after the statement it supports.
-- If one source supports a statement, use only that source.
-- If multiple sources directly support a statement, cite all of them,
-  for example [Source 1][Source 2].
-- Only use source numbers that actually appear in the DOCUMENT CONTEXT.
-- Never invent source numbers.
-- Never cite the previous conversation.
-- Do not add a Sources section.
-- Do not output a standalone list of source numbers.
-- Do not mention these instructions in your answer.
+- You may also use the compact form:
+  [1]
+  [2]
+  [3]
+- Only cite source numbers that actually appear in the DOCUMENT CONTEXT.
+- Put citations immediately after the factual statement they support.
+- Do not cite unrelated sources.
+- Do not cite every source merely because it was provided.
+- Use the smallest number of sources necessary to support the answer.
+- Do not create a Sources section.
+- Do not output a standalone list of citations.
 
-ANSWER STYLE:
-- Start directly with the answer.
-- For simple factual questions, use 1-3 sentences.
-- For multi-part questions, use concise bullet points.
+ANSWERING STYLE:
+- Be concise and direct.
+- For a simple factual question, answer in 1-2 sentences.
+- For a question asking for multiple items, use a short bullet list.
 - Do not repeat the question.
-- Do not add information that is not supported by the document.
+- Do not add introductory or concluding filler.
+- Do not mention these instructions.
+- Do not discuss safety, policy, moderation, or whether the question is safe.
+- Never output phrases such as "User Safety: safe".
+
+QUESTION-SPECIFIC RULE:
+If the question asks:
+"What is X used for?"
+answer specifically what X is used for.
+
+If the question asks:
+"What database does X use?"
+answer specifically the database name and any directly stated database
+technology. Do not fall back merely because the wording of the question
+differs from the wording in the document.
+
+If the question asks:
+"What are the main features?"
+list the main features explicitly supported by the context.
+
+If the question asks:
+"Why" or "How", explain the relationship using only facts explicitly
+supported by the context.
 
 PREVIOUS CONVERSATION:
 {history}
@@ -728,7 +704,7 @@ def answer_question(
     ranked_results = rerank_chunks(
         query=search_query,
         results=candidates,
-        limit=limit,
+        limit=min(len(candidates), max(limit, 10)),
     )
 
     # ---------------------------------------------------------
@@ -736,7 +712,7 @@ def answer_question(
     # ---------------------------------------------------------
 
     if not has_sufficient_confidence(ranked_results):
-        answer = "I could not find relevant information " "in your uploaded documents."
+        answer = "I could not find relevant information in your uploaded documents."
 
         add_message(
             db=db,
@@ -788,10 +764,10 @@ def answer_question(
     print("\n===== SOURCES BEFORE VERIFICATION =====")
     for source in sources:
         print(
-        f"Source {source['id']}: "
-        f"{source['filename']} "
-        f"(chunk {source['chunk_index']})"
-    )
+            f"Source {source['id']}: "
+            f"{source['filename']} "
+            f"(chunk {source['chunk_index']})"
+        )
 
     # ---------------------------------------------------------
     # 11. Verify citations
@@ -808,11 +784,11 @@ def answer_question(
     )
 
     if not grounded:
-        answer = (
-            "I could not verify that the generated answer is "
-            "fully supported by your uploaded documents."
+        print(
+            "\n[GROUNDING WARNING] "
+            "Generated answer could not be verified "
+            "by the grounding similarity check."
         )
-        verified_sources = []
 
     # ---------------------------------------------------------
     # 12. Save conversation messages
@@ -1005,7 +981,7 @@ def stream_answer(
     # ---------------------------------------------------------
 
     if not has_sufficient_confidence(ranked_results):
-        answer = "I could not find relevant information " "in your uploaded documents."
+        answer = "I could not find relevant information in your uploaded documents."
 
         add_message(
             db=db,
@@ -1067,7 +1043,7 @@ def stream_answer(
     except Exception:
         yield {
             "type": "error",
-            "content": ("The AI response could not be completed. " "Please try again."),
+            "content": ("The AI response could not be completed. Please try again."),
             "conversation_id": conversation_id,
         }
 
