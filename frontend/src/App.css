@@ -473,6 +473,74 @@
   background: #f7f7f8;
 }
 
+.admin-page {
+  min-height: 100%;
+  background: #f7f7f8;
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  padding: 28px;
+}
+
+.admin-stats div,
+.admin-table-section {
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.admin-stats div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-stats strong {
+  font-size: 24px;
+}
+
+.admin-stats span {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.admin-table-section {
+  margin: 0 28px 28px;
+}
+
+.admin-table-section h2 {
+  margin-top: 0;
+}
+
+.admin-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid #f0f1f3;
+  color: #374151;
+}
+
+@media (max-width: 700px) {
+  .admin-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 16px;
+  }
+
+  .admin-table-section {
+    margin: 0 16px 16px;
+  }
+
+  .admin-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
 
 /* =========================================================
    CHAT PAGE

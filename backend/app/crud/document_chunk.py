@@ -1,34 +1,38 @@
 from sqlalchemy.orm import Session
 
 from app.models.document_chunk import DocumentChunk
+from app.services.chunking import ChunkData
 
 
 def create_document_chunk(
     db: Session,
     document_id: int,
     chunk_index: int,
-    content: str,
+    chunk_data: ChunkData,
 ) -> DocumentChunk:
     chunk = DocumentChunk(
         document_id=document_id,
         chunk_index=chunk_index,
-        content=content,
+        content=chunk_data.content,
+        page_number=chunk_data.page_number,
+        section_heading=chunk_data.section_heading,
+        block_type=chunk_data.block_type,
+        token_count=chunk_data.token_count,
     )
 
     db.add(chunk)
 
     return chunk
 
+
 def create_document_chunks(
     db: Session,
     document_id: int,
-    chunks: list[str],
+    chunks: list[ChunkData],
 ) -> list[DocumentChunk]:
 
     existing_chunks = (
-        db.query(DocumentChunk)
-        .filter(DocumentChunk.document_id == document_id)
-        .all()
+        db.query(DocumentChunk).filter(DocumentChunk.document_id == document_id).all()
     )
 
     if existing_chunks:
@@ -36,12 +40,12 @@ def create_document_chunks(
 
     db_chunks = []
 
-    for index, content in enumerate(chunks):
+    for index, chunk_data in enumerate(chunks):
         chunk = create_document_chunk(
             db=db,
             document_id=document_id,
             chunk_index=index,
-            content=content,
+            chunk_data=chunk_data,
         )
 
         db_chunks.append(chunk)

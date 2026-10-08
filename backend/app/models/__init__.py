@@ -1,15 +1,19 @@
-from app.models.user import User
+from app.models.collection import Collection
+from app.models.conversation import Conversation
 from app.models.document import Document
 from app.models.document_chunk import DocumentChunk
-from app.models.conversation import Conversation
 from app.models.message import Message
-from app.models.collection import Collection
+from app.models.processing_job import ProcessingJob
+from app.models.query_event import QueryEvent
+from app.models.user import User
 
 __all__ = [
-    "User",
+    "Collection",
+    "Conversation",
     "Document",
     "DocumentChunk",
-    "Conversation",
     "Message",
-    "Collection",
+    "ProcessingJob",
+    "QueryEvent",
+    "User",
 ]

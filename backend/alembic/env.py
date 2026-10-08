@@ -1,19 +1,9 @@
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
-from app.db.base import Base
-from app.core.config import settings
-
-from app.models.user import User
-from app.models.document import Document
-from app.models.document_chunk import DocumentChunk
-from app.models.conversation import Conversation
-from app.models.message import Message
-from app.models.collection import Collection
-
 from alembic import context
+from app.core.config import settings
+from app.db.base import Base
+from sqlalchemy import engine_from_config, pool
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -75,9 +65,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

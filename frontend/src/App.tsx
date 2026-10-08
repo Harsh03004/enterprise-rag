@@ -9,6 +9,7 @@ import {
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Chat from "./pages/Chat";
+import Admin from "./pages/Admin";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
@@ -16,6 +17,7 @@ import Layout from "./components/Layout";
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
       {/* ============================== */}
       {/* Authentication */}
       {/* ============================== */}
@@ -70,6 +72,15 @@ function App() {
         }
       />
 
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <Admin />
+          </ProtectedRoute>
+        }
+      />
+
       {/* ============================== */}
       {/* Fallback */}
       {/* ============================== */}
@@ -78,7 +89,7 @@ function App() {
         path="*"
         element={
           <Navigate
-            to="/chat"
+            to="/login"
             replace
           />
         }

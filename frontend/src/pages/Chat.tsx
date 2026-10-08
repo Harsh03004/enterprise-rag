@@ -77,13 +77,13 @@ export default function Chat({
 
   const [error, setError] = useState('')
 
-  const [activeSourceId, setActiveSourceId] = useState<number | null>(null)
+  const [activeSourceId, setActiveSourceId] = useState<string | null>(null)
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
 
-  const sourceRefs = useRef<Record<number, HTMLDivElement | null>>({})
+  const sourceRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
   /*
    * Identifies the currently visible chat.
@@ -110,6 +110,7 @@ export default function Chat({
    * by the backend for a new chat.
    */
   const activeConversationIdRef = useRef<number | null>(null)
+  const streamSourcesRef = useRef<ChatSource[]>([])
 
   /*
    * --------------------------------------------------
@@ -118,6 +119,16 @@ export default function Chat({
    */
 
   useEffect(() => {
+    // The backend announces a newly created conversation while the current
+    // request is streaming. Selecting that same conversation is not a real
+    // navigation: keep the in-flight answer visible and keep its generation.
+    if (
+      selectedConversationId !== null &&
+      selectedConversationId === activeConversationIdRef.current
+    ) {
+      return
+    }
+
     visibleChatGenerationRef.current += 1
 
     const visibleGeneration = visibleChatGenerationRef.current
@@ -132,6 +143,7 @@ export default function Chat({
         setMessages([])
         setAnswer('')
         setSources([])
+        streamSourcesRef.current = []
         setError('')
         setLoading(false)
         setLoadingConversation(false)
@@ -149,6 +161,7 @@ export default function Chat({
       setMessages([])
       setAnswer('')
       setSources([])
+      streamSourcesRef.current = []
       setError('')
       setLoading(false)
       setLoadingConversation(true)
@@ -203,12 +216,15 @@ export default function Chat({
      *
      * Loading is controlled by the request itself.
      */
+    /* eslint-disable react-hooks/set-state-in-effect */
     setMessages([])
     setAnswer('')
     setSources([])
+    streamSourcesRef.current = []
     setQuestion('')
     setError('')
     setActiveSourceId(null)
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     activeConversationIdRef.current = null
 
@@ -261,14 +277,15 @@ export default function Chat({
    * --------------------------------------------------
    */
 
-  function scrollToSource (sourceId: number) {
-    const sourceElement = sourceRefs.current[sourceId]
+  function scrollToSource (sourceId: number, sourceContext: string) {
+    const sourceKey = `${sourceContext}-${sourceId}`
+    const sourceElement = sourceRefs.current[sourceKey]
 
     if (!sourceElement) {
       return
     }
 
-    setActiveSourceId(sourceId)
+    setActiveSourceId(sourceKey)
 
     sourceElement.scrollIntoView({
       behavior: 'smooth',
@@ -276,7 +293,7 @@ export default function Chat({
     })
 
     window.setTimeout(() => {
-      setActiveSourceId(current => (current === sourceId ? null : current))
+      setActiveSourceId(current => (current === sourceKey ? null : current))
     }, 1800)
   }
 
@@ -292,13 +309,16 @@ export default function Chat({
    * ReactMarkdown then passes these links
    * through the custom <a> renderer below.
    */
-  function prepareMarkdown (content: string): string {
+  function prepareMarkdown (
+    content: string,
+    messageSources: ChatSource[] = sources
+  ): string {
     return content.replace(
-      /\[Source\s+(\d+)\]/gi,
+      /\[(?:Source\s+)?(\d+)\]/gi,
       (match, sourceNumber: string) => {
         const number = Number(sourceNumber)
 
-        const sourceExists = sources.some(source => source.id === number)
+        const sourceExists = messageSources.some(source => source.id === number)
 
         if (!sourceExists) {
           return match
@@ -315,35 +335,67 @@ export default function Chat({
    * Citation links become buttons.
    * Normal links remain normal links.
    */
-  const citationMarkdownComponents = {
-    ...markdownComponents,
+  function getCitationMarkdownComponents (
+    messageSources: ChatSource[],
+    sourceContext: string
+  ) {
+    return {
+      ...markdownComponents,
+      a: ({ href, children }: { href?: string; children?: React.ReactNode }) => {
+        const match = href?.match(/^#source-(\d+)$/)
+        if (!match) {
+          return <a href={href} target='_blank' rel='noreferrer'>{children}</a>
+        }
 
-    a: ({ href, children }: { href?: string; children?: React.ReactNode }) => {
-      const match = href?.match(/^#source-(\d+)$/)
+        const sourceNumber = Number(match[1])
+        if (!messageSources.some(source => source.id === sourceNumber)) {
+          return <>{children}</>
+        }
 
-      if (!match) {
+        const sourceKey = `${sourceContext}-${sourceNumber}`
         return (
-          <a href={href} target='_blank' rel='noreferrer'>
-            {children}
-          </a>
+          <button
+            type='button'
+            className={`citation-button ${activeSourceId === sourceKey ? 'citation-button-active' : ''}`}
+            onClick={() => scrollToSource(sourceNumber, sourceContext)}
+            title={`View Source ${sourceNumber}`}
+          >
+            [{sourceNumber}]
+          </button>
         )
       }
-
-      const sourceNumber = Number(match[1])
-
-      return (
-        <button
-          type='button'
-          className={`citation-button ${
-            activeSourceId === sourceNumber ? 'citation-button-active' : ''
-          }`}
-          onClick={() => scrollToSource(sourceNumber)}
-          title={`View Source ${sourceNumber}`}
-        >
-          [{sourceNumber}]
-        </button>
-      )
     }
+  }
+
+  function renderSourcePanel (messageSources: ChatSource[], sourceContext: string) {
+    if (messageSources.length === 0) return null
+    return (
+      <div className='sources-panel'>
+        <div className='sources-header'>Sources</div>
+        <div className='sources-list'>
+          {messageSources.map(source => {
+            const sourceKey = `${sourceContext}-${source.id}`
+            return (
+              <div
+                key={source.id}
+                ref={element => { sourceRefs.current[sourceKey] = element }}
+                className={`source-card ${activeSourceId === sourceKey ? 'source-card-active' : ''}`}
+              >
+                <div className='source-filename'>
+                  <span>[{source.id}]</span> 📄 {source.filename}
+                </div>
+                <div className='source-meta'>
+                  <span>Chunk {source.chunk_index + 1}</span>
+                  {source.page_number !== null && source.page_number !== undefined && <span>Page {source.page_number}</span>}
+                  {source.section_heading && <span>{source.section_heading}</span>}
+                  <span>Distance {source.distance.toFixed(4)}</span>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
   }
 
   /*
@@ -448,6 +500,7 @@ export default function Chat({
 
     setAnswer('')
     setSources([])
+    streamSourcesRef.current = []
     setError('')
     setActiveSourceId(null)
 
@@ -569,7 +622,21 @@ await streamChat({
             return
           }
 
+          streamSourcesRef.current = newSources
           setSources(newSources)
+        },
+
+        onFinal: finalAnswer => {
+          if (requestGenerationRef.current !== requestGeneration) {
+            return
+          }
+
+          if (visibleChatGenerationRef.current !== requestVisibleGeneration) {
+            return
+          }
+
+          streamedAnswer = finalAnswer
+          setAnswer(finalAnswer)
         },
 
         /*
@@ -610,6 +677,8 @@ await streamChat({
               role: 'assistant',
 
               content: streamedAnswer,
+
+              sources: streamSourcesRef.current,
 
               created_at: new Date().toISOString()
             }
@@ -850,41 +919,38 @@ await streamChat({
         {/* ====================================== */}
 
         <div className='messages-container'>
-          {messages.map(message => (
-            <div
-              key={message.id}
-              className={`chat-message ${
-                message.role === 'user'
-                  ? 'chat-message-user'
-                  : 'chat-message-assistant'
-              }`}
-            >
-              <div className='message-avatar'>
-                {message.role === 'user' ? 'You' : 'AI'}
-              </div>
-
-              <div className='message-body'>
-                <div className='message-role'>
-                  {message.role === 'user' ? 'You' : 'Assistant'}
+          {messages.map(message => {
+            const messageSources = message.sources ?? []
+            const sourceContext = `message-${message.id}`
+            return (
+              <div
+                key={message.id}
+                className={`chat-message ${message.role === 'user' ? 'chat-message-user' : 'chat-message-assistant'}`}
+              >
+                <div className='message-avatar'>
+                  {message.role === 'user' ? 'You' : 'AI'}
                 </div>
-
-                <div className='message-content'>
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    components={
-                      message.role === 'assistant'
-                        ? citationMarkdownComponents
-                        : markdownComponents
-                    }
-                  >
-                    {message.role === 'assistant'
-                      ? prepareMarkdown(message.content)
-                      : message.content}
-                  </ReactMarkdown>
+                <div className='message-body'>
+                  <div className='message-role'>
+                    {message.role === 'user' ? 'You' : 'Assistant'}
+                  </div>
+                  <div className='message-content'>
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={message.role === 'assistant'
+                        ? getCitationMarkdownComponents(messageSources, sourceContext)
+                        : markdownComponents}
+                    >
+                      {message.role === 'assistant'
+                        ? prepareMarkdown(message.content, messageSources)
+                        : message.content}
+                    </ReactMarkdown>
+                  </div>
+                  {message.role === 'assistant' && renderSourcePanel(messageSources, sourceContext)}
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
 
           {/* ================================== */}
           {/* Currently streaming */}
@@ -900,13 +966,14 @@ await streamChat({
                 <div className='message-content'>
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
-                    components={citationMarkdownComponents}
+                    components={getCitationMarkdownComponents(sources, 'current')}
                   >
-                    {prepareMarkdown(answer)}
+                    {prepareMarkdown(answer, sources)}
                   </ReactMarkdown>
 
                   {loading && <span className='streaming-cursor'>▌</span>}
                 </div>
+                {renderSourcePanel(sources, 'current')}
               </div>
             </div>
           )}
@@ -936,40 +1003,6 @@ await streamChat({
           {/* ================================== */}
 
           {error && <div className='chat-error'>{error}</div>}
-
-          {/* ================================== */}
-          {/* Sources */}
-          {/* ================================== */}
-
-          {sources.length > 0 && (
-            <div className='sources-panel'>
-              <div className='sources-header'>Sources</div>
-
-              <div className='sources-list'>
-                {sources.map(source => (
-                  <div
-                    key={source.id}
-                    ref={element => {
-                      sourceRefs.current[source.id] = element
-                    }}
-                    className={`source-card ${
-                      activeSourceId === source.id ? 'source-card-active' : ''
-                    }`}
-                  >
-                    <div className='source-filename'>
-                      <span>[{source.id}]</span> 📄 {source.filename}
-                    </div>
-
-                    <div className='source-meta'>
-                      <span>Chunk {source.chunk_index + 1}</span>
-
-                      <span>Distance {source.distance.toFixed(4)}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
           <div ref={messagesEndRef} />
         </div>

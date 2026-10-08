@@ -1,4 +1,5 @@
 import { apiFetch } from "./client";
+import type { ChatSource } from "./chat";
 
 export interface Conversation {
   id: number;
@@ -14,6 +15,7 @@ export interface Message {
   conversation_id: number;
   role: "user" | "assistant";
   content: string;
+  sources?: ChatSource[] | null;
   created_at: string;
 }
 

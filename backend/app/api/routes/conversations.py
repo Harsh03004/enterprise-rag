@@ -1,3 +1,5 @@
+# ruff: noqa: B008
+
 from fastapi import (
     APIRouter,
     Depends,
@@ -7,6 +9,7 @@ from fastapi import (
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_current_user
+from app.crud.collection import get_collection
 from app.crud.conversation import (
     create_conversation,
     delete_conversation,
@@ -15,6 +18,7 @@ from app.crud.conversation import (
     get_messages,
     update_conversation_title,
 )
+from app.crud.document import get_document
 from app.db.dependencies import get_db
 from app.models.user import User
 from app.schemas.conversation import (
@@ -24,8 +28,6 @@ from app.schemas.conversation import (
     ConversationUpdate,
     MessageResponse,
 )
-from app.crud.collection import get_collection
-
 
 router = APIRouter(
     prefix="/conversations",
@@ -43,15 +45,11 @@ def create_new_conversation(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    if (
-        request.document_id is not None
-        and request.collection_id is not None
-    ):
+    if request.document_id is not None and request.collection_id is not None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=(
-                "A conversation cannot be scoped to both "
-                "a document and a collection."
+                "A conversation cannot be scoped to both a document and a collection."
             ),
         )
 
@@ -66,6 +64,19 @@ def create_new_conversation(
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Collection not found.",
+            )
+
+    if request.document_id is not None:
+        document = get_document(
+            db=db,
+            document_id=request.document_id,
+            user_id=current_user.id,
+        )
+
+        if document is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Document not found.",
             )
 
     conversation = create_conversation(
@@ -152,10 +163,7 @@ def get_conversation_detail(
         collection_id=conversation.collection_id,
         title=conversation.title,
         created_at=conversation.created_at,
-        messages=[
-            MessageResponse.model_validate(message)
-            for message in messages
-        ],
+        messages=[MessageResponse.model_validate(message) for message in messages],
     )
 
 
@@ -213,5 +221,3 @@ def remove_conversation(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Conversation not found.",
         )
-
-    return None

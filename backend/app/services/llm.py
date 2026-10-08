@@ -9,9 +9,6 @@ GEMINI_BASE_URL = (
     "https://generativelanguage.googleapis.com/v1beta/openai/"
 )
 
-OLLAMA_BASE_URL = "http://localhost:11434/v1"
-
-
 def _get_client() -> tuple[OpenAI, str]:
     """
     Return the configured LLM client and model.
@@ -27,7 +24,7 @@ def _get_client() -> tuple[OpenAI, str]:
         return (
             OpenAI(
                 api_key="ollama",
-                base_url=OLLAMA_BASE_URL,
+                base_url=settings.ollama_base_url,
             ),
             settings.ollama_model,
         )

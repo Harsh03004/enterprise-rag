@@ -2,6 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.document import Document
+from app.services.document_service import remove_uploaded_file
 
 
 def create_document(
@@ -103,7 +104,9 @@ def delete_document(
     if document is None:
         return False
 
+    file_path = document.file_path
     db.delete(document)
     db.commit()
+    remove_uploaded_file(file_path)
 
     return True

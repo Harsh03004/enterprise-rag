@@ -1,0 +1,4 @@
+{
+  "include": ["backend/app", "backend/test_hardening.py"],
+  "reportCallInDefaultInitializer": "none"
+}

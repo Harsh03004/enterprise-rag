@@ -973,7 +973,7 @@ export default function Sidebar({
 
             <input
               type="file"
-              accept=".pdf,.docx,.md,.markdown"
+              accept=".pdf,.docx,.md,.txt"
               onChange={handleUpload}
               disabled={uploading}
               hidden

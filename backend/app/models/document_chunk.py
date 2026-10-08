@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import DateTime, ForeignKey, Integer, Text, func
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
@@ -29,6 +29,20 @@ class DocumentChunk(Base):
         Text,
         nullable=False,
     )
+
+    page_number: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+    section_heading: Mapped[str | None] = mapped_column(
+        String(500),
+        nullable=True,
+    )
+
+    block_type: Mapped[str | None] = mapped_column(
+        String(50),
+        nullable=True,
+    )
+
+    token_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     embedding: Mapped[list[float] | None] = mapped_column(
         Vector(384),

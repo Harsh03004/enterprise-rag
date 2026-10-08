@@ -7,6 +7,7 @@ from pathlib import Path
 from app.db.session import SessionLocal
 from app.evaluation.dataset import load_dataset
 from app.evaluation.evaluator import evaluate_case, summarize_results
+from app.evaluation.regression import compare_summaries
 
 
 def main() -> None:
@@ -17,6 +18,17 @@ def main() -> None:
     parser.add_argument("--document-id", type=int, default=None)
     parser.add_argument("--collection-id", type=int, default=None)
     parser.add_argument("--output", default="evaluation_results.json")
+    parser.add_argument(
+        "--baseline",
+        default=None,
+        help="Existing evaluation JSON to compare against.",
+    )
+    parser.add_argument(
+        "--max-regression",
+        type=float,
+        default=0.05,
+        help="Maximum allowed drop for aggregate metrics.",
+    )
 
     args = parser.parse_args()
     dataset = load_dataset(args.dataset)
@@ -63,7 +75,7 @@ def main() -> None:
                 print(f"Citations:           {result.citation_ids}")
                 print(f"RESULT:              {'PASS' if result.passed else 'FAIL'}")
 
-            except Exception as exc:
+            except (OSError, RuntimeError, ValueError) as exc:
                 print(f"ERROR: {exc}")
                 print("RESULT: FAIL")
 
@@ -73,6 +85,19 @@ def main() -> None:
             "summary": summary,
             "results": [result.to_dict() for result in results],
         }
+
+        regression_failures: list[str] = []
+
+        if args.baseline:
+            baseline_payload = json.loads(
+                Path(args.baseline).read_text(encoding="utf-8")
+            )
+            regression_failures = compare_summaries(
+                current=summary,
+                baseline=baseline_payload["summary"],
+                max_regression=args.max_regression,
+            )
+            payload["regression_failures"] = regression_failures
 
         output_path = Path(args.output)
         output_path.write_text(
@@ -96,6 +121,15 @@ def main() -> None:
         print(f"CITATION COUNT:      {summary['citation_count']:.2f}")
         print("=" * 80)
         print(f"Results written to: {output_path}")
+
+        if regression_failures:
+            print("REGRESSION CHECK: FAIL")
+            for failure in regression_failures:
+                print(f"- {failure}")
+            raise SystemExit(1)
+
+        if args.baseline:
+            print("REGRESSION CHECK: PASS")
 
     finally:
         db.close()

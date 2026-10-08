@@ -15,12 +15,17 @@ from app.evaluation.metrics import (
     token_f1,
 )
 from app.services.llm import generate_response
+from app.services.citation_verifier import (
+    repair_missing_citations,
+    verify_answer_grounding,
+)
 from app.services.rag import (
+    GROUNDING_FALLBACK,
     build_context_and_sources,
     build_rag_prompt,
     verify_citations,
 )
-from app.services.reranking import rerank_chunks
+from app.services.reranking import has_sufficient_confidence, rerank_chunks
 from app.services.retrieval import search_similar_chunks
 
 
@@ -159,16 +164,30 @@ def evaluate_case(
         )
 
     # ---------------------------------------------------------
-    # 4. Build context
+    # 4. Apply the same confidence gate used by production RAG
+    # ---------------------------------------------------------
+
+    if not has_sufficient_confidence(ranked_results):
+        answer = "I could not find relevant information in your uploaded documents."
+        fallback = _is_fallback(answer)
+        return EvaluationResult(
+            case_id=case.id, category=case.category, question=case.question,
+            answer=answer, fallback=fallback,
+            retrieval_recall=retrieval_recall_score,
+            retrieval_precision=retrieval_precision_score,
+            answer_f1=None, keyword_recall=None, citation_ids=[],
+            citation_recall=None, citation_precision=None,
+            fallback_accuracy=fallback_accuracy(fallback, case.should_fallback),
+            passed=case.should_fallback,
+        )
+
+    # ---------------------------------------------------------
+    # 5. Build context
     # ---------------------------------------------------------
 
     context, sources = build_context_and_sources(
         [result for result, _score in ranked_results]
     )
-
-    # ---------------------------------------------------------
-    # 5. Build prompt
-    # ---------------------------------------------------------
 
     prompt = build_rag_prompt(
         question=case.question,
@@ -193,6 +212,12 @@ def evaluate_case(
         answer=answer,
         sources=sources,
     )
+
+    answer = repair_missing_citations(answer, sources)
+    answer, verified_sources = verify_citations(answer, sources)
+    if not verify_answer_grounding(answer, verified_sources):
+        answer = GROUNDING_FALLBACK
+        verified_sources = []
 
     # ---------------------------------------------------------
     # 8. Citation metrics

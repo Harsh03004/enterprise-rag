@@ -1,15 +1,19 @@
 import re
-from app.services.citation_verifier import verify_answer_grounding
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models.collection import Collection
-from app.models.document import Document
 
 from app.crud.conversation import (
     add_message,
     create_conversation,
     get_conversation,
     get_messages,
+)
+from app.models.collection import Collection
+from app.models.document import Document
+from app.services.citation_verifier import (
+    repair_missing_citations,
+    verify_answer_grounding,
 )
 from app.services.document_search import (
     extract_document_reference,
@@ -30,6 +34,11 @@ from app.services.retrieval import search_similar_chunks
 SOURCE_PATTERN = re.compile(
     r"\[(?:Source\s+)?(\d+)\]",
     re.IGNORECASE,
+)
+
+GROUNDING_FALLBACK = (
+    "I could not verify that the generated answer is fully supported "
+    "by your uploaded documents."
 )
 
 
@@ -89,6 +98,17 @@ def verify_citations(
     return verified_answer, verified_sources
 
 
+def public_sources(sources: list[dict]) -> list[dict]:
+    return [
+        {
+            key: value
+            for key, value in source.items()
+            if key not in {"_content", "_embedding"}
+        }
+        for source in sources
+    ]
+
+
 # ============================================================
 # Result preparation
 # ============================================================
@@ -141,9 +161,6 @@ def group_results_by_document(
             [],
         ).append((chunk, document, distance))
 
-    for document_results in documents.values():
-        document_results.sort(key=lambda item: item[0].chunk_index)
-
     return documents
 
 
@@ -182,6 +199,7 @@ def build_context_and_sources(
         document_header = f"Document: {document.filename}\nDocument ID: {document.id}"
 
         document_parts: list[str] = [document_header]
+        document_length = len(document_header)
 
         document_sources: list[dict] = []
 
@@ -190,6 +208,8 @@ def build_context_and_sources(
                 f"Chunk ID: {chunk.id}\n"
                 f"Chunk Index: {chunk.chunk_index + 1}\n"
                 f"Distance: {float(distance):.4f}\n"
+                f"Page: {chunk.page_number or 'unknown'}\n"
+                f"Section: {chunk.section_heading or 'unknown'}\n"
                 f"{chunk.content}"
             )
 
@@ -197,26 +217,22 @@ def build_context_and_sources(
 
             chunk_text = f"[Source {source_id}]\n{chunk_text_without_source}"
 
-            addition = len(chunk_text)
-
-            if len(document_parts) > 1:
-                addition += 2
-
+            addition = len(chunk_text) + (2 if document_sources else 0)
             separator_length = len(separator) if context_parts else 0
 
-            # Skip this chunk if it does not fit.
-            # IMPORTANT: do not break here.
-            # Later chunks may still be relevant and fit.
+            # Skip this chunk if it does not fit. Keep scanning because a later
+            # shorter chunk may still fit within the remaining context budget.
             if (
                 current_length
                 + separator_length
-                + len("\n\n".join(document_parts))
+                + document_length
                 + addition
                 > max_context_chars
             ):
                 continue
 
             document_parts.append(chunk_text)
+            document_length += addition
 
             document_sources.append(
                 {
@@ -225,6 +241,10 @@ def build_context_and_sources(
                     "chunk_id": chunk.id,
                     "filename": document.filename,
                     "chunk_index": chunk.chunk_index,
+                    "page_number": chunk.page_number,
+                    "section_heading": chunk.section_heading,
+                    "block_type": chunk.block_type,
+                    "token_count": chunk.token_count,
                     "distance": float(distance),
                     "_content": chunk.content,
                     "_embedding": chunk.embedding,
@@ -414,11 +434,7 @@ def resolve_conversation(
         # Document scope consistency
         # -----------------------------------------------------
 
-        if (
-            conversation.document_id is not None
-            and document_id is not None
-            and conversation.document_id != document_id
-        ):
+        if conversation.document_id != document_id:
             raise ValueError("This conversation belongs to a different document.")
 
         # A document conversation cannot be reused as a
@@ -428,28 +444,8 @@ def resolve_conversation(
         # Collection scope consistency
         # -----------------------------------------------------
 
-        if (
-            conversation.collection_id is not None
-            and collection_id is not None
-            and conversation.collection_id != collection_id
-        ):
+        if conversation.collection_id != collection_id:
             raise ValueError("This conversation belongs to a different collection.")
-
-        # A collection conversation cannot be reused as a
-        # global/document conversation.
-        if conversation.collection_id is not None and collection_id is None:
-            raise ValueError("This conversation belongs to a specific collection.")
-
-        # A global conversation cannot suddenly become scoped.
-        if (
-            conversation.document_id is None
-            and conversation.collection_id is None
-            and (document_id is not None or collection_id is not None)
-        ):
-            raise ValueError(
-                "This conversation is an All Documents conversation "
-                "and cannot be used with a different scope."
-            )
 
         # Always use the scope stored on the conversation.
         document_id = conversation.document_id
@@ -704,7 +700,7 @@ def answer_question(
     ranked_results = rerank_chunks(
         query=search_query,
         results=candidates,
-        limit=min(len(candidates), max(limit, 10)),
+        limit=limit,
     )
 
     # ---------------------------------------------------------
@@ -778,17 +774,17 @@ def answer_question(
         sources=sources,
     )
 
+    answer = repair_missing_citations(answer, sources)
+    answer, verified_sources = verify_citations(answer, sources)
+
     grounded = verify_answer_grounding(
         answer=answer,
         sources=verified_sources,
     )
 
     if not grounded:
-        print(
-            "\n[GROUNDING WARNING] "
-            "Generated answer could not be verified "
-            "by the grounding similarity check."
-        )
+        answer = GROUNDING_FALLBACK
+        verified_sources = []
 
     # ---------------------------------------------------------
     # 12. Save conversation messages
@@ -806,6 +802,7 @@ def answer_question(
         conversation_id=conversation_id,
         role="assistant",
         content=answer,
+        sources=public_sources(verified_sources),
     )
 
     # ---------------------------------------------------------
@@ -814,14 +811,7 @@ def answer_question(
 
     return {
         "answer": answer,
-        "sources": [
-            {
-                key: value
-                for key, value in source.items()
-                if key not in {"_content", "_embedding"}
-            }
-            for source in verified_sources
-        ],
+        "sources": public_sources(verified_sources),
         "conversation_id": conversation_id,
     }
 
@@ -923,6 +913,7 @@ def stream_answer(
                 conversation_id=conversation_id,
                 role="assistant",
                 content=answer,
+                sources=public_sources(sources),
             )
 
             yield {
@@ -1035,12 +1026,7 @@ def stream_answer(
         for token in stream_response(prompt):
             full_answer += token
 
-            yield {
-                "type": "token",
-                "content": token,
-            }
-
-    except Exception:
+    except RuntimeError:
         yield {
             "type": "error",
             "content": ("The AI response could not be completed. Please try again."),
@@ -1050,7 +1036,7 @@ def stream_answer(
         return
 
     # ---------------------------------------------------------
-    # 11. Verify citations after streaming completes
+    # 11. Verify citations and grounding after streaming completes
     # ---------------------------------------------------------
 
     verified_answer, verified_sources = verify_citations(
@@ -1058,10 +1044,23 @@ def stream_answer(
         sources=sources,
     )
 
-    # ---------------------------------------------------------
-    # 12. Save completed conversation messages
-    # ---------------------------------------------------------
+    verified_answer = repair_missing_citations(verified_answer, sources)
+    verified_answer, verified_sources = verify_citations(
+        verified_answer,
+        sources,
+    )
 
+    grounded = verify_answer_grounding(
+        answer=verified_answer,
+        sources=verified_sources,
+    )
+
+    if not grounded:
+        verified_answer = GROUNDING_FALLBACK
+        verified_sources = []
+
+    # Persist the verified answer before sending chunks so a client disconnect
+    # during display does not discard the completed exchange.
     add_message(
         db=db,
         conversation_id=conversation_id,
@@ -1074,15 +1073,27 @@ def stream_answer(
         conversation_id=conversation_id,
         role="assistant",
         content=verified_answer,
+        sources=public_sources(verified_sources),
     )
+
+    # Emit only the verified answer. Generation still uses the provider stream,
+    # but provisional ungrounded text is never exposed to the client.
+    for offset in range(0, len(verified_answer), 64):
+        yield {"type": "token", "content": verified_answer[offset : offset + 64]}
 
     # ---------------------------------------------------------
     # 13. Send verified sources
     # ---------------------------------------------------------
 
     yield {
+        "type": "final",
+        "content": verified_answer,
+        "conversation_id": conversation_id,
+    }
+
+    yield {
         "type": "sources",
-        "sources": verified_sources,
+        "sources": public_sources(verified_sources),
         "conversation_id": conversation_id,
     }
 

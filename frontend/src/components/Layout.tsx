@@ -40,24 +40,58 @@ interface LayoutProps {
   ) => ReactNode;
 }
 
+const ACTIVE_CHAT_STORAGE_KEY = "enterprise_rag_active_chat";
+
+interface PersistedChatSelection {
+  documentId: number | null;
+  collectionId: number | null;
+  conversationId: number | null;
+}
+
+function readPersistedChatSelection(): PersistedChatSelection {
+  const emptySelection = {
+    documentId: null,
+    collectionId: null,
+    conversationId: null,
+  };
+
+  try {
+    const raw = localStorage.getItem(ACTIVE_CHAT_STORAGE_KEY);
+    if (!raw) return emptySelection;
+    const parsed = JSON.parse(raw) as Partial<PersistedChatSelection>;
+    const validId = (value: unknown): number | null =>
+      Number.isInteger(value) && (value as number) > 0 ? (value as number) : null;
+
+    return {
+      documentId: validId(parsed.documentId),
+      collectionId: validId(parsed.collectionId),
+      conversationId: validId(parsed.conversationId),
+    };
+  } catch {
+    return emptySelection;
+  }
+}
+
 
 export default function Layout({
   children,
 }: LayoutProps) {
+  const [initialChatSelection] = useState(readPersistedChatSelection);
+
   const [
     selectedDocumentId,
     setSelectedDocumentId,
-  ] = useState<number | null>(null);
+  ] = useState<number | null>(initialChatSelection.documentId);
 
   const [
     selectedCollectionId,
     setSelectedCollectionId,
-  ] = useState<number | null>(null);
+  ] = useState<number | null>(initialChatSelection.collectionId);
 
   const [
     selectedConversationId,
     setSelectedConversationId,
-  ] = useState<number | null>(null);
+  ] = useState<number | null>(initialChatSelection.conversationId);
 
   const [
     documents,
@@ -83,6 +117,17 @@ export default function Layout({
     chatResetKey,
     setChatResetKey,
   ] = useState(0);
+
+  useEffect(() => {
+    localStorage.setItem(
+      ACTIVE_CHAT_STORAGE_KEY,
+      JSON.stringify({
+        documentId: selectedDocumentId,
+        collectionId: selectedCollectionId,
+        conversationId: selectedConversationId,
+      }),
+    );
+  }, [selectedDocumentId, selectedCollectionId, selectedConversationId]);
 
 
   /*
@@ -222,6 +267,7 @@ export default function Layout({
   }, [
     selectedDocumentId,
     selectedCollectionId,
+    selectedConversationId,
   ]);
 
 

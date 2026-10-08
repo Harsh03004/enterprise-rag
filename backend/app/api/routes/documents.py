@@ -1,6 +1,7 @@
+# ruff: noqa: B008
+
 from fastapi import (
     APIRouter,
-    BackgroundTasks,
     Depends,
     File,
     HTTPException,
@@ -19,7 +20,6 @@ from app.crud.document import (
     update_document_filename,
 )
 from app.db.dependencies import get_db
-from app.db.session import SessionLocal
 from app.models.document import Document
 from app.models.user import User
 from app.schemas.document import (
@@ -28,43 +28,17 @@ from app.schemas.document import (
     DocumentUpdate,
     DocumentURLCreate,
 )
-from app.services.document_processing import process_document
-from app.services.document_service import save_uploaded_file
-
+from app.services.document_jobs import enqueue_document_processing
+from app.services.document_service import (
+    save_uploaded_file,
+    validate_upload_filename,
+)
+from app.services.web_extraction import validate_url
 
 router = APIRouter(
     prefix="/documents",
     tags=["Documents"],
 )
-
-
-def process_document_in_background(
-    document_id: int,
-) -> None:
-    db = SessionLocal()
-
-    try:
-        document = db.get(
-            Document,
-            document_id,
-        )
-
-        if document is None:
-            return
-
-        process_document(
-            db=db,
-            document=document,
-        )
-
-    except Exception as exc:
-        print(
-            f"Document processing failed "
-            f"for document {document_id}: {exc}"
-        )
-
-    finally:
-        db.close()
 
 
 @router.post(
@@ -73,12 +47,19 @@ def process_document_in_background(
     status_code=status.HTTP_201_CREATED,
 )
 async def upload_document(
-    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     collection_id: int | None = None,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    try:
+        filename = validate_upload_filename(file.filename)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail=str(exc),
+        ) from exc
+
     if collection_id is not None:
         collection = get_collection(
             db=db,
@@ -92,28 +73,33 @@ async def upload_document(
                 detail="Collection not found.",
             )
 
-    file_path = await save_uploaded_file(
-        file=file,
-        user_id=current_user.id,
-    )
+    try:
+        file_path = await save_uploaded_file(
+            file=file,
+            user_id=current_user.id,
+        )
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail=str(exc),
+        ) from exc
 
     document = create_document(
         db=db,
         user_id=current_user.id,
-        filename=file.filename,
-        content_type=file.content_type,
+        filename=filename,
+        content_type=file.content_type or "application/octet-stream",
         file_path=file_path,
         collection_id=collection_id,
     )
 
-    document.status = "processing"
-    db.commit()
-    db.refresh(document)
-
-    background_tasks.add_task(
-        process_document_in_background,
-        document.id,
-    )
+    try:
+        enqueue_document_processing(db=db, document=document)
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(exc),
+        ) from exc
 
     return document
 
@@ -125,7 +111,6 @@ async def upload_document(
 )
 def ingest_url(
     request: DocumentURLCreate,
-    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
     collection_id: int | None = None,
@@ -137,6 +122,14 @@ def ingest_url(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="URL cannot be empty.",
         )
+
+    try:
+        validate_url(url)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        ) from exc
 
     if collection_id is not None:
         collection = get_collection(
@@ -161,14 +154,13 @@ def ingest_url(
         collection_id=collection_id,
     )
 
-    document.status = "processing"
-    db.commit()
-    db.refresh(document)
-
-    background_tasks.add_task(
-        process_document_in_background,
-        document.id,
-    )
+    try:
+        enqueue_document_processing(db=db, document=document)
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(exc),
+        ) from exc
 
     return document
 
@@ -183,12 +175,8 @@ def list_documents(
 ):
     documents = db.scalars(
         select(Document)
-        .where(
-            Document.user_id == current_user.id
-        )
-        .order_by(
-            Document.created_at.desc()
-        )
+        .where(Document.user_id == current_user.id)
+        .order_by(Document.created_at.desc())
     ).all()
 
     return documents
@@ -200,13 +188,11 @@ def list_documents(
 )
 def retry_document_processing(
     document_id: int,
-    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     document = db.scalars(
-        select(Document)
-        .where(
+        select(Document).where(
             Document.id == document_id,
             Document.user_id == current_user.id,
         )
@@ -224,16 +210,13 @@ def retry_document_processing(
             detail="Document is already being processed.",
         )
 
-    document.status = "processing"
-    document.processing_error = None
-
-    db.commit()
-    db.refresh(document)
-
-    background_tasks.add_task(
-        process_document_in_background,
-        document.id,
-    )
+    try:
+        enqueue_document_processing(db=db, document=document)
+    except RuntimeError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(exc),
+        ) from exc
 
     return document
 
@@ -293,9 +276,6 @@ def remove_document(
             detail="Document not found.",
         )
 
-    return None
-
-
 
 @router.patch(
     "/{document_id}/collection",
@@ -347,5 +327,3 @@ def update_document_collection_route(
         )
 
     return updated_document
-
-
