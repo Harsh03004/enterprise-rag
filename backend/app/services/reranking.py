@@ -1,5 +1,6 @@
 from sentence_transformers import CrossEncoder
 
+from app.services.rag_settings import DEFAULT_MINIMUM_SCORE
 
 MODEL_NAME = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 
@@ -35,7 +36,7 @@ def rerank_chunks(
 
 def has_sufficient_confidence(
     ranked_results,
-    minimum_score: float = -12.0,
+    minimum_score: float = DEFAULT_MINIMUM_SCORE,
 ) -> bool:
     """
     Determine whether the strongest retrieved chunk is relevant

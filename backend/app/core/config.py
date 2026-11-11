@@ -11,15 +11,31 @@ class Settings(BaseSettings):
     secret_key: str
     algorithm: str
     access_token_expire_minutes: int
+    sqlalchemy_echo: bool = False
 
     # Provider credentials are optional so local Ollama deployments do not
     # require placeholder cloud secrets.
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-2.5-flash"
+    gemini_model: str = "gemini-3.1-flash-lite"
+    openrouter_api_key: str = ""
+    openrouter_model: str = "google/gemma-4-31b-it:free"
+    openrouter_base_url: str = "https://openrouter.ai/api/v1"
 
     llm_provider: str = "ollama"
     ollama_model: str = "llama3.2"
     ollama_base_url: str = "http://localhost:11434/v1"
+    embedding_model: str = "BAAI/bge-small-en-v1.5"
+    # CPU entailment model used to check that answer sentences are supported
+    # by the sources they cite.
+    grounding_model: str = "cross-encoder/nli-deberta-v3-xsmall"
+    grounding_min_entailment: float = 0.5
+
+    storage_backend: str = "local"
+    s3_bucket: str = ""
+    s3_region: str = "us-east-1"
+    s3_endpoint_url: str = ""
+    s3_access_key_id: str = ""
+    s3_secret_access_key: str = ""
 
     model_config = SettingsConfigDict(
         env_file=".env",

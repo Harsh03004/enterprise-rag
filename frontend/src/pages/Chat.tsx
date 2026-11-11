@@ -73,6 +73,10 @@ export default function Chat({
 
   const [loading, setLoading] = useState(false)
 
+  const [verifyingAnswer, setVerifyingAnswer] = useState(false)
+  // Streamed text is a draft until the backend sends the verified final answer.
+  const [answerIsDraft, setAnswerIsDraft] = useState(false)
+
   const [loadingConversation, setLoadingConversation] = useState(false)
 
   const [error, setError] = useState('')
@@ -219,6 +223,7 @@ export default function Chat({
     /* eslint-disable react-hooks/set-state-in-effect */
     setMessages([])
     setAnswer('')
+    setVerifyingAnswer(false)
     setSources([])
     streamSourcesRef.current = []
     setQuestion('')
@@ -604,6 +609,7 @@ await streamChat({
 
           streamedAnswer += token
 
+          setAnswerIsDraft(true)
           setAnswer(previous => previous + token)
         },
 
@@ -636,7 +642,15 @@ await streamChat({
           }
 
           streamedAnswer = finalAnswer
+          setVerifyingAnswer(false)
+          setAnswerIsDraft(false)
           setAnswer(finalAnswer)
+        },
+
+        onVerifying: () => {
+          if (requestGenerationRef.current === requestGeneration && visibleChatGenerationRef.current === requestVisibleGeneration) {
+            setVerifyingAnswer(true)
+          }
         },
 
         /*
@@ -696,6 +710,8 @@ await streamChat({
        * User pressed Stop.
        */
       if (err instanceof DOMException && err.name === 'AbortError') {
+        setAnswer('')
+        setVerifyingAnswer(false)
         return
       }
 
@@ -718,6 +734,10 @@ await streamChat({
       setError(
         err instanceof Error ? err.message : 'Failed to generate response.'
       )
+      setAnswer('')
+      setSources([])
+      setVerifyingAnswer(false)
+      setAnswerIsDraft(false)
     } finally {
       if (requestGenerationRef.current === requestGeneration) {
         /*
@@ -961,9 +981,14 @@ await streamChat({
               <div className='message-avatar'>AI</div>
 
               <div className='message-body'>
-                <div className='message-role'>Assistant</div>
+                <div className='message-role'>
+                  Assistant{' '}
+                  {verifyingAnswer
+                    ? <span className='verification-status'>Checking citations and document support…</span>
+                    : answerIsDraft && <span className='verification-status'>Draft – not yet verified</span>}
+                </div>
 
-                <div className='message-content'>
+                <div className={answerIsDraft ? 'message-content message-content-draft' : 'message-content'} aria-busy={answerIsDraft}>
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     components={getCitationMarkdownComponents(sources, 'current')}
