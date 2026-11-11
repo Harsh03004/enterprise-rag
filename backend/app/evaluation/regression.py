@@ -4,14 +4,19 @@ from collections.abc import Mapping
 
 DEFAULT_METRICS = (
     "pass_rate",
-    "retrieval_recall",
-    "retrieval_precision",
-    "answer_f1",
-    "keyword_recall",
-    "citation_recall",
+    "answer_accuracy",
+    "fact_recall",
+    "refusal_accuracy",
+    "false_refusal_rate",
+    "retrieval_hit_rate",
+    "passage_recall",
+    "mrr",
     "citation_precision",
-    "fallback_accuracy",
+    "citation_recall",
 )
+
+# Metrics where a higher value is worse.
+LOWER_IS_BETTER = frozenset({"false_refusal_rate"})
 
 
 def compare_summaries(
@@ -36,6 +41,8 @@ def compare_summaries(
             continue
 
         regression = float(baseline_value) - float(current_value)
+        if metric in LOWER_IS_BETTER:
+            regression = -regression
 
         if regression > max_regression:
             failures.append(

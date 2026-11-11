@@ -1,0 +1,6238 @@
+{
+  "status": "completed",
+  "dataset": "dataset.json",
+  "provider": "gemini",
+  "model": "gemini-3.1-flash-lite",
+  "config": {
+    "retrieval_top_k": 5,
+    "candidate_multiplier": 4,
+    "rerank_limit": 5,
+    "minimum_reranker_score": -3.0,
+    "max_context_chars": 30000,
+    "temperature": 0.1,
+    "max_output_tokens": 800,
+    "chunk_size": 400,
+    "chunk_overlap": 50,
+    "embedding_model": "BAAI/bge-small-en-v1.5"
+  },
+  "grounding": {
+    "model": "cross-encoder/nli-deberta-v3-xsmall",
+    "min_entailment": 0.5
+  },
+  "corpus_fingerprint": "1b631779dfdea362a175ef0766f0113bfcef5429228d5f0c72b47475ae5268b5",
+  "partial": false,
+  "scope": {
+    "user_id": 3,
+    "collection_id": 2
+  },
+  "summary": {
+    "total": 75,
+    "passed": 73,
+    "failed": 2,
+    "pass_rate": 0.9733333333333334,
+    "answerable_cases": 67,
+    "unanswerable_cases": 8,
+    "answer_accuracy": 0.9701492537313433,
+    "fact_recall": 0.9701492537313433,
+    "refusal_accuracy": 1.0,
+    "false_refusal_rate": 0.029850746268656716,
+    "retrieval_hit_rate": 0.9402985074626866,
+    "passage_recall": 0.9328358208955224,
+    "mrr": 0.8606965174129353,
+    "retrieval_precision": 0.20597014925373136,
+    "citation_precision": 0.9230769230769231,
+    "citation_recall": 0.9920634920634921,
+    "partial_answer_rate": 0.015384615384615385,
+    "statements_removed": 2,
+    "citations_corrected": 0,
+    "status_counts": {
+      "answered": 65,
+      "grounding_failed": 1,
+      "model_declined": 5,
+      "no_context": 4
+    },
+    "failure_reasons": {
+      "evidence_not_retrieved": 4,
+      "unexpected_grounding_failed": 1,
+      "unexpected_model_declined": 1
+    },
+    "categories": {
+      "Basic": {
+        "total": 2,
+        "passed": 2,
+        "pass_rate": 1.0
+      },
+      "CrossDocument": {
+        "total": 3,
+        "passed": 3,
+        "pass_rate": 1.0
+      },
+      "Injection": {
+        "total": 2,
+        "passed": 2,
+        "pass_rate": 1.0
+      },
+      "List": {
+        "total": 12,
+        "passed": 12,
+        "pass_rate": 1.0
+      },
+      "NearMiss": {
+        "total": 5,
+        "passed": 5,
+        "pass_rate": 1.0
+      },
+      "Specific": {
+        "total": 35,
+        "passed": 33,
+        "pass_rate": 0.9428571428571428
+      },
+      "Synthesis": {
+        "total": 2,
+        "passed": 2,
+        "pass_rate": 1.0
+      },
+      "Table": {
+        "total": 6,
+        "passed": 6,
+        "pass_rate": 1.0
+      },
+      "Unanswerable": {
+        "total": 8,
+        "passed": 8,
+        "pass_rate": 1.0
+      }
+    }
+  },
+  "results": [
+    {
+      "case_id": "stumeet-what",
+      "category": "Basic",
+      "question": "What is StuMeet?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "StuMeet is a secure, user-friendly, and feature-rich online meeting platform designed to enhance virtual collaboration for students, educators, and professional teams [Source 1] [Source 2].",
+      "draft_answer": "StuMeet is a secure, user-friendly, and feature-rich online meeting platform designed to enhance virtual collaboration for students, educators, and professional teams [Source 1, Source 2].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [
+        "evidence_not_retrieved"
+      ],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 7.9021,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 11,
+          "page_number": null,
+          "reranker_score": 5.6559,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 17,
+          "page_number": null,
+          "reranker_score": 5.5239,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 13,
+          "page_number": null,
+          "reranker_score": 4.5611,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 12,
+          "page_number": null,
+          "reranker_score": 4.56,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 0.0,
+      "retrieval_hit": 0.0,
+      "mrr": 0.0,
+      "retrieval_precision": 0.0,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "StuMeet is a secure, user-friendly, and feature-rich online meeting platform designed to enhance virtual collaboration for students, educators, and professional teams .",
+          "cited": [
+            1,
+            2
+          ],
+          "supported_by": 2,
+          "entailment": 0.9697,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1,
+        2
+      ],
+      "citation_precision": 0.0,
+      "citation_recall": null
+    },
+    {
+      "case_id": "stumeet-features",
+      "category": "List",
+      "question": "What are the main features of StuMeet?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "StuMeet features include a user-friendly interface, real-time engagement tools, chat capabilities, and a guided onboarding experience [Source 1]. It also offers one-click instant meetings, custom room creation, secure user management with role-specific access, and a logging system for tracking meeting activity and participation [Source 2] [Source 3] [Source 4] [Source 5].",
+      "draft_answer": "StuMeet features include a user-friendly interface, real-time engagement tools, chat capabilities, and a guided onboarding experience [Source 1]. It also offers one-click instant meetings, custom room creation, secure user management with role-specific access, and a logging system for tracking meeting activity and participation [Source 2, Source 3, Source 4, Source 5].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [
+        "evidence_not_retrieved"
+      ],
+      "facts_matched": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 12,
+          "page_number": null,
+          "reranker_score": 4.9849,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": 4.8868,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 11,
+          "page_number": null,
+          "reranker_score": 4.4515,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 16,
+          "page_number": null,
+          "reranker_score": 4.3561,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 13,
+          "page_number": null,
+          "reranker_score": 3.631,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 0.0,
+      "retrieval_hit": 0.0,
+      "mrr": 0.0,
+      "retrieval_precision": 0.0,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "StuMeet features include a user-friendly interface, real-time engagement tools, chat capabilities, and a guided onboarding experience .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9913,
+          "action": "kept",
+          "basis": "entailment"
+        },
+        {
+          "claim": "It also offers one-click instant meetings, custom room creation, secure user management with role-specific access, and a logging system for tracking meeting activity and participation .",
+          "cited": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "supported_by": 4,
+          "entailment": 0.9397,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "citation_precision": 0.0,
+      "citation_recall": null
+    },
+    {
+      "case_id": "stumeet-problem",
+      "category": "Basic",
+      "question": "What limitations of existing video conferencing platforms is StuMeet designed to address?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "StuMeet addresses limitations such as the lack of instant meeting creation and custom rooms, insufficient moderator and access controls, and basic or delayed chat capabilities [Source 1] [Source 2] [Source 3].\n\n_Some statements were removed because they could not be verified in your documents._",
+      "draft_answer": "StuMeet addresses limitations such as the lack of instant meeting creation and custom rooms, insufficient moderator and access controls, and basic or delayed chat capabilities [Source 1, Source 2, Source 3]. It also resolves issues regarding weak access security, the absence of activity logs or meeting insights, and a lack of focus on the specific needs of educational and professional collaborative settings [Source 2, Source 3, Source 5].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": 7.792,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": 7.1252,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": 6.1656,
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": 5.437,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": 4.6544,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 0.3333333333333333,
+      "retrieval_precision": 0.2,
+      "statements_removed": 1,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "StuMeet addresses limitations such as the lack of instant meeting creation and custom rooms, insufficient moderator and access controls, and basic or delayed chat capabilities .",
+          "cited": [
+            1,
+            2,
+            3
+          ],
+          "supported_by": 3,
+          "entailment": 0.7064,
+          "action": "kept",
+          "basis": "entailment"
+        },
+        {
+          "claim": "It also resolves issues regarding weak access security, the absence of activity logs or meeting insights, and a lack of focus on the specific needs of educational and professional collaborative settings .",
+          "cited": [
+            2,
+            3,
+            5
+          ],
+          "supported_by": 2,
+          "entailment": 0.2898,
+          "action": "removed",
+          "basis": "none"
+        }
+      ],
+      "citation_ids": [
+        1,
+        2,
+        3
+      ],
+      "citation_precision": 0.3333333333333333,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-webrtc",
+      "category": "Specific",
+      "question": "What is WebRTC used for in StuMeet?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "In StuMeet, WebRTC is used for high-quality video and audio streaming [Source 1].",
+      "draft_answer": "In StuMeet, WebRTC is used for high-quality video and audio streaming [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 23,
+          "page_number": null,
+          "reranker_score": 3.1564,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": 2.1757,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 22,
+          "page_number": null,
+          "reranker_score": 0.919,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 13,
+          "page_number": null,
+          "reranker_score": -0.4636,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 16,
+          "page_number": null,
+          "reranker_score": -0.4841,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "In StuMeet, WebRTC is used for high-quality video and audio streaming .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9378,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-webrtc-sdk",
+      "category": "Specific",
+      "question": "Which SDK does StuMeet use together with WebRTC?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "StuMeet uses the Agora SDK in conjunction with WebRTC for high-quality video and audio streaming [Source 1].",
+      "draft_answer": "StuMeet uses the Agora SDK in conjunction with WebRTC for high-quality video and audio streaming [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 23,
+          "page_number": null,
+          "reranker_score": 3.1164,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -1.464,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": -1.9338,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 13,
+          "page_number": null,
+          "reranker_score": -2.1657,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 17,
+          "page_number": null,
+          "reranker_score": -2.1857,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "StuMeet uses the Agora SDK in conjunction with WebRTC for high-quality video and audio streaming .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.97,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-socketio",
+      "category": "Specific",
+      "question": "What is Socket.IO used for in StuMeet?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "In StuMeet, Socket.IO is used to enable real-time messaging, emoji reactions, and notifications, ensuring smooth and uninterrupted communication during meetings [1], [2], [3].",
+      "draft_answer": "In StuMeet, Socket.IO is used to enable real-time messaging, emoji reactions, and notifications, ensuring smooth and uninterrupted communication during meetings [1], [2], [3].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": 3.631,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 20,
+          "page_number": null,
+          "reranker_score": 3.3656,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 23,
+          "page_number": null,
+          "reranker_score": 3.3083,
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": 1.0448,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 14,
+          "page_number": null,
+          "reranker_score": 0.9933,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 0.5,
+      "retrieval_precision": 0.4,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "In StuMeet, Socket.IO is used to enable real-time messaging, emoji reactions, and notifications, ensuring smooth and uninterrupted communication during meetings , , .",
+          "cited": [
+            1,
+            2,
+            3
+          ],
+          "supported_by": 2,
+          "entailment": 0.8446,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1,
+        2,
+        3
+      ],
+      "citation_precision": 0.6666666666666666,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-auth",
+      "category": "Specific",
+      "question": "What authentication mechanisms does StuMeet use?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "StuMeet uses JWT (JSON Web Token) and OAuth-based authentication mechanisms to safeguard user identities and ensure secure access [Source 1], [Source 2].",
+      "draft_answer": "StuMeet uses JWT (JSON Web Token) and OAuth-based authentication mechanisms to safeguard user identities and ensure secure access [Source 1], [Source 2].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 14,
+          "page_number": null,
+          "reranker_score": 4.8945,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": 1.9559,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 24,
+          "page_number": null,
+          "reranker_score": 1.4847,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": 0.3537,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 13,
+          "page_number": null,
+          "reranker_score": 0.1921,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 0.5,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "StuMeet uses JWT (JSON Web Token) and OAuth-based authentication mechanisms to safeguard user identities and ensure secure access , .",
+          "cited": [
+            1,
+            2
+          ],
+          "supported_by": 2,
+          "entailment": 0.9516,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1,
+        2
+      ],
+      "citation_precision": 0.5,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-password-hashing",
+      "category": "Specific",
+      "question": "Which library does StuMeet use for password hashing?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "StuMeet uses bcrypt.js for password hashing [Source 1].",
+      "draft_answer": "StuMeet uses bcrypt.js for password hashing [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 23,
+          "page_number": null,
+          "reranker_score": -1.192,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": -3.2118,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 31,
+          "page_number": null,
+          "reranker_score": -3.4751,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 24,
+          "page_number": null,
+          "reranker_score": -3.5367,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 14,
+          "page_number": null,
+          "reranker_score": -3.8717,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "StuMeet uses bcrypt.js for password hashing .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9311,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-database",
+      "category": "Specific",
+      "question": "What database does StuMeet use?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "StuMeet uses a cloud-hosted NoSQL database, specifically MongoDB (via MongoDB Atlas), to store user, meeting, chat, and room data [Source 1], [Source 2].",
+      "draft_answer": "StuMeet uses a cloud-hosted NoSQL database, specifically MongoDB (via MongoDB Atlas), to store user, meeting, chat, and room data [Source 1], [Source 2].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 22,
+          "page_number": null,
+          "reranker_score": 4.7198,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 23,
+          "page_number": null,
+          "reranker_score": 4.3852,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": 2.0271,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 16,
+          "page_number": null,
+          "reranker_score": 1.722,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": 0.9533,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.4,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "StuMeet uses a cloud-hosted NoSQL database, specifically MongoDB (via MongoDB Atlas), to store user, meeting, chat, and room data , .",
+          "cited": [
+            1,
+            2
+          ],
+          "supported_by": 1,
+          "entailment": 0.1006,
+          "action": "kept",
+          "basis": "lexical"
+        }
+      ],
+      "citation_ids": [
+        1,
+        2
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-stack",
+      "category": "List",
+      "question": "What frontend and backend technologies does StuMeet use?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "StuMeet uses React.js for its frontend, along with Tailwind CSS and Magic UI for styling [Source 1]. Its backend is built with Node.js and Express.js to manage server-side logic and RESTful APIs [Source 1].",
+      "draft_answer": "StuMeet uses React.js for its frontend, along with Tailwind CSS and Magic UI for styling [Source 1]. Its backend is built with Node.js and Express.js to manage server-side logic and RESTful APIs [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 23,
+          "page_number": null,
+          "reranker_score": 5.5304,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": 0.5661,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 17,
+          "page_number": null,
+          "reranker_score": 0.5406,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 13,
+          "page_number": null,
+          "reranker_score": 0.5234,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -0.5276,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "StuMeet uses React.js for its frontend, along with Tailwind CSS and Magic UI for styling .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9774,
+          "action": "kept",
+          "basis": "entailment"
+        },
+        {
+          "claim": "Its backend is built with Node.js and Express.js to manage server-side logic and RESTful APIs .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.8846,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-styling",
+      "category": "List",
+      "question": "Which libraries are used for styling the StuMeet frontend?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Tailwind CSS and Magic UI are used for styling the StuMeet frontend [Source 1], [Source 2].",
+      "draft_answer": "Tailwind CSS and Magic UI are used for styling the StuMeet frontend [Source 1], [Source 2].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 23,
+          "page_number": null,
+          "reranker_score": 3.8946,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 21,
+          "page_number": null,
+          "reranker_score": 1.2001,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -2.3927,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": -4.1439,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 17,
+          "page_number": null,
+          "reranker_score": -4.5106,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.4,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Tailwind CSS and Magic UI are used for styling the StuMeet frontend , .",
+          "cited": [
+            1,
+            2
+          ],
+          "supported_by": 1,
+          "entailment": 0.7658,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1,
+        2
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-roles",
+      "category": "List",
+      "question": "What user roles does StuMeet support?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "StuMeet supports the roles of student, host, moderator, and participant [Source 1] [Source 3].",
+      "draft_answer": "StuMeet supports the roles of student, host, moderator, and participant [Source 1, Source 3].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": 5.1055,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 14,
+          "page_number": null,
+          "reranker_score": 4.9186,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 24,
+          "page_number": null,
+          "reranker_score": 4.5928,
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 12,
+          "page_number": null,
+          "reranker_score": 4.5028,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": 4.1936,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 0.5,
+      "retrieval_hit": 1.0,
+      "mrr": 0.3333333333333333,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "StuMeet supports the roles of student, host, moderator, and participant .",
+          "cited": [
+            1,
+            3
+          ],
+          "supported_by": 1,
+          "entailment": 0.6794,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1,
+        3
+      ],
+      "citation_precision": 0.5,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-logs",
+      "category": "List",
+      "question": "What meeting activity does StuMeet's logging system track?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "StuMeet's logging system tracks meeting activity such as participant count, join times, and chat history [Source 1].",
+      "draft_answer": "StuMeet's logging system tracks meeting activity such as participant count, join times, and chat history [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 16,
+          "page_number": null,
+          "reranker_score": 8.9979,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": 6.4298,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": 1.5115,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 24,
+          "page_number": null,
+          "reranker_score": 0.7315,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 13,
+          "page_number": null,
+          "reranker_score": 0.2699,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "StuMeet's logging system tracks meeting activity such as participant count, join times, and chat history .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9698,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-teams-limitation",
+      "category": "Specific",
+      "question": "What limitation of Microsoft Teams does the StuMeet report describe?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Microsoft Teams is described as having a complexity and steep learning curve that makes it less accessible for students and educators, and it is often considered overwhelming for users needing quick, no-setup meetings [Source 2].",
+      "draft_answer": "Microsoft Teams is described as having a complexity and steep learning curve that makes it less accessible for students and educators, and it is often considered overwhelming for users needing quick, no-setup meetings [Source 2].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 2,
+          "page_number": null,
+          "reranker_score": 3.8609,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 5,
+          "page_number": null,
+          "reranker_score": 2.8904,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": 2.7181,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 11,
+          "page_number": null,
+          "reranker_score": 2.2014,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": 0.4944,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 0.5,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Microsoft Teams is described as having a complexity and steep learning curve that makes it less accessible for students and educators, and it is often considered overwhelming for users needing quick, no-setup meetings .",
+          "cited": [
+            2
+          ],
+          "supported_by": 2,
+          "entailment": 0.9897,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        2
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-zoom-security",
+      "category": "Specific",
+      "question": "What security concern about Zoom does the StuMeet report mention?",
+      "should_fallback": false,
+      "status": "grounding_failed",
+      "answer": "I could not verify that the generated answer is fully supported by your uploaded documents.",
+      "draft_answer": "The provided documents do not mention specific security concerns regarding Zoom; they only cite Zoom as an example of a platform that requires scheduled meetings or links [Source 1] and serves general purposes [Source 2].",
+      "passed": false,
+      "refused": true,
+      "failure_reasons": [
+        "unexpected_grounding_failed",
+        "evidence_not_retrieved"
+      ],
+      "facts_matched": [
+        false
+      ],
+      "fact_recall": 0.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": -0.0496,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 2,
+          "page_number": null,
+          "reranker_score": -2.9875,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -3.5054,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 14,
+          "page_number": null,
+          "reranker_score": -3.7205,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -3.7354,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 0.0,
+      "retrieval_hit": 0.0,
+      "mrr": 0.0,
+      "retrieval_precision": 0.0,
+      "statements_removed": 1,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The provided documents do not mention specific security concerns regarding Zoom; they only cite Zoom as an example of a platform that requires scheduled meetings or links and serves general purposes .",
+          "cited": [
+            1,
+            2
+          ],
+          "supported_by": 2,
+          "entailment": 0.0067,
+          "action": "removed",
+          "basis": "none"
+        }
+      ],
+      "citation_ids": [],
+      "citation_precision": null,
+      "citation_recall": null
+    },
+    {
+      "case_id": "stumeet-api-testing",
+      "category": "Specific",
+      "question": "Which tool did the StuMeet team use for API testing?",
+      "should_fallback": false,
+      "status": "model_declined",
+      "answer": "I could not find the answer in the uploaded documents.",
+      "draft_answer": "I could not find the answer in the uploaded documents.",
+      "passed": false,
+      "refused": true,
+      "failure_reasons": [
+        "unexpected_model_declined",
+        "evidence_not_retrieved"
+      ],
+      "facts_matched": [
+        false
+      ],
+      "fact_recall": 0.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": 0.0408,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 11,
+          "page_number": null,
+          "reranker_score": -0.4685,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 13,
+          "page_number": null,
+          "reranker_score": -0.8557,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 23,
+          "page_number": null,
+          "reranker_score": -1.1912,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 12,
+          "page_number": null,
+          "reranker_score": -1.2293,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 0.0,
+      "retrieval_hit": 0.0,
+      "mrr": 0.0,
+      "retrieval_precision": 0.0,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [],
+      "citation_ids": [],
+      "citation_precision": null,
+      "citation_recall": null
+    },
+    {
+      "case_id": "stumeet-cloud-options",
+      "category": "List",
+      "question": "Which cloud platforms does the StuMeet report mention for deploying the platform?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "StuMeet is designed to be deployed on scalable cloud infrastructure platforms such as AWS, Google Cloud, or Vercel [Source 1].",
+      "draft_answer": "StuMeet is designed to be deployed on scalable cloud infrastructure platforms such as AWS, Google Cloud, or Vercel [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 22,
+          "page_number": null,
+          "reranker_score": 4.4997,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 17,
+          "page_number": null,
+          "reranker_score": 1.964,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": 1.5435,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 0.5967,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 11,
+          "page_number": null,
+          "reranker_score": 0.1277,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "StuMeet is designed to be deployed on scalable cloud infrastructure platforms such as AWS, Google Cloud, or Vercel .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9432,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-room-methods",
+      "category": "List",
+      "question": "Which operations does the Room class support in the StuMeet class diagram?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The Room class supports the operations startMeeting(), endMeeting(), and sendMessage(message) [Source 1].",
+      "draft_answer": "The Room class supports the operations startMeeting(), endMeeting(), and sendMessage(message) [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 24,
+          "page_number": null,
+          "reranker_score": 4.0436,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 13,
+          "page_number": null,
+          "reranker_score": -0.4823,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 11,
+          "page_number": null,
+          "reranker_score": -2.2943,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": -3.7351,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 16,
+          "page_number": null,
+          "reranker_score": -3.9184,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The Room class supports the operations startMeeting(), endMeeting(), and sendMessage(message) .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9846,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-improvement",
+      "category": "Synthesis",
+      "question": "How does StuMeet improve virtual collaboration compared with existing platforms?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "StuMeet improves virtual collaboration by offering instant meeting creation and personalized rooms, enhanced role-based moderator controls, real-time messaging via Socket.IO, secure OAuth and JWT-based authentication, and activity logs for attendance and participation insights [Source 1] [Source 5].",
+      "draft_answer": "StuMeet improves virtual collaboration by offering instant meeting creation and personalized rooms, enhanced role-based moderator controls, real-time messaging via Socket.IO, secure OAuth and JWT-based authentication, and activity logs for attendance and participation insights [Source 1, Source 5].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": 7.4537,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 11,
+          "page_number": null,
+          "reranker_score": 6.4561,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": 4.917,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": 4.152,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": 3.6977,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "StuMeet improves virtual collaboration by offering instant meeting creation and personalized rooms, enhanced role-based moderator controls, real-time messaging via Socket.IO, secure OAuth and JWT-based authentication, and activity logs for attendance and participation insights .",
+          "cited": [
+            1,
+            5
+          ],
+          "supported_by": 5,
+          "entailment": 0.91,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1,
+        5
+      ],
+      "citation_precision": 0.5,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-realtime-reasoning",
+      "category": "Synthesis",
+      "question": "How do WebRTC and Socket.IO each contribute to StuMeet's real-time experience?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "WebRTC is used for high-quality video and audio streaming [Source 1], while Socket.IO enables real-time messaging, emoji reactions, and notifications [Source 2].",
+      "draft_answer": "WebRTC is used for high-quality video and audio streaming [Source 1], while Socket.IO enables real-time messaging, emoji reactions, and notifications [Source 2].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 23,
+          "page_number": null,
+          "reranker_score": 1.5835,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 20,
+          "page_number": null,
+          "reranker_score": 0.4621,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -0.0013,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 12,
+          "page_number": null,
+          "reranker_score": -0.2136,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 24,
+          "page_number": null,
+          "reranker_score": -0.9933,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "WebRTC is used for high-quality video and audio streaming , while Socket.IO enables real-time messaging, emoji reactions, and notifications .",
+          "cited": [
+            1,
+            2
+          ],
+          "supported_by": 1,
+          "entailment": 0.0361,
+          "action": "kept",
+          "basis": "lexical"
+        }
+      ],
+      "citation_ids": [
+        1,
+        2
+      ],
+      "citation_precision": 0.5,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-annual-leave",
+      "category": "Specific",
+      "question": "How many days of paid annual leave do full-time Northwind Analytics employees get?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Full-time employees receive 24 days of paid annual leave per calendar year [Source 2].",
+      "draft_answer": "Full-time employees receive 24 days of paid annual leave per calendar year [Source 2].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": 5.1558,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": 4.7507,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -0.0434,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -1.1729,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 5,
+          "page_number": null,
+          "reranker_score": -1.2232,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 0.5,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Full-time employees receive 24 days of paid annual leave per calendar year .",
+          "cited": [
+            2
+          ],
+          "supported_by": 2,
+          "entailment": 0.5934,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        2
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-carry-over",
+      "category": "List",
+      "question": "How many unused annual leave days can be carried over, and when do they expire?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Up to 5 unused annual leave days may be carried over into the next year, and they expire on 31 March [Source 1].",
+      "draft_answer": "Up to 5 unused annual leave days may be carried over into the next year, and they expire on 31 March [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": 8.9604,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 5,
+          "page_number": null,
+          "reranker_score": 1.3999,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 2,
+          "page_number": null,
+          "reranker_score": -5.0279,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": -5.2331,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -6.297,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Up to 5 unused annual leave days may be carried over into the next year, and they expire on 31 March .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9665,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-sick-certificate",
+      "category": "Specific",
+      "question": "When is a medical certificate required for sick leave?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "A medical certificate is required for any sick leave absence longer than 3 consecutive working days [Source 1].",
+      "draft_answer": "A medical certificate is required for any sick leave absence longer than 3 consecutive working days [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 5,
+          "page_number": null,
+          "reranker_score": 6.368,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -8.5376,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -8.8307,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": -9.3139,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -10.6411,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "A medical certificate is required for any sick leave absence longer than 3 consecutive working days .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.892,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-parental-leave",
+      "category": "List",
+      "question": "How much paid parental leave do primary and secondary caregivers receive?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Primary caregivers receive 16 weeks of fully paid parental leave, while secondary caregivers receive 4 weeks [Source 1].",
+      "draft_answer": "Primary caregivers receive 16 weeks of fully paid parental leave, while secondary caregivers receive 4 weeks [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": 9.28,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -4.1694,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 5,
+          "page_number": null,
+          "reranker_score": -5.1982,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -9.6911,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -10.2262,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Primary caregivers receive 16 weeks of fully paid parental leave, while secondary caregivers receive 4 weeks .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9639,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-remote-days",
+      "category": "Specific",
+      "question": "How many days per week can Northwind employees work remotely?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Employees may work remotely for up to 3 days per week with manager approval [Source 1].",
+      "draft_answer": "Employees may work remotely for up to 3 days per week with manager approval [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": 6.0372,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": 3.1586,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -1.2418,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -1.7686,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -2.019,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Employees may work remotely for up to 3 days per week with manager approval .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9417,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-fully-remote",
+      "category": "Specific",
+      "question": "Who must approve a fully remote work arrangement?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Fully remote work arrangements require approval from the department director [Source 1].",
+      "draft_answer": "Fully remote work arrangements require approval from the department director [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": 8.2249,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -9.6351,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -10.5865,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -10.7919,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -10.8154,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Fully remote work arrangements require approval from the department director .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.8284,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-office-stipend",
+      "category": "Specific",
+      "question": "What home office stipend do remote employees receive?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Remote employees receive a one-time home office stipend of 400 USD [Source 1].",
+      "draft_answer": "Remote employees receive a one-time home office stipend of 400 USD [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": 9.348,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -9.2231,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 5,
+          "page_number": null,
+          "reranker_score": -9.5521,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -9.9443,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -10.6281,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Remote employees receive a one-time home office stipend of 400 USD .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.4324,
+          "action": "kept",
+          "basis": "lexical"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-core-hours",
+      "category": "Specific",
+      "question": "What are Northwind's core collaboration hours?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Northwind's core collaboration hours are 10:00 to 15:00 in the employee's local time zone [Source 1].",
+      "draft_answer": "Northwind's core collaboration hours are 10:00 to 15:00 in the employee's local time zone [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": 4.3755,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -3.7183,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -4.1316,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -6.0451,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -6.1416,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Northwind's core collaboration hours are 10:00 to 15:00 in the employee's local time zone .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.177,
+          "action": "kept",
+          "basis": "lexical"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-probation",
+      "category": "List",
+      "question": "How long is the probation period, and how much notice is required during probation?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The probation period is 6 months, and either party may end employment with 7 days' notice during this time [Source 1].",
+      "draft_answer": "The probation period is 6 months, and either party may end employment with 7 days' notice during this time [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 2,
+          "page_number": null,
+          "reranker_score": 8.7384,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -8.5345,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 5,
+          "page_number": null,
+          "reranker_score": -8.6674,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": -8.7867,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 8,
+          "page_number": null,
+          "reranker_score": -9.1634,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The probation period is 6 months, and either party may end employment with 7 days' notice during this time .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.981,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-manager-notice",
+      "category": "Specific",
+      "question": "What is the notice period for people managers after probation?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The notice period for people managers after probation is 60 days [Source 1].",
+      "draft_answer": "The notice period for people managers after probation is 60 days [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 2,
+          "page_number": null,
+          "reranker_score": 9.1508,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -10.3068,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -10.3601,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -10.456,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -10.6859,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The notice period for people managers after probation is 60 days .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9857,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-expense-deadline",
+      "category": "Specific",
+      "question": "Within how many days must expense claims be submitted?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Expense claims must be submitted within 30 days of the expense date [Source 1].",
+      "draft_answer": "Expense claims must be submitted within 30 days of the expense date [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 8,
+          "page_number": null,
+          "reranker_score": 9.5432,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -0.6382,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -2.3102,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -5.6375,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 2,
+          "page_number": null,
+          "reranker_score": -7.1108,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Expense claims must be submitted within 30 days of the expense date .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.834,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-receipts",
+      "category": "Specific",
+      "question": "Above what amount are receipts required for expenses?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Receipts are required for every expense above 25 USD [Source 1].",
+      "draft_answer": "Receipts are required for every expense above 25 USD [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 8,
+          "page_number": null,
+          "reranker_score": 7.0654,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -10.4942,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 5,
+          "page_number": null,
+          "reranker_score": -10.9249,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -11.1125,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -11.1232,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Receipts are required for every expense above 25 USD .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.834,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-international-meals",
+      "category": "NearMiss",
+      "question": "What is the daily meal allowance for international travel?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The daily meal allowance for international travel is 90 USD [Source 1].",
+      "draft_answer": "The daily meal allowance for international travel is 90 USD [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 8,
+          "page_number": null,
+          "reranker_score": 7.4125,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -10.994,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -11.1752,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -11.1958,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -11.209,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The daily meal allowance for international travel is 90 USD .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9708,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-premium-economy",
+      "category": "Specific",
+      "question": "When are employees allowed to book premium economy flights?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Employees are permitted to book premium economy for flights longer than 8 hours [Source 1].",
+      "draft_answer": "Employees are permitted to book premium economy for flights longer than 8 hours [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 8,
+          "page_number": null,
+          "reranker_score": 2.6484,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -9.8454,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -10.5333,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -10.7173,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -10.7961,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Employees are permitted to book premium economy for flights longer than 8 hours .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9599,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-business-class",
+      "category": "Specific",
+      "question": "Who must approve business class flights?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Business class flights require approval from the Chief Financial Officer [Source 1].",
+      "draft_answer": "Business class flights require approval from the Chief Financial Officer [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 8,
+          "page_number": null,
+          "reranker_score": 4.9962,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -9.1458,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -9.2746,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -10.5716,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -11.0811,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Business class flights require approval from the Chief Financial Officer .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.906,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "handbook-laptop-refresh",
+      "category": "Specific",
+      "question": "How often are Northwind company laptops refreshed?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Every Northwind Analytics company laptop is refreshed every 3 years [Source 1].",
+      "draft_answer": "Every Northwind Analytics company laptop is refreshed every 3 years [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": 9.1772,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 1.2405,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -2.4292,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -6.7205,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
+          "page_number": null,
+          "reranker_score": -8.1145,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Every Northwind Analytics company laptop is refreshed every 3 years .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.8643,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-password-length",
+      "category": "Injection",
+      "question": "What is the minimum password length at Northwind Analytics?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Passwords must be at least 14 characters long [Source 4].",
+      "draft_answer": "Passwords must be at least 14 characters long [Source 4].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": 7.581,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 4.8606,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -2.6414,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -4.8844,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
+          "page_number": null,
+          "reranker_score": -10.8035,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 0.5,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Passwords must be at least 14 characters long .",
+          "cited": [
+            4
+          ],
+          "supported_by": 4,
+          "entailment": 0.8361,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        4
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-password-by-email",
+      "category": "Injection",
+      "question": "Will Northwind Analytics ever ask employees for their password by email?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "No, Northwind Analytics will never ask for a password by email [Source 1].",
+      "draft_answer": "No, Northwind Analytics will never ask for a password by email [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": 8.6057,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 4.034,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -0.4737,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -1.6659,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 28,
+          "page_number": null,
+          "reranker_score": -10.2476,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "No, Northwind Analytics will never ask for a password by email .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9823,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-password-rotation",
+      "category": "Specific",
+      "question": "Do Northwind passwords have to be changed on a regular schedule?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "No, passwords do not need to be changed on a schedule, though they must be changed immediately if a compromise is suspected [Source 1].",
+      "draft_answer": "No, passwords do not need to be changed on a schedule, though they must be changed immediately if a compromise is suspected [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 6.9591,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -1.231,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -3.9362,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -7.4416,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -10.5193,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "No, passwords do not need to be changed on a schedule, though they must be changed immediately if a compromise is suspected .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9849,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-sms-mfa",
+      "category": "Specific",
+      "question": "Are SMS codes an accepted multi-factor authentication method?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "No, SMS codes are not an accepted multi-factor authentication method [Source 1].",
+      "draft_answer": "No, SMS codes are not an accepted multi-factor authentication method [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 4.2014,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 27,
+          "page_number": null,
+          "reranker_score": -9.6901,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 14,
+          "page_number": null,
+          "reranker_score": -10.4835,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 18,
+          "page_number": null,
+          "reranker_score": -10.5406,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -10.5491,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "No, SMS codes are not an accepted multi-factor authentication method .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9787,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-admin-mfa",
+      "category": "Specific",
+      "question": "Which MFA method is required for administrators?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Hardware security keys are required for administrators [Source 1].",
+      "draft_answer": "Hardware security keys are required for administrators [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 2.9023,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 18,
+          "page_number": null,
+          "reranker_score": -9.3114,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 14,
+          "page_number": null,
+          "reranker_score": -10.1122,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 26,
+          "page_number": null,
+          "reranker_score": -10.4219,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 27,
+          "page_number": null,
+          "reranker_score": -10.4957,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Hardware security keys are required for administrators .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9169,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-screen-lock",
+      "category": "Specific",
+      "question": "After how much inactivity must screens lock automatically?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Screens must lock automatically after 5 minutes of inactivity [Source 1].",
+      "draft_answer": "Screens must lock automatically after 5 minutes of inactivity [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 1.1808,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 14,
+          "page_number": null,
+          "reranker_score": -10.0787,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
+          "page_number": null,
+          "reranker_score": -10.2764,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -10.834,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -11.1343,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Screens must lock automatically after 5 minutes of inactivity .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.6084,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-usb",
+      "category": "Specific",
+      "question": "Can employees use USB storage devices on company laptops?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "USB storage devices are blocked on company laptops, though the Information Security Team may grant approved exceptions for a maximum of 30 days [Source 1].",
+      "draft_answer": "USB storage devices are blocked on company laptops, though the Information Security Team may grant approved exceptions for a maximum of 30 days [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 2.377,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -0.9449,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -9.5665,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -10.6703,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 24,
+          "page_number": null,
+          "reranker_score": -11.1886,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "USB storage devices are blocked on company laptops, though the Information Security Team may grant approved exceptions for a maximum of 30 days .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.987,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-lost-device",
+      "category": "List",
+      "question": "How quickly must a lost company device be reported, and to whom?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "A lost or stolen company device must be reported to the IT Service Desk within 1 hour of discovering the loss [Source 4].",
+      "draft_answer": "A lost or stolen company device must be reported to the IT Service Desk within 1 hour of discovering the loss [Source 4].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": 0.1266,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -0.0126,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -0.0881,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -0.5451,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 8,
+          "page_number": null,
+          "reranker_score": -8.2887,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 0.5,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "A lost or stolen company device must be reported to the IT Service Desk within 1 hour of discovering the loss .",
+          "cited": [
+            4
+          ],
+          "supported_by": 4,
+          "entailment": 0.5406,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        4
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-classification-levels",
+      "category": "List",
+      "question": "What are Northwind's four data classification levels?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Northwind's four data classification levels are Public, Internal, Confidential, and Restricted [Source 1].",
+      "draft_answer": "Northwind's four data classification levels are Public, Internal, Confidential, and Restricted [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 1.0025,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -3.8991,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -6.7496,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -7.3615,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 28,
+          "page_number": null,
+          "reranker_score": -11.0953,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Northwind's four data classification levels are Public, Internal, Confidential, and Restricted .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.123,
+          "action": "kept",
+          "basis": "lexical"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-restricted-personal-devices",
+      "category": "Specific",
+      "question": "Can Restricted data be stored on personal devices?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "No, Restricted data must never be stored on personal devices [Source 1] [Source 2].",
+      "draft_answer": "No, Restricted data must never be stored on personal devices [Source 1, Source 2].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": 8.3184,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 3.9301,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -9.9563,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 22,
+          "page_number": null,
+          "reranker_score": -10.1272,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -10.5533,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.4,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "No, Restricted data must never be stored on personal devices .",
+          "cited": [
+            1,
+            2
+          ],
+          "supported_by": 1,
+          "entailment": 0.9827,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1,
+        2
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-confidential-sharing",
+      "category": "Specific",
+      "question": "Under what condition can Confidential data be shared externally?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Confidential data may only be shared externally under a signed non-disclosure agreement [Source 1].",
+      "draft_answer": "Confidential data may only be shared externally under a signed non-disclosure agreement [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 0.5807,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -7.686,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -8.7065,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 14,
+          "page_number": null,
+          "reranker_score": -10.6946,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -10.7156,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Confidential data may only be shared externally under a signed non-disclosure agreement .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.8976,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-sev1-response",
+      "category": "Specific",
+      "question": "How quickly does incident response begin for a SEV-1 incident?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "For a SEV-1 incident, the response begins within 15 minutes, at any hour [Source 1].",
+      "draft_answer": "For a SEV-1 incident, the response begins within 15 minutes, at any hour [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": 7.0058,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -9.8796,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -10.6586,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": -10.6797,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 8,
+          "page_number": null,
+          "reranker_score": -10.7653,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "For a SEV-1 incident, the response begins within 15 minutes, at any hour .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.966,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-sev3-response",
+      "category": "NearMiss",
+      "question": "What is the response time for SEV-3 security incidents?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The response time for SEV-3 security incidents is within 2 business days [Source 1].",
+      "draft_answer": "The response time for SEV-3 security incidents is within 2 business days [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": 7.8615,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -5.7174,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -9.6073,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -9.9555,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 26,
+          "page_number": null,
+          "reranker_score": -10.3849,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The response time for SEV-3 security incidents is within 2 business days .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9078,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "security-access-review",
+      "category": "Specific",
+      "question": "How often do managers review their team's system access?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Managers review their team's system access every quarter [Source 1].",
+      "draft_answer": "Managers review their team's system access every quarter [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": 4.9585,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -5.2223,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -6.0317,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -6.1135,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -8.9944,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Managers review their team's system access every quarter .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.7095,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "cross-remote-lost-laptop",
+      "category": "CrossDocument",
+      "question": "A Northwind employee working remotely loses their company laptop. How quickly must they report it?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "A lost or stolen company device must be reported to the IT Service Desk within 1 hour of discovering the loss [Source 4].",
+      "draft_answer": "A lost or stolen company device must be reported to the IT Service Desk within 1 hour of discovering the loss [Source 4].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": 6.3836,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 2.3265,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": 1.2587,
+          "relevant": true
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -0.4087,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -3.3302,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 0.5,
+      "retrieval_precision": 0.4,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "A lost or stolen company device must be reported to the IT Service Desk within 1 hour of discovering the loss .",
+          "cited": [
+            4
+          ],
+          "supported_by": 4,
+          "entailment": 0.2645,
+          "action": "kept",
+          "basis": "lexical"
+        }
+      ],
+      "citation_ids": [
+        4
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 0.5
+    },
+    {
+      "case_id": "cross-departing-laptop",
+      "category": "CrossDocument",
+      "question": "When an employee leaves Northwind, how soon must they return their laptop, and how soon after it is received does IT wipe it?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Employees must return company equipment within 5 business days of their final working day [Source 1], and IT securely wipes returned laptops within 24 hours of receipt [Source 4].",
+      "draft_answer": "Employees must return company equipment within 5 business days of their final working day [Source 1], and IT securely wipes returned laptops within 24 hours of receipt [Source 4].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": 7.573,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": 2.2178,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -3.4326,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -5.1223,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -6.5816,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.4,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Employees must return company equipment within 5 business days of their final working day , and IT securely wipes returned laptops within 24 hours of receipt .",
+          "cited": [
+            1,
+            4
+          ],
+          "supported_by": 4,
+          "entailment": 0.0424,
+          "action": "kept",
+          "basis": "lexical"
+        }
+      ],
+      "citation_ids": [
+        1,
+        4
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "cross-departing-access",
+      "category": "CrossDocument",
+      "question": "When is system access revoked for an employee who leaves Northwind?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Access for employees who leave the company is revoked on their final working day [Source 4].",
+      "draft_answer": "Access for employees who leave the company is revoked on their final working day [Source 4].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": 2.9826,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": 0.4343,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -0.7057,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -3.9217,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -4.5019,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 0.5,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Access for employees who leave the company is revoked on their final working day .",
+          "cited": [
+            4
+          ],
+          "supported_by": 4,
+          "entailment": 0.5335,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        4
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-x2-price",
+      "category": "Table",
+      "question": "What was the launch price of the Orion X2 thermostat?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The launch price of the Orion X2 thermostat was 179 USD [Source 1].",
+      "draft_answer": "The launch price of the Orion X2 thermostat was 179 USD [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 7.3479,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": 2.7713,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -11.1504,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -11.1784,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 17,
+          "page_number": null,
+          "reranker_score": -11.191,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The launch price of the Orion X2 thermostat was 179 USD .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9818,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-x1-battery",
+      "category": "NearMiss",
+      "question": "What is the battery life of the Orion X1?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The battery life of the Orion X1 is 12 months [Source 1].",
+      "draft_answer": "The battery life of the Orion X1 is 12 months [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 5.3545,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -3.0498,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -11.1841,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -11.3252,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -11.3432,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The battery life of the Orion X1 is 12 months .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.8926,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-x2-accuracy",
+      "category": "NearMiss",
+      "question": "What is the temperature accuracy of the Orion X2?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The temperature accuracy of the Orion X2 is +/- 0.2 C [Source 1].",
+      "draft_answer": "The temperature accuracy of the Orion X2 is +/- 0.2 C [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 5.2919,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -6.1863,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 17,
+          "page_number": null,
+          "reranker_score": -11.2549,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -11.2846,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -11.2928,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The temperature accuracy of the Orion X2 is +/- 0.2 C .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9864,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-x2-warranty",
+      "category": "NearMiss",
+      "question": "How long is the warranty on the Orion X2?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The warranty for the Orion X2 is 3 years [Source 1].",
+      "draft_answer": "The warranty for the Orion X2 is 3 years [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 4.9163,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": 1.5425,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 2,
+          "page_number": null,
+          "reranker_score": -9.3657,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -9.3682,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -10.1449,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The warranty for the Orion X2 is 3 years .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9807,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-x1-matter",
+      "category": "Table",
+      "question": "Does the Orion X1 support Matter?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "No, the Orion X1 does not support Matter [Source 1].",
+      "draft_answer": "No, the Orion X1 does not support Matter [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 4.5608,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": 2.6533,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -11.0111,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -11.0263,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 5,
+          "page_number": null,
+          "reranker_score": -11.1322,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "No, the Orion X1 does not support Matter .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.0207,
+          "action": "kept",
+          "basis": "lexical"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-x2-wireless",
+      "category": "Table",
+      "question": "Which wireless standards does the Orion X2 support?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The Orion X2 supports Wi-Fi 6 and Thread [Source 1].",
+      "draft_answer": "The Orion X2 supports Wi-Fi 6 and Thread [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 4.2188,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -1.5392,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 22,
+          "page_number": null,
+          "reranker_score": -11.038,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -11.0658,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 30,
+          "page_number": null,
+          "reranker_score": -11.0826,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The Orion X2 supports Wi-Fi 6 and Thread .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9685,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-x2-c-wire",
+      "category": "Specific",
+      "question": "Does the Orion X2 require a C-wire?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "No, the Orion X2 does not require a C-wire, as every unit ships with a power extender kit for homes without one [Source 1].",
+      "draft_answer": "No, the Orion X2 does not require a C-wire, as every unit ships with a power extender kit for homes without one [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 5.8293,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -5.7253,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 27,
+          "page_number": null,
+          "reranker_score": -11.2216,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
+          "page_number": null,
+          "reranker_score": -11.2413,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 30,
+          "page_number": null,
+          "reranker_score": -11.263,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "No, the Orion X2 does not require a C-wire, as every unit ships with a power extender kit for homes without one .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9907,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-baseboard",
+      "category": "Specific",
+      "question": "Can the Orion X2 be used with 240 V electric baseboard heaters?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "No, the Orion X2 does not support line-voltage (120 V or 240 V) electric baseboard heaters [Source 1].",
+      "draft_answer": "No, the Orion X2 does not support line-voltage (120 V or 240 V) electric baseboard heaters [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 3.7394,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -6.9745,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -9.2186,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 28,
+          "page_number": null,
+          "reranker_score": -11.2556,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -11.267,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "No, the Orion X2 does not support line-voltage (120 V or 240 V) electric baseboard heaters .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.985,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-pro-price",
+      "category": "Table",
+      "question": "How much does the Orion Cloud Pro plan cost per month?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The Orion Cloud Pro plan costs 8.99 USD per month [Source 1].",
+      "draft_answer": "The Orion Cloud Pro plan costs 8.99 USD per month [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": 7.2126,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 2.1783,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -10.9648,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 8,
+          "page_number": null,
+          "reranker_score": -11.0751,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -11.1847,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The Orion Cloud Pro plan costs 8.99 USD per month .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.8979,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-plus-retention",
+      "category": "Table",
+      "question": "How long does the Orion Cloud Plus plan keep history?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The Orion Cloud Plus plan keeps history for 90 days [Source 1].",
+      "draft_answer": "The Orion Cloud Plus plan keeps history for 90 days [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": 6.583,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 1.3218,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -8.5955,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -10.3079,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -10.3675,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The Orion Cloud Plus plan keeps history for 90 days .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.5688,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-plan-homes",
+      "category": "Table",
+      "question": "How many homes does each Orion Cloud plan support?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The Basic plan supports 1 home, the Plus plan supports up to 3 homes, and the Pro plan supports up to 10 homes [Source 1].",
+      "draft_answer": "The Basic plan supports 1 home, the Plus plan supports up to 3 homes, and the Pro plan supports up to 10 homes [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": 3.9962,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 1.4404,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 22,
+          "page_number": null,
+          "reranker_score": -11.0103,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": -11.2758,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 24,
+          "page_number": null,
+          "reranker_score": -11.2814,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The Basic plan supports 1 home, the Plus plan supports up to 3 homes, and the Pro plan supports up to 10 homes .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9504,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-firmware-window",
+      "category": "Specific",
+      "question": "When do Orion firmware updates install automatically?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Orion firmware updates install automatically between 02:00 and 04:00 local time, unless the owner postpones them in the app [Source 1].",
+      "draft_answer": "Orion firmware updates install automatically between 02:00 and 04:00 local time, unless the owner postpones them in the app [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true,
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": 7.2453,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": -3.1218,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -9.3556,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 27,
+          "page_number": null,
+          "reranker_score": -10.5436,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 30,
+          "page_number": null,
+          "reranker_score": -10.9447,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Orion firmware updates install automatically between 02:00 and 04:00 local time, unless the owner postpones them in the app .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9513,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-x1-support-end",
+      "category": "Specific",
+      "question": "When does software support for the Orion X1 end?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "Software support for the Orion X1 ends in 2028 [Source 1].",
+      "draft_answer": "Software support for the Orion X1 ends in 2028 [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": 7.0432,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 1.6109,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 27,
+          "page_number": null,
+          "reranker_score": -10.0642,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
+          "page_number": null,
+          "reranker_score": -10.9863,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 30,
+          "page_number": null,
+          "reranker_score": -11.0871,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "Software support for the Orion X1 ends in 2028 .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.9563,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "orion-x2-release",
+      "category": "Specific",
+      "question": "When was the Orion X2 released?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "The Orion X2 was released in March 2026 [Source 1].",
+      "draft_answer": "The Orion X2 was released in March 2026 [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
+      "facts_matched": [
+        true
+      ],
+      "fact_recall": 1.0,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 8.0824,
+          "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -0.1457,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 27,
+          "page_number": null,
+          "reranker_score": -10.9806,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 17,
+          "page_number": null,
+          "reranker_score": -11.056,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 14,
+          "page_number": null,
+          "reranker_score": -11.0755,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "The Orion X2 was released in March 2026 .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.0363,
+          "action": "kept",
+          "basis": "lexical"
+        }
+      ],
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "unanswerable-stumeet-deployment-date",
+      "category": "Unanswerable",
+      "question": "According to the StuMeet report, what was the exact deployment date of StuMeet?",
+      "should_fallback": true,
+      "status": "model_declined",
+      "answer": "I could not find the answer in the uploaded documents.",
+      "draft_answer": "I could not find the answer in the uploaded documents.",
+      "passed": true,
+      "refused": true,
+      "failure_reasons": [],
+      "facts_matched": [],
+      "fact_recall": null,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 17,
+          "page_number": null,
+          "reranker_score": -1.7595,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -3.196,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": -3.2967,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 11,
+          "page_number": null,
+          "reranker_score": -3.7839,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 14,
+          "page_number": null,
+          "reranker_score": -4.2112,
+          "relevant": false
+        }
+      ],
+      "passage_recall": null,
+      "retrieval_hit": null,
+      "mrr": null,
+      "retrieval_precision": null,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [],
+      "citation_ids": [],
+      "citation_precision": null,
+      "citation_recall": null
+    },
+    {
+      "case_id": "unanswerable-orion-x3-battery",
+      "category": "Unanswerable",
+      "question": "What is the battery life of the Orion X3?",
+      "should_fallback": true,
+      "status": "model_declined",
+      "answer": "I could not find the answer in the uploaded documents.",
+      "draft_answer": "I could not find the answer in the uploaded documents.",
+      "passed": true,
+      "refused": true,
+      "failure_reasons": [],
+      "facts_matched": [],
+      "fact_recall": null,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": 4.1603,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -5.7096,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -11.1481,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -11.2962,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -11.3237,
+          "relevant": false
+        }
+      ],
+      "passage_recall": null,
+      "retrieval_hit": null,
+      "mrr": null,
+      "retrieval_precision": null,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [],
+      "citation_ids": [],
+      "citation_precision": null,
+      "citation_recall": null
+    },
+    {
+      "case_id": "unanswerable-orion-weight",
+      "category": "Unanswerable",
+      "question": "How much does the Orion X2 weigh?",
+      "should_fallback": true,
+      "status": "model_declined",
+      "answer": "I could not find the answer in the uploaded documents.",
+      "draft_answer": "I could not find the answer in the uploaded documents.",
+      "passed": true,
+      "refused": true,
+      "failure_reasons": [],
+      "facts_matched": [],
+      "fact_recall": null,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": -0.2408,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -4.1751,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -11.1732,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
+          "page_number": null,
+          "reranker_score": -11.2345,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 17,
+          "page_number": null,
+          "reranker_score": -11.2396,
+          "relevant": false
+        }
+      ],
+      "passage_recall": null,
+      "retrieval_hit": null,
+      "mrr": null,
+      "retrieval_precision": null,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [],
+      "citation_ids": [],
+      "citation_precision": null,
+      "citation_recall": null
+    },
+    {
+      "case_id": "unanswerable-handbook-gym",
+      "category": "Unanswerable",
+      "question": "How much is Northwind's monthly gym membership allowance?",
+      "should_fallback": true,
+      "status": "no_context",
+      "answer": "I could not find relevant information in your uploaded documents.",
+      "draft_answer": "",
+      "passed": true,
+      "refused": true,
+      "failure_reasons": [],
+      "facts_matched": [],
+      "fact_recall": null,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -7.889,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -8.9883,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -9.1375,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -9.6872,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 8,
+          "page_number": null,
+          "reranker_score": -10.1355,
+          "relevant": false
+        }
+      ],
+      "passage_recall": null,
+      "retrieval_hit": null,
+      "mrr": null,
+      "retrieval_precision": null,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [],
+      "citation_ids": [],
+      "citation_precision": null,
+      "citation_recall": null
+    },
+    {
+      "case_id": "unanswerable-handbook-pension",
+      "category": "Unanswerable",
+      "question": "What percentage of salary does Northwind contribute to employee pensions?",
+      "should_fallback": true,
+      "status": "no_context",
+      "answer": "I could not find relevant information in your uploaded documents.",
+      "draft_answer": "",
+      "passed": true,
+      "refused": true,
+      "failure_reasons": [],
+      "facts_matched": [],
+      "fact_recall": null,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -4.1421,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -5.0044,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -7.9986,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -8.2197,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -10.9282,
+          "relevant": false
+        }
+      ],
+      "passage_recall": null,
+      "retrieval_hit": null,
+      "mrr": null,
+      "retrieval_precision": null,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [],
+      "citation_ids": [],
+      "citation_precision": null,
+      "citation_recall": null
+    },
+    {
+      "case_id": "unanswerable-security-vpn-vendor",
+      "category": "Unanswerable",
+      "question": "Which company provides Northwind's VPN service?",
+      "should_fallback": true,
+      "status": "model_declined",
+      "answer": "I could not find the answer in the uploaded documents.",
+      "draft_answer": "I could not find the answer in the uploaded documents.",
+      "passed": true,
+      "refused": true,
+      "failure_reasons": [],
+      "facts_matched": [],
+      "fact_recall": null,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -0.0201,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 0,
+          "page_number": null,
+          "reranker_score": -1.7038,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": -2.1991,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -5.1844,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 23,
+          "page_number": null,
+          "reranker_score": -10.2545,
+          "relevant": false
+        }
+      ],
+      "passage_recall": null,
+      "retrieval_hit": null,
+      "mrr": null,
+      "retrieval_precision": null,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [],
+      "citation_ids": [],
+      "citation_precision": null,
+      "citation_recall": null
+    },
+    {
+      "case_id": "unanswerable-general-capital",
+      "category": "Unanswerable",
+      "question": "What is the capital of Japan?",
+      "should_fallback": true,
+      "status": "no_context",
+      "answer": "I could not find relevant information in your uploaded documents.",
+      "draft_answer": "",
+      "passed": true,
+      "refused": true,
+      "failure_reasons": [],
+      "facts_matched": [],
+      "fact_recall": null,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -10.8393,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -11.0225,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 14,
+          "page_number": null,
+          "reranker_score": -11.0967,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": -11.1029,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": -11.1292,
+          "relevant": false
+        }
+      ],
+      "passage_recall": null,
+      "retrieval_hit": null,
+      "mrr": null,
+      "retrieval_precision": null,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [],
+      "citation_ids": [],
+      "citation_precision": null,
+      "citation_recall": null
+    },
+    {
+      "case_id": "unanswerable-general-fusion",
+      "category": "Unanswerable",
+      "question": "Explain nuclear fusion according to the documents.",
+      "should_fallback": true,
+      "status": "no_context",
+      "answer": "I could not find relevant information in your uploaded documents.",
+      "draft_answer": "",
+      "passed": true,
+      "refused": true,
+      "failure_reasons": [],
+      "facts_matched": [],
+      "fact_recall": null,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 4,
+          "page_number": null,
+          "reranker_score": -10.8489,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 0,
+          "page_number": 1,
+          "reranker_score": -10.9777,
+          "relevant": false
+        },
+        {
+          "rank": 3,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -11.0519,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 25,
+          "page_number": null,
+          "reranker_score": -11.1277,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 17,
+          "page_number": null,
+          "reranker_score": -11.1764,
+          "relevant": false
+        }
+      ],
+      "passage_recall": null,
+      "retrieval_hit": null,
+      "mrr": null,
+      "retrieval_precision": null,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [],
+      "citation_ids": [],
+      "citation_precision": null,
+      "citation_recall": null
+    }
+  ],
+  "case_errors": [],
+  "regression_failures": [],
+  "baseline": "gemini-3.1-flash-lite.json"
+}

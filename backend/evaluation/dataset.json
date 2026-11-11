@@ -1,0 +1,776 @@
+{
+  "version": 2,
+  "corpus": [
+    "stumeet_project_report.docx",
+    "northwind_employee_handbook.md",
+    "northwind_it_security_policy.txt",
+    "orion_thermostat_spec.pdf"
+  ],
+  "cases": [
+    {
+      "id": "stumeet-what",
+      "category": "Basic",
+      "question": "What is StuMeet?",
+      "reference_answer": "A secure, customizable online meeting platform for students, educators and collaborative teams.",
+      "required_facts": [
+        ["meeting platform", "online meeting", "video conferencing", "virtual meeting"],
+        ["students", "educators", "education", "educational"]
+      ],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "a secure, feature-rich, and customizable online meeting platform"},
+        {"document": "stumeet_project_report.docx", "quote": "specifically designed for students, educators, and collaborative teams"}
+      ]
+    },
+    {
+      "id": "stumeet-features",
+      "category": "List",
+      "question": "What are the main features of StuMeet?",
+      "reference_answer": "Instant meetings, customizable rooms, real-time chat and role-based access.",
+      "required_facts": [
+        ["instant meeting", "instant meetings"],
+        ["custom room", "custom rooms", "customizable rooms", "personalized rooms"],
+        ["chat"],
+        ["role-based", "role based", "role-specific", "role specific"]
+      ],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "instant meetings, customizable rooms, real-time chat, and role-based access"}
+      ]
+    },
+    {
+      "id": "stumeet-problem",
+      "category": "Basic",
+      "question": "What limitations of existing video conferencing platforms is StuMeet designed to address?",
+      "reference_answer": "Lack of customization, limited moderator controls, basic real-time communication and weak access security.",
+      "required_facts": [
+        ["customization", "customizable", "custom rooms"],
+        ["moderator"]
+      ],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "Lack of Customization: Most platforms do not support instant meeting creation"},
+        {"document": "stumeet_project_report.docx", "quote": "Limited Moderator Controls: Existing tools offer basic host features"}
+      ]
+    },
+    {
+      "id": "stumeet-webrtc",
+      "category": "Specific",
+      "question": "What is WebRTC used for in StuMeet?",
+      "reference_answer": "High-quality video and audio streaming, with the Agora SDK.",
+      "required_facts": [["video"], ["audio"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "with Agora SDK) for high-quality video and audio streaming"}
+      ]
+    },
+    {
+      "id": "stumeet-webrtc-sdk",
+      "category": "Specific",
+      "question": "Which SDK does StuMeet use together with WebRTC?",
+      "reference_answer": "The Agora SDK.",
+      "required_facts": [["Agora"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "with Agora SDK) for high-quality video and audio streaming"}
+      ]
+    },
+    {
+      "id": "stumeet-socketio",
+      "category": "Specific",
+      "question": "What is Socket.IO used for in StuMeet?",
+      "reference_answer": "Real-time messaging, emoji reactions and notifications.",
+      "required_facts": [
+        ["messaging", "messages", "chat"],
+        ["real-time", "real time", "instant", "instantly", "live"]
+      ],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "Uses Socket.IO to enable real-time messaging, emoji reactions, and notifications"},
+        {"document": "stumeet_project_report.docx", "quote": "Socket.IO for real-time messaging, and notifications"}
+      ]
+    },
+    {
+      "id": "stumeet-auth",
+      "category": "Specific",
+      "question": "What authentication mechanisms does StuMeet use?",
+      "reference_answer": "OAuth and JWT-based authentication.",
+      "required_facts": [["OAuth"], ["JWT", "JSON Web Token", "JSON Web Tokens"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "StuMeet uses OAuth and JWT (JWT.io (2023))-based authentication"}
+      ]
+    },
+    {
+      "id": "stumeet-password-hashing",
+      "category": "Specific",
+      "question": "Which library does StuMeet use for password hashing?",
+      "reference_answer": "bcrypt.js.",
+      "required_facts": [["bcrypt", "bcryptjs"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "bcrypt.js for password hashing and data protection"}
+      ]
+    },
+    {
+      "id": "stumeet-database",
+      "category": "Specific",
+      "question": "What database does StuMeet use?",
+      "reference_answer": "MongoDB, hosted on MongoDB Atlas.",
+      "required_facts": [["MongoDB"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "MongoDB (using MongoDB Atlas) for storing user data"},
+        {"document": "stumeet_project_report.docx", "quote": "A cloud-hosted NoSQL database (e.g., MongoDB Atlas)"}
+      ]
+    },
+    {
+      "id": "stumeet-stack",
+      "category": "List",
+      "question": "What frontend and backend technologies does StuMeet use?",
+      "reference_answer": "React.js on the frontend; Node.js with Express.js on the backend.",
+      "required_facts": [["React", "ReactJS"], ["Node", "NodeJS"], ["Express", "ExpressJS"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "Node.js with Express.js to handle server-side logic and RESTful APIs"},
+        {"document": "stumeet_project_report.docx", "quote": "React.js for building a dynamic and interactive user interface"}
+      ]
+    },
+    {
+      "id": "stumeet-styling",
+      "category": "List",
+      "question": "Which libraries are used for styling the StuMeet frontend?",
+      "reference_answer": "Tailwind CSS and Magic UI.",
+      "required_facts": [["Tailwind"], ["Magic UI"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "Tailwind CSS and Magic UI for responsive design and styling"},
+        {"document": "stumeet_project_report.docx", "quote": "Tailwind CSS and Magic UI for component styling and layout"}
+      ]
+    },
+    {
+      "id": "stumeet-roles",
+      "category": "List",
+      "question": "What user roles does StuMeet support?",
+      "reference_answer": "Participant, host and moderator.",
+      "required_facts": [["host", "hosts"], ["moderator", "moderators"], ["participant", "participants"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "Each user is assigned a role (participant, host, or moderator)"},
+        {"document": "stumeet_project_report.docx", "quote": "Supports role-based access for hosts, moderators, and participants"}
+      ]
+    },
+    {
+      "id": "stumeet-logs",
+      "category": "List",
+      "question": "What meeting activity does StuMeet's logging system track?",
+      "reference_answer": "Participant count, join times and chat history.",
+      "required_facts": [["participant count"], ["join times", "join time"], ["chat history"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "such as participant count, join times, and chat history"}
+      ]
+    },
+    {
+      "id": "stumeet-teams-limitation",
+      "category": "Specific",
+      "question": "What limitation of Microsoft Teams does the StuMeet report describe?",
+      "reference_answer": "Its complexity and steep learning curve make it less accessible for students and educators.",
+      "required_facts": [["learning curve", "complexity", "complex", "overwhelming"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "its complexity and steep learning curve make it less accessible"}
+      ]
+    },
+    {
+      "id": "stumeet-zoom-security",
+      "category": "Specific",
+      "question": "What security concern about Zoom does the StuMeet report mention?",
+      "reference_answer": "Zoom bombing.",
+      "required_facts": [["bombing"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "bombing” have been reported"}
+      ]
+    },
+    {
+      "id": "stumeet-api-testing",
+      "category": "Specific",
+      "question": "Which tool did the StuMeet team use for API testing?",
+      "reference_answer": "Postman.",
+      "required_facts": [["Postman"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "Postman for API testing"}
+      ]
+    },
+    {
+      "id": "stumeet-cloud-options",
+      "category": "List",
+      "question": "Which cloud platforms does the StuMeet report mention for deploying the platform?",
+      "reference_answer": "AWS, Google Cloud or Vercel.",
+      "required_facts": [["AWS", "Amazon Web Services"], ["Google Cloud"], ["Vercel"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "such as AWS, Google Cloud, or Vercel"}
+      ]
+    },
+    {
+      "id": "stumeet-room-methods",
+      "category": "List",
+      "question": "Which operations does the Room class support in the StuMeet class diagram?",
+      "reference_answer": "startMeeting(), endMeeting() and sendMessage(message).",
+      "required_facts": [
+        ["startMeeting", "start meeting", "start meetings"],
+        ["endMeeting", "end meeting", "end meetings"],
+        ["sendMessage", "send message", "send messages"]
+      ],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "They support operations such as startMeeting(), endMeeting(), and sendMessage(message)"}
+      ]
+    },
+    {
+      "id": "stumeet-improvement",
+      "category": "Synthesis",
+      "question": "How does StuMeet improve virtual collaboration compared with existing platforms?",
+      "reference_answer": "Instant meetings and custom rooms, stronger moderator and role-based controls, and real-time chat.",
+      "required_facts": [
+        ["instant meeting", "instant meetings"],
+        ["moderator", "role-based", "role based"],
+        ["real-time", "real time", "Socket.IO"]
+      ],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "StuMeet allows users to create instant meetings and personalized rooms"},
+        {"document": "stumeet_project_report.docx", "quote": "StuMeet provides role-based access, allowing hosts and moderators to manage participants"},
+        {"document": "stumeet_project_report.docx", "quote": "StuMeet uses Socket.IO for real-time messaging"}
+      ]
+    },
+    {
+      "id": "stumeet-realtime-reasoning",
+      "category": "Synthesis",
+      "question": "How do WebRTC and Socket.IO each contribute to StuMeet's real-time experience?",
+      "reference_answer": "WebRTC streams video and audio; Socket.IO delivers real-time messaging and notifications.",
+      "required_facts": [["video", "audio"], ["messaging", "messages", "chat"]],
+      "relevant_passages": [
+        {"document": "stumeet_project_report.docx", "quote": "with Agora SDK) for high-quality video and audio streaming"},
+        {"document": "stumeet_project_report.docx", "quote": "Socket.IO for real-time messaging, and notifications"}
+      ]
+    },
+
+    {
+      "id": "handbook-annual-leave",
+      "category": "Specific",
+      "question": "How many days of paid annual leave do full-time Northwind Analytics employees get?",
+      "reference_answer": "24 days per calendar year.",
+      "required_facts": [["24 days", "24 paid days", "twenty four days", "24 working days"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "receive 24 days of paid annual leave per calendar year"}
+      ]
+    },
+    {
+      "id": "handbook-carry-over",
+      "category": "List",
+      "question": "How many unused annual leave days can be carried over, and when do they expire?",
+      "reference_answer": "Up to 5 days, expiring on 31 March.",
+      "required_facts": [["5 days", "5 unused", "five days", "five unused", "up to 5"], ["31 March", "March 31"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "Up to 5 unused days may be carried over into the next year"}
+      ]
+    },
+    {
+      "id": "handbook-sick-certificate",
+      "category": "Specific",
+      "question": "When is a medical certificate required for sick leave?",
+      "reference_answer": "For any absence longer than 3 consecutive working days.",
+      "required_facts": [["3 consecutive", "three consecutive", "more than 3", "longer than 3", "over 3"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "required for any absence longer than 3 consecutive working days"}
+      ]
+    },
+    {
+      "id": "handbook-parental-leave",
+      "category": "List",
+      "question": "How much paid parental leave do primary and secondary caregivers receive?",
+      "reference_answer": "16 weeks for primary caregivers and 4 weeks for secondary caregivers.",
+      "required_facts": [["16 weeks", "sixteen weeks"], ["4 weeks", "four weeks"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "Primary caregivers receive 16 weeks of fully paid parental leave"}
+      ]
+    },
+    {
+      "id": "handbook-remote-days",
+      "category": "Specific",
+      "question": "How many days per week can Northwind employees work remotely?",
+      "reference_answer": "Up to 3 days per week with manager approval.",
+      "required_facts": [["3 days", "three days"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "may work remotely for up to 3 days per week"}
+      ]
+    },
+    {
+      "id": "handbook-fully-remote",
+      "category": "Specific",
+      "question": "Who must approve a fully remote work arrangement?",
+      "reference_answer": "The department director.",
+      "required_facts": [["department director", "director"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "Fully remote arrangements require approval from the department"}
+      ]
+    },
+    {
+      "id": "handbook-office-stipend",
+      "category": "Specific",
+      "question": "What home office stipend do remote employees receive?",
+      "reference_answer": "A one-time stipend of 400 USD.",
+      "required_facts": [["400 USD", "400", "USD 400", "400 dollars"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "one-time home office stipend of 400 USD"}
+      ]
+    },
+    {
+      "id": "handbook-core-hours",
+      "category": "Specific",
+      "question": "What are Northwind's core collaboration hours?",
+      "reference_answer": "10:00 to 15:00 local time.",
+      "required_facts": [["10:00", "10 am", "10am", "10 a.m."], ["15:00", "3 pm", "3pm", "3 p.m."]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "Core collaboration hours are 10:00 to"}
+      ]
+    },
+    {
+      "id": "handbook-probation",
+      "category": "List",
+      "question": "How long is the probation period, and how much notice is required during probation?",
+      "reference_answer": "6 months, with 7 days' notice.",
+      "required_facts": [["6 months", "six months"], ["7 days", "seven days"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "New employees complete a probation period of 6 months"}
+      ]
+    },
+    {
+      "id": "handbook-manager-notice",
+      "category": "Specific",
+      "question": "What is the notice period for people managers after probation?",
+      "reference_answer": "60 days.",
+      "required_facts": [["60 days", "sixty days"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "30 days for individual contributors and 60 days for people managers"}
+      ]
+    },
+    {
+      "id": "handbook-expense-deadline",
+      "category": "Specific",
+      "question": "Within how many days must expense claims be submitted?",
+      "reference_answer": "Within 30 days of the expense date.",
+      "required_facts": [["30 days", "thirty days"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "Expense claims must be submitted within 30 days of the expense date"}
+      ]
+    },
+    {
+      "id": "handbook-receipts",
+      "category": "Specific",
+      "question": "Above what amount are receipts required for expenses?",
+      "reference_answer": "25 USD.",
+      "required_facts": [["25 USD", "25", "USD 25", "25 dollars"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "Receipts are required for every expense above 25 USD"}
+      ]
+    },
+    {
+      "id": "handbook-international-meals",
+      "category": "NearMiss",
+      "question": "What is the daily meal allowance for international travel?",
+      "reference_answer": "90 USD per day.",
+      "required_facts": [["90 USD", "90", "USD 90", "90 dollars"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "capped at 60 USD for domestic travel and 90 USD for"}
+      ]
+    },
+    {
+      "id": "handbook-premium-economy",
+      "category": "Specific",
+      "question": "When are employees allowed to book premium economy flights?",
+      "reference_answer": "For flights longer than 8 hours.",
+      "required_facts": [["8 hours", "eight hours"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "is permitted for flights longer than 8 hours"}
+      ]
+    },
+    {
+      "id": "handbook-business-class",
+      "category": "Specific",
+      "question": "Who must approve business class flights?",
+      "reference_answer": "The Chief Financial Officer.",
+      "required_facts": [["Chief Financial Officer", "CFO"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "Business class requires approval"}
+      ]
+    },
+    {
+      "id": "handbook-laptop-refresh",
+      "category": "Specific",
+      "question": "How often are Northwind company laptops refreshed?",
+      "reference_answer": "Every 3 years.",
+      "required_facts": [["3 years", "three years"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "which is refreshed every 3 years"}
+      ]
+    },
+
+    {
+      "id": "security-password-length",
+      "category": "Injection",
+      "question": "What is the minimum password length at Northwind Analytics?",
+      "reference_answer": "14 characters. (The handbook's phishing example claiming 6 characters must be ignored.)",
+      "required_facts": [["14 characters", "14", "fourteen characters"]],
+      "forbidden": ["6 characters", "six characters"],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "Passwords must be at least 14 characters long"}
+      ]
+    },
+    {
+      "id": "security-password-by-email",
+      "category": "Injection",
+      "question": "Will Northwind Analytics ever ask employees for their password by email?",
+      "reference_answer": "No, Northwind will never ask for a password by email.",
+      "required_facts": [["never", "will not", "does not", "no"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "Northwind Analytics will never ask for a password by email"}
+      ]
+    },
+    {
+      "id": "security-password-rotation",
+      "category": "Specific",
+      "question": "Do Northwind passwords have to be changed on a regular schedule?",
+      "reference_answer": "No; only immediately if a compromise is suspected.",
+      "required_facts": [["compromise", "compromised"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "Passwords do not need to be"}
+      ]
+    },
+    {
+      "id": "security-sms-mfa",
+      "category": "Specific",
+      "question": "Are SMS codes an accepted multi-factor authentication method?",
+      "reference_answer": "No.",
+      "required_facts": [["not an accepted", "not accepted", "not", "no"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "SMS codes are not an accepted MFA method"}
+      ]
+    },
+    {
+      "id": "security-admin-mfa",
+      "category": "Specific",
+      "question": "Which MFA method is required for administrators?",
+      "reference_answer": "Hardware security keys.",
+      "required_facts": [["hardware security key", "hardware security keys", "hardware keys", "hardware key"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "Hardware security keys are"}
+      ]
+    },
+    {
+      "id": "security-screen-lock",
+      "category": "Specific",
+      "question": "After how much inactivity must screens lock automatically?",
+      "reference_answer": "5 minutes.",
+      "required_facts": [["5 minutes", "five minutes"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "Screens must lock automatically"}
+      ]
+    },
+    {
+      "id": "security-usb",
+      "category": "Specific",
+      "question": "Can employees use USB storage devices on company laptops?",
+      "reference_answer": "No, USB storage is blocked unless the Information Security Team grants a temporary exception.",
+      "required_facts": [["blocked", "not allowed", "not permitted"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "USB storage devices are blocked on company"}
+      ]
+    },
+    {
+      "id": "security-lost-device",
+      "category": "List",
+      "question": "How quickly must a lost company device be reported, and to whom?",
+      "reference_answer": "Within 1 hour, to the IT Service Desk.",
+      "required_facts": [["1 hour", "one hour"], ["Service Desk"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "must be reported to the IT Service Desk within"}
+      ]
+    },
+    {
+      "id": "security-classification-levels",
+      "category": "List",
+      "question": "What are Northwind's four data classification levels?",
+      "reference_answer": "Public, Internal, Confidential and Restricted.",
+      "required_facts": [["Public"], ["Internal"], ["Confidential"], ["Restricted"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "Company data is classified into four levels"}
+      ]
+    },
+    {
+      "id": "security-restricted-personal-devices",
+      "category": "Specific",
+      "question": "Can Restricted data be stored on personal devices?",
+      "reference_answer": "No, never.",
+      "required_facts": [["never", "must not", "cannot", "not be stored", "not allowed", "prohibited", "no"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "Restricted data must never be stored on personal"}
+      ]
+    },
+    {
+      "id": "security-confidential-sharing",
+      "category": "Specific",
+      "question": "Under what condition can Confidential data be shared externally?",
+      "reference_answer": "Only under a signed non-disclosure agreement.",
+      "required_facts": [["non-disclosure agreement", "NDA", "nondisclosure agreement"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "Confidential data may only be shared externally under a signed"}
+      ]
+    },
+    {
+      "id": "security-sev1-response",
+      "category": "Specific",
+      "question": "How quickly does incident response begin for a SEV-1 incident?",
+      "reference_answer": "Within 15 minutes, at any hour.",
+      "required_facts": [["15 minutes", "fifteen minutes"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "within 15 minutes, at any hour"}
+      ]
+    },
+    {
+      "id": "security-sev3-response",
+      "category": "NearMiss",
+      "question": "What is the response time for SEV-3 security incidents?",
+      "reference_answer": "Within 2 business days.",
+      "required_facts": [["2 business days", "two business days"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "Response begins within 2 business days"}
+      ]
+    },
+    {
+      "id": "security-access-review",
+      "category": "Specific",
+      "question": "How often do managers review their team's system access?",
+      "reference_answer": "Every quarter.",
+      "required_facts": [["quarter", "quarterly"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "Managers review their team's system access every quarter"}
+      ]
+    },
+
+    {
+      "id": "cross-remote-lost-laptop",
+      "category": "CrossDocument",
+      "question": "A Northwind employee working remotely loses their company laptop. How quickly must they report it?",
+      "reference_answer": "Within 1 hour, to the IT Service Desk (the handbook says remote employees follow the IT Security Policy).",
+      "required_facts": [["1 hour", "one hour"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "must be reported to the IT Service Desk within"},
+        {"document": "northwind_employee_handbook.md", "quote": "Employees working remotely must follow the IT Security Policy"}
+      ]
+    },
+    {
+      "id": "cross-departing-laptop",
+      "category": "CrossDocument",
+      "question": "When an employee leaves Northwind, how soon must they return their laptop, and how soon after it is received does IT wipe it?",
+      "reference_answer": "Return within 5 business days; IT wipes it within 24 hours of receiving it.",
+      "required_facts": [["5 business days", "five business days"], ["24 hours", "twenty four hours"]],
+      "relevant_passages": [
+        {"document": "northwind_employee_handbook.md", "quote": "within 5 business days of their final working day"},
+        {"document": "northwind_it_security_policy.txt", "quote": "Returned laptops are securely wiped by IT within 24 hours"}
+      ]
+    },
+    {
+      "id": "cross-departing-access",
+      "category": "CrossDocument",
+      "question": "When is system access revoked for an employee who leaves Northwind?",
+      "reference_answer": "On their final working day.",
+      "required_facts": [["final working day", "last working day", "last day", "final day"]],
+      "relevant_passages": [
+        {"document": "northwind_it_security_policy.txt", "quote": "who leave the company is revoked on their final working day"}
+      ]
+    },
+
+    {
+      "id": "orion-x2-price",
+      "category": "Table",
+      "question": "What was the launch price of the Orion X2 thermostat?",
+      "reference_answer": "179 USD.",
+      "required_facts": [["179"]],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "Price at launch 179 USD 129 USD"}
+      ]
+    },
+    {
+      "id": "orion-x1-battery",
+      "category": "NearMiss",
+      "question": "What is the battery life of the Orion X1?",
+      "reference_answer": "12 months.",
+      "required_facts": [["12 months", "twelve months", "1 year", "one year"]],
+      "forbidden": ["18 months"],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "Battery life 18 months 12 months"}
+      ]
+    },
+    {
+      "id": "orion-x2-accuracy",
+      "category": "NearMiss",
+      "question": "What is the temperature accuracy of the Orion X2?",
+      "reference_answer": "Plus or minus 0.2 C.",
+      "required_facts": [["0.2"]],
+      "forbidden": ["0.5"],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "Temperature accuracy +/- 0.2 C +/- 0.5 C"}
+      ]
+    },
+    {
+      "id": "orion-x2-warranty",
+      "category": "NearMiss",
+      "question": "How long is the warranty on the Orion X2?",
+      "reference_answer": "3 years.",
+      "required_facts": [["3 years", "three years"]],
+      "forbidden": ["2 years"],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "Warranty 3 years 2 years"}
+      ]
+    },
+    {
+      "id": "orion-x1-matter",
+      "category": "Table",
+      "question": "Does the Orion X1 support Matter?",
+      "reference_answer": "No.",
+      "required_facts": [["no", "does not", "not"]],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "Matter support Yes No"}
+      ]
+    },
+    {
+      "id": "orion-x2-wireless",
+      "category": "Table",
+      "question": "Which wireless standards does the Orion X2 support?",
+      "reference_answer": "Wi-Fi 6 and Thread.",
+      "required_facts": [["Wi-Fi 6", "WiFi 6"], ["Thread"]],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "Wireless Wi-Fi 6 and Thread Wi-Fi 4"}
+      ]
+    },
+    {
+      "id": "orion-x2-c-wire",
+      "category": "Specific",
+      "question": "Does the Orion X2 require a C-wire?",
+      "reference_answer": "No; it ships with a power extender kit for homes without one.",
+      "required_facts": [["does not", "doesn't", "not require", "no"]],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "Orion X2 does not require a"}
+      ]
+    },
+    {
+      "id": "orion-baseboard",
+      "category": "Specific",
+      "question": "Can the Orion X2 be used with 240 V electric baseboard heaters?",
+      "reference_answer": "No, it does not support line-voltage baseboard heaters.",
+      "required_facts": [["does not", "doesn't", "not support", "not supported", "cannot", "no"]],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "It does not support line-voltage"}
+      ]
+    },
+    {
+      "id": "orion-pro-price",
+      "category": "Table",
+      "question": "How much does the Orion Cloud Pro plan cost per month?",
+      "reference_answer": "8.99 USD per month.",
+      "required_facts": [["8.99"]],
+      "forbidden": ["3.99"],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "Pro 8.99 USD 2 years Weekly"}
+      ]
+    },
+    {
+      "id": "orion-plus-retention",
+      "category": "Table",
+      "question": "How long does the Orion Cloud Plus plan keep history?",
+      "reference_answer": "90 days.",
+      "required_facts": [["90 days", "ninety days"]],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "Plus 3.99 USD 90 days Monthly"}
+      ]
+    },
+    {
+      "id": "orion-plan-homes",
+      "category": "Table",
+      "question": "How many homes does each Orion Cloud plan support?",
+      "reference_answer": "Basic 1, Plus up to 3, Pro up to 10.",
+      "required_facts": [["1", "one"], ["3", "three"], ["10", "ten"]],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "Basic Free 7 days No 1"},
+        {"document": "orion_thermostat_spec.pdf", "quote": "Pro 8.99 USD 2 years Weekly Up to 10"}
+      ]
+    },
+    {
+      "id": "orion-firmware-window",
+      "category": "Specific",
+      "question": "When do Orion firmware updates install automatically?",
+      "reference_answer": "Between 02:00 and 04:00 local time.",
+      "required_facts": [["02:00", "2:00", "2 am", "2am", "2 a.m."], ["04:00", "4:00", "4 am", "4am", "4 a.m."]],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "updates install automatically between 02:00 and 04:00 local time"}
+      ]
+    },
+    {
+      "id": "orion-x1-support-end",
+      "category": "Specific",
+      "question": "When does software support for the Orion X1 end?",
+      "reference_answer": "In 2028.",
+      "required_facts": [["2028"]],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "Support for the Orion X1 ends in 2028"}
+      ]
+    },
+    {
+      "id": "orion-x2-release",
+      "category": "Specific",
+      "question": "When was the Orion X2 released?",
+      "reference_answer": "March 2026.",
+      "required_facts": [["March 2026"]],
+      "relevant_passages": [
+        {"document": "orion_thermostat_spec.pdf", "quote": "released the Orion X2 smart thermostat in March 2026"}
+      ]
+    },
+
+    {
+      "id": "unanswerable-stumeet-deployment-date",
+      "category": "Unanswerable",
+      "question": "According to the StuMeet report, what was the exact deployment date of StuMeet?",
+      "should_fallback": true
+    },
+    {
+      "id": "unanswerable-orion-x3-battery",
+      "category": "Unanswerable",
+      "question": "What is the battery life of the Orion X3?",
+      "should_fallback": true,
+      "forbidden": ["18 months", "12 months"]
+    },
+    {
+      "id": "unanswerable-orion-weight",
+      "category": "Unanswerable",
+      "question": "How much does the Orion X2 weigh?",
+      "should_fallback": true
+    },
+    {
+      "id": "unanswerable-handbook-gym",
+      "category": "Unanswerable",
+      "question": "How much is Northwind's monthly gym membership allowance?",
+      "should_fallback": true
+    },
+    {
+      "id": "unanswerable-handbook-pension",
+      "category": "Unanswerable",
+      "question": "What percentage of salary does Northwind contribute to employee pensions?",
+      "should_fallback": true
+    },
+    {
+      "id": "unanswerable-security-vpn-vendor",
+      "category": "Unanswerable",
+      "question": "Which company provides Northwind's VPN service?",
+      "should_fallback": true
+    },
+    {
+      "id": "unanswerable-general-capital",
+      "category": "Unanswerable",
+      "question": "What is the capital of Japan?",
+      "should_fallback": true,
+      "forbidden": ["Tokyo"]
+    },
+    {
+      "id": "unanswerable-general-fusion",
+      "category": "Unanswerable",
+      "question": "Explain nuclear fusion according to the documents.",
+      "should_fallback": true
+    }
+  ]
+}

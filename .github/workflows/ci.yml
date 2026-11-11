@@ -3,10 +3,25 @@ name: CI
 on:
   push:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      baseline:
+        description: Optional baseline JSON path relative to backend/ (empty skips the regression check)
+        required: false
+        default: ""
+        type: string
 
 jobs:
   backend:
     runs-on: ubuntu-latest
+    env:
+      APP_NAME: Enterprise RAG CI
+      ENVIRONMENT: test
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/enterprise_rag
+      REDIS_URL: redis://localhost:6379/0
+      SECRET_KEY: ci-test-secret-key-not-for-deployment
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 60
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
@@ -23,7 +38,7 @@ jobs:
         run: uv run python -m compileall app
       - name: Run focused tests
         working-directory: backend
-        run: uv run python -m unittest test_hardening.py -v
+        run: uv run python -m unittest test_hardening.py test_rag_pipeline.py test_evaluation.py -v
 
   frontend:
     runs-on: ubuntu-latest
@@ -37,6 +52,79 @@ jobs:
       - name: Install frontend dependencies
         working-directory: frontend
         run: npm ci
+      - name: Lint frontend
+        working-directory: frontend
+        run: npm run lint
       - name: Build frontend
         working-directory: frontend
         run: npm run build
+
+  rag-regression:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: enterprise_rag_eval
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+    env:
+      APP_NAME: Enterprise RAG CI
+      ENVIRONMENT: test
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/enterprise_rag_eval
+      REDIS_URL: redis://localhost:6379/0
+      SECRET_KEY: ${{ secrets.CI_SECRET_KEY }}
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 60
+      LLM_PROVIDER: gemini
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.1-flash-lite' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: latest
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate evaluation secrets
+        run: |
+          test -n "$SECRET_KEY" || (echo "Set CI_SECRET_KEY in repository secrets." && exit 1)
+          test -n "$GEMINI_API_KEY" || (echo "Set GEMINI_API_KEY in repository secrets." && exit 1)
+      - name: Install backend dependencies
+        working-directory: backend
+        run: uv sync --frozen
+      - name: Apply database migrations
+        working-directory: backend
+        run: uv run alembic upgrade head
+      - name: Install OCR runtime
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends tesseract-ocr
+      - name: Run benchmark and regression check
+        working-directory: backend
+        env:
+          EVAL_BASELINE: ${{ inputs.baseline }}
+        run: |
+          # The runner ingests the committed corpus into this fresh database itself.
+          args=(--provider gemini --model "$GEMINI_MODEL" --output /tmp/rag-evaluation.json)
+          if [ -n "$EVAL_BASELINE" ]; then args+=(--baseline "$EVAL_BASELINE"); fi
+          set -o pipefail
+          uv run python -m app.evaluation.runner "${args[@]}" 2>&1 | tee /tmp/rag-evaluation.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rag-evaluation-${{ github.run_id }}
+          path: |
+            /tmp/rag-evaluation.json
+            /tmp/rag-evaluation.txt

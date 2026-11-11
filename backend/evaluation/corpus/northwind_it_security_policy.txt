@@ -1,0 +1,61 @@
+NORTHWIND ANALYTICS - IT SECURITY POLICY
+Policy owner: Information Security Team. Effective date: 1 February 2026.
+
+1. PASSWORDS AND AUTHENTICATION
+
+Passwords must be at least 14 characters long. Passwords do not need to be
+changed on a schedule; they must be changed immediately if a compromise is
+suspected. Password managers approved by IT are permitted and encouraged.
+
+Multi-factor authentication (MFA) is mandatory for every company account,
+including email, source code hosting and the VPN. Hardware security keys are
+required for administrators; other employees may use an authenticator app.
+SMS codes are not an accepted MFA method.
+
+2. DEVICES
+
+All company laptops use full-disk encryption. Screens must lock automatically
+after 5 minutes of inactivity. USB storage devices are blocked on company
+laptops; approved exceptions are granted by the Information Security Team for
+a maximum of 30 days.
+
+Returned laptops are securely wiped by IT within 24 hours of being received.
+
+3. LOST OR STOLEN DEVICES
+
+A lost or stolen company device must be reported to the IT Service Desk within
+1 hour of discovering the loss. IT will remotely lock the device and revoke its
+access tokens. If the device may have held Restricted data, the Information
+Security Team opens a security incident.
+
+4. DATA CLASSIFICATION
+
+Company data is classified into four levels:
+
+- Public: approved for publication, such as marketing pages.
+- Internal: general business information for employees only.
+- Confidential: sensitive business data, such as contracts and financial
+  forecasts. Confidential data may only be shared externally under a signed
+  non-disclosure agreement.
+- Restricted: the most sensitive data, such as customer personal data and
+  security credentials. Restricted data must never be stored on personal
+  devices and must only be processed in approved systems.
+
+5. SECURITY INCIDENTS
+
+Security incidents are rated by severity:
+
+- SEV-1: active compromise or exposure of Restricted data. Response begins
+  within 15 minutes, at any hour.
+- SEV-2: likely compromise without confirmed data exposure. Response begins
+  within 4 hours.
+- SEV-3: policy violation or suspicious activity with no immediate risk.
+  Response begins within 2 business days.
+
+Every employee must report a suspected incident immediately; reporting a false
+alarm is never penalised.
+
+6. ACCESS REVIEWS
+
+Managers review their team's system access every quarter. Access for employees
+who leave the company is revoked on their final working day.

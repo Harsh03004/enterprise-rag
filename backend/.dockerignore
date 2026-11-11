@@ -7,3 +7,5 @@ storage
 backend.log
 .pytest_cache
 .mypy_cache
+evaluation_runs
+evaluation_results*.json

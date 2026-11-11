@@ -1,61 +1,27 @@
+"""Score evaluation cases against the production RAG pipeline."""
+
 from __future__ import annotations
 
-import re
-from dataclasses import dataclass
+from collections import Counter, defaultdict
+from dataclasses import asdict, dataclass, field
 
 from app.evaluation.dataset import EvaluationCase
 from app.evaluation.metrics import (
     average,
-    citation_precision,
-    citation_recall,
-    fallback_accuracy,
-    keyword_recall,
-    retrieval_precision,
-    retrieval_recall,
-    token_f1,
-)
-from app.services.llm import generate_response
-from app.services.citation_verifier import (
-    repair_missing_citations,
-    verify_answer_grounding,
+    chunk_relevance,
+    citation_scores,
+    forbidden_hits,
+    matched_facts,
+    retrieval_scores,
 )
 from app.services.rag import (
-    GROUNDING_FALLBACK,
-    build_context_and_sources,
-    build_rag_prompt,
-    verify_citations,
-)
-from app.services.reranking import has_sufficient_confidence, rerank_chunks
-from app.services.retrieval import search_similar_chunks
-
-
-FALLBACK_PHRASES = (
-    "i could not verify",
-    "i could not find",
-    "cannot answer",
-    "can't answer",
-    "not enough information",
-    "not found in the document",
-    "not provided in the document",
+    begin_rag_request,
+    extract_citation_ids,
+    is_model_refusal,
+    run_rag_pipeline,
 )
 
-
-def _extract_citation_ids(answer: str) -> list[int]:
-    matches = re.findall(
-    r"\[(?:Source\s+)?(\d+)\]",
-    answer,
-    flags=re.IGNORECASE,
-)
-
-    citation_ids: list[int] = []
-
-    for value in matches:
-        source_id = int(value)
-
-        if source_id not in citation_ids:
-            citation_ids.append(source_id)
-
-    return citation_ids
+ANSWERED = "answered"
 
 
 @dataclass
@@ -63,333 +29,220 @@ class EvaluationResult:
     case_id: str
     category: str
     question: str
+    should_fallback: bool
 
+    status: str
     answer: str
-    fallback: bool
-
-    retrieval_recall: float | None
-    retrieval_precision: float | None
-
-    answer_f1: float | None
-    keyword_recall: float | None
-
-    citation_ids: list[int]
-    citation_recall: float | None
-    citation_precision: float | None
-
-    fallback_accuracy: float
-
+    draft_answer: str
     passed: bool
+    refused: bool = False
+    failure_reasons: list[str] = field(default_factory=list)
+
+    # Answer quality (answerable cases)
+    facts_matched: list[bool] = field(default_factory=list)
+    fact_recall: float | None = None
+    forbidden_found: list[str] = field(default_factory=list)
+
+    # Retrieval quality (cases with labelled passages)
+    retrieved: list[dict] = field(default_factory=list)
+    passage_recall: float | None = None
+    retrieval_hit: float | None = None
+    mrr: float | None = None
+    retrieval_precision: float | None = None
+
+    # Grounding: what sentence-level verification changed
+    statements_removed: int = 0
+    citations_corrected: int = 0
+    grounding_verdicts: list[dict] = field(default_factory=list)
+
+    # Citations (answered cases)
+    citation_ids: list[int] = field(default_factory=list)
+    citation_precision: float | None = None
+    citation_recall: float | None = None
 
     def to_dict(self) -> dict:
-        return {
-            "case_id": self.case_id,
-            "category": self.category,
-            "question": self.question,
-            "answer": self.answer,
-            "fallback": self.fallback,
-            "retrieval_recall": self.retrieval_recall,
-            "retrieval_precision": self.retrieval_precision,
-            "answer_f1": self.answer_f1,
-            "keyword_recall": self.keyword_recall,
-            "citation_ids": self.citation_ids,
-            "citation_recall": self.citation_recall,
-            "citation_precision": self.citation_precision,
-            "fallback_accuracy": self.fallback_accuracy,
-            "passed": self.passed,
-        }
-
-
-def _is_fallback(answer: str) -> bool:
-    normalized = answer.lower().strip()
-
-    return any(phrase in normalized for phrase in FALLBACK_PHRASES)
+        return asdict(self)
 
 
 def evaluate_case(
     db,
     case: EvaluationCase,
     user_id: int,
-    document_id: int | None = None,
     collection_id: int | None = None,
+    document_id: int | None = None,
+    config: dict | None = None,
+    generate=None,
 ) -> EvaluationResult:
-    """
-    Evaluate one RAG case without creating a conversation.
-
-    Retrieval and reranking happen exactly once.
-    """
-
-    # ---------------------------------------------------------
-    # 1. Retrieve
-    # ---------------------------------------------------------
-
-    candidates = search_similar_chunks(
+    """Run one case through the same pipeline chat uses, without persistence."""
+    begin_rag_request()
+    outcome = run_rag_pipeline(
         db=db,
-        query=case.question,
         user_id=user_id,
+        question=case.question,
         document_id=document_id,
         collection_id=collection_id,
-        limit=5,
-        candidate_limit=20,
+        config=config or {},
+        generate=generate,
     )
 
-    # ---------------------------------------------------------
-    # 2. Rerank
-    # ---------------------------------------------------------
-
-    ranked_results = rerank_chunks(
-        query=case.question,
-        results=candidates,
-        limit=5,
-    )
-
-    # ---------------------------------------------------------
-    # 3. Retrieval metrics
-    # ---------------------------------------------------------
-
-    retrieved_chunk_ids = [result[0].id for result, _score in ranked_results]
-
-    retrieval_recall_score = None
-    retrieval_precision_score = None
-
-    if case.relevant_chunk_ids:
-        retrieval_recall_score = retrieval_recall(
-            retrieved_chunk_ids,
-            case.relevant_chunk_ids,
-        )
-
-        retrieval_precision_score = retrieval_precision(
-            retrieved_chunk_ids,
-            case.relevant_chunk_ids,
-        )
-
-    # ---------------------------------------------------------
-    # 4. Apply the same confidence gate used by production RAG
-    # ---------------------------------------------------------
-
-    if not has_sufficient_confidence(ranked_results):
-        answer = "I could not find relevant information in your uploaded documents."
-        fallback = _is_fallback(answer)
-        return EvaluationResult(
-            case_id=case.id, category=case.category, question=case.question,
-            answer=answer, fallback=fallback,
-            retrieval_recall=retrieval_recall_score,
-            retrieval_precision=retrieval_precision_score,
-            answer_f1=None, keyword_recall=None, citation_ids=[],
-            citation_recall=None, citation_precision=None,
-            fallback_accuracy=fallback_accuracy(fallback, case.should_fallback),
-            passed=case.should_fallback,
-        )
-
-    # ---------------------------------------------------------
-    # 5. Build context
-    # ---------------------------------------------------------
-
-    context, sources = build_context_and_sources(
-        [result for result, _score in ranked_results]
-    )
-
-    prompt = build_rag_prompt(
-        question=case.question,
-        history="",
-        context=context,
-    )
-
-    # ---------------------------------------------------------
-    # 6. Generate answer
-    # ---------------------------------------------------------
-
-    answer = generate_response(prompt)
-
-    if not answer:
-        answer = ""
-
-    # ---------------------------------------------------------
-    # 7. Verify citations
-    # ---------------------------------------------------------
-
-    answer, verified_sources = verify_citations(
-        answer=answer,
-        sources=sources,
-    )
-
-    answer = repair_missing_citations(answer, sources)
-    answer, verified_sources = verify_citations(answer, sources)
-    if not verify_answer_grounding(answer, verified_sources):
-        answer = GROUNDING_FALLBACK
-        verified_sources = []
-
-    # ---------------------------------------------------------
-    # 8. Citation metrics
-    #
-    # Convert expected chunk IDs into the source-number
-    # namespace used by [Source N].
-    # ---------------------------------------------------------
-
-    expected_source_ids: list[int] = []
-
-    if case.relevant_chunk_ids:
-        relevant_chunks = set(case.relevant_chunk_ids)
-
-        for source in sources:
-            chunk_id = source.get("chunk_id")
-
-            if chunk_id in relevant_chunks:
-                source_id = source.get("id")
-
-                if source_id is not None:
-                    expected_source_ids.append(int(source_id))
-
-    citation_ids = _extract_citation_ids(answer)
-
-    citation_recall_score = None
-    citation_precision_score = None
-
-    if expected_source_ids:
-        citation_recall_score = citation_recall(
-            citation_ids,
-            expected_source_ids,
-        )
-
-        citation_precision_score = citation_precision(
-            citation_ids,
-            expected_source_ids,
-        )
-
-    # ---------------------------------------------------------
-    # 9. Answer metrics
-    # ---------------------------------------------------------
-
-    answer_f1_score = None
-
-    if case.expected_answer:
-        answer_f1_score = token_f1(
-            answer,
-            case.expected_answer,
-        )
-
-    keyword_recall_score = None
-
-    if case.expected_keywords:
-        keyword_recall_score = keyword_recall(
-            answer,
-            case.expected_keywords,
-        )
-
-    # ---------------------------------------------------------
-    # 10. Fallback
-    # ---------------------------------------------------------
-
-    fallback = _is_fallback(answer)
-
-    fallback_accuracy_score = fallback_accuracy(
-        fallback,
-        case.should_fallback,
-    )
-
-    # ---------------------------------------------------------
-    # 11. Pass criteria
-    # ---------------------------------------------------------
-
-    if case.should_fallback:
-        # For negative / grounding cases, the primary requirement
-        # is that the system correctly refuses to answer when the
-        # document does not contain sufficient information.
-        passed = fallback_accuracy_score == 1.0
-
-    else:
-        # Normal answerable cases must satisfy the quality gates.
-        checks: list[bool] = []
-
-        if retrieval_recall_score is not None:
-            checks.append(retrieval_recall_score >= 0.5)
-
-        if retrieval_precision_score is not None:
-            checks.append(retrieval_precision_score >= 0.2)
-
-        if answer_f1_score is not None:
-            checks.append(answer_f1_score >= 0.5)
-
-        if keyword_recall_score is not None:
-            checks.append(keyword_recall_score >= 0.5)
-
-        if citation_recall_score is not None:
-            checks.append(citation_recall_score >= 0.5)
-
-        checks.append(not fallback)
-
-        passed = all(checks) if checks else False
-
-    return EvaluationResult(
+    passages = [(passage.document, passage.quote) for passage in case.relevant_passages]
+    result = EvaluationResult(
         case_id=case.id,
         category=case.category,
         question=case.question,
-        answer=answer,
-        fallback=fallback,
-        retrieval_recall=retrieval_recall_score,
-        retrieval_precision=retrieval_precision_score,
-        answer_f1=answer_f1_score,
-        keyword_recall=keyword_recall_score,
-        citation_ids=citation_ids,
-        citation_recall=citation_recall_score,
-        citation_precision=citation_precision_score,
-        fallback_accuracy=fallback_accuracy_score,
-        passed=passed,
+        should_fallback=case.should_fallback,
+        status=outcome.status,
+        answer=outcome.answer,
+        draft_answer=outcome.draft_answer,
+        passed=False,
     )
 
-
-def summarize_results(
-    results: list[EvaluationResult],
-) -> dict:
-    if not results:
-        return {
-            "total": 0,
-            "passed": 0,
-            "failed": 0,
-            "pass_rate": 0.0,
-            "retrieval_recall": 0.0,
-            "retrieval_precision": 0.0,
-            "answer_f1": 0.0,
-            "keyword_recall": 0.0,
-            "citation_recall": 0.0,
-            "citation_precision": 0.0,
-            "fallback_accuracy": 0.0,
-            "citation_count": 0.0,
+    # ---- Retrieval: which reranked chunks hold labelled evidence -------------
+    ranked = [(document.filename, chunk.content) for (chunk, document, _distance), _score in outcome.ranked_results]
+    relevance = chunk_relevance(ranked, passages)
+    result.retrieved = [
+        {
+            "rank": rank,
+            "filename": document.filename,
+            "chunk_index": chunk.chunk_index,
+            "page_number": chunk.page_number,
+            "reranker_score": round(float(score), 4),
+            "relevant": bool(hits),
         }
+        for rank, (((chunk, document, _distance), score), hits) in enumerate(
+            zip(outcome.ranked_results, relevance, strict=True), start=1
+        )
+    ]
+    if passages:
+        scores = retrieval_scores(relevance, len(passages))
+        result.passage_recall = scores["passage_recall"]
+        result.retrieval_hit = scores["hit"]
+        result.mrr = scores["mrr"]
+        result.retrieval_precision = scores["precision"]
 
-    return {
+    if outcome.grounding is not None:
+        result.statements_removed = outcome.grounding.removed
+        result.citations_corrected = outcome.grounding.corrected
+        result.grounding_verdicts = [asdict(verdict) for verdict in outcome.grounding.verdicts]
+
+    # A refusal sentence can pass verification once citation repair attaches a
+    # [Source N] to it. Score it as the refusal the user actually sees, and flag
+    # the spurious citation separately.
+    cited_refusal = outcome.status == ANSWERED and is_model_refusal(outcome.answer)
+    answered = outcome.status == ANSWERED and not cited_refusal
+    result.refused = not answered
+
+    # ---- Answer and citations -------------------------------------------------
+    if answered:
+        result.citation_ids = sorted(extract_citation_ids(outcome.answer))
+        result.forbidden_found = forbidden_hits(outcome.answer, case.forbidden)
+        if passages:
+            source_relevance = chunk_relevance(
+                [(source["filename"], source.get("_content", "")) for source in outcome.context_sources],
+                passages,
+            )
+            relevant_ids = [
+                int(source["id"])
+                for source, hits in zip(outcome.context_sources, source_relevance, strict=True)
+                if hits
+            ]
+            citations = citation_scores(result.citation_ids, relevant_ids)
+            result.citation_precision = citations["precision"]
+            result.citation_recall = citations["recall"]
+
+    if case.required_facts:
+        result.facts_matched = matched_facts(outcome.answer if answered else "", case.required_facts)
+        result.fact_recall = sum(result.facts_matched) / len(result.facts_matched)
+
+    # ---- Pass / fail ------------------------------------------------------------
+    reasons: list[str] = []
+    if cited_refusal:
+        reasons.append("citation_attached_to_refusal")
+    if case.should_fallback:
+        if answered:
+            reasons.append("answered_unanswerable_question")
+    else:
+        if not answered:
+            reasons.append("unexpected_model_declined" if cited_refusal else f"unexpected_{outcome.status}")
+        elif not all(result.facts_matched):
+            reasons.append("missing_required_facts")
+        if result.retrieval_hit == 0.0:
+            reasons.append("evidence_not_retrieved")
+    if result.forbidden_found:
+        reasons.append("contains_forbidden_phrase")
+
+    # Diagnostics are reported but do not decide the case: a case passes on the
+    # outcome the user sees (a correct answer, or a refusal when expected).
+    diagnostics = {"evidence_not_retrieved", "citation_attached_to_refusal"}
+    blocking = [reason for reason in reasons if reason not in diagnostics]
+    result.passed = not blocking
+    result.failure_reasons = reasons
+    return result
+
+
+SUMMARY_METRICS = (
+    "pass_rate",
+    "answer_accuracy",
+    "fact_recall",
+    "refusal_accuracy",
+    "false_refusal_rate",
+    "retrieval_hit_rate",
+    "passage_recall",
+    "mrr",
+    "retrieval_precision",
+    "citation_precision",
+    "citation_recall",
+    "partial_answer_rate",
+)
+
+
+def summarize_results(results: list[EvaluationResult]) -> dict:
+    """Aggregate scores; each metric averages only the cases it applies to."""
+    answerable = [result for result in results if not result.should_fallback]
+    unanswerable = [result for result in results if result.should_fallback]
+    passed = sum(1 for result in results if result.passed)
+
+    summary: dict = {
         "total": len(results),
-        "passed": sum(1 for result in results if result.passed),
-        "failed": sum(1 for result in results if not result.passed),
-        "pass_rate": (sum(1 for result in results if result.passed) / len(results)),
-        "retrieval_recall": average(
-            result.retrieval_recall
-            for result in results
-            if result.retrieval_recall is not None
+        "passed": passed,
+        "failed": len(results) - passed,
+        "pass_rate": passed / len(results) if results else None,
+        "answerable_cases": len(answerable),
+        "unanswerable_cases": len(unanswerable),
+        # Answerable questions answered with every required fact and no forbidden phrase.
+        "answer_accuracy": average(1.0 if result.passed else 0.0 for result in answerable),
+        "fact_recall": average(result.fact_recall for result in answerable),
+        # Unanswerable questions correctly refused.
+        "refusal_accuracy": average(1.0 if result.passed else 0.0 for result in unanswerable),
+        # Answerable questions the system refused (lower is better).
+        "false_refusal_rate": average(1.0 if result.refused else 0.0 for result in answerable),
+        "retrieval_hit_rate": average(result.retrieval_hit for result in answerable),
+        "passage_recall": average(result.passage_recall for result in answerable),
+        "mrr": average(result.mrr for result in answerable),
+        "retrieval_precision": average(result.retrieval_precision for result in answerable),
+        "citation_precision": average(result.citation_precision for result in results),
+        "citation_recall": average(result.citation_recall for result in results),
+        # Answered cases where grounding removed at least one sentence.
+        "partial_answer_rate": average(
+            (1.0 if result.statements_removed else 0.0) for result in results if not result.refused
         ),
-        "retrieval_precision": average(
-            result.retrieval_precision
-            for result in results
-            if result.retrieval_precision is not None
+        "statements_removed": sum(result.statements_removed for result in results),
+        "citations_corrected": sum(result.citations_corrected for result in results),
+        "status_counts": dict(Counter(result.status for result in results)),
+        "failure_reasons": dict(
+            Counter(reason for result in results for reason in result.failure_reasons)
         ),
-        "answer_f1": average(
-            result.answer_f1 for result in results if result.answer_f1 is not None
-        ),
-        "keyword_recall": average(
-            result.keyword_recall
-            for result in results
-            if result.keyword_recall is not None
-        ),
-        "citation_recall": average(
-            result.citation_recall
-            for result in results
-            if result.citation_recall is not None
-        ),
-        "citation_precision": average(
-            result.citation_precision
-            for result in results
-            if result.citation_precision is not None
-        ),
-        "fallback_accuracy": average(result.fallback_accuracy for result in results),
-        "citation_count": average(len(result.citation_ids) for result in results),
     }
+
+    by_category: dict[str, list[EvaluationResult]] = defaultdict(list)
+    for result in results:
+        by_category[result.category].append(result)
+    summary["categories"] = {
+        category: {
+            "total": len(items),
+            "passed": sum(1 for item in items if item.passed),
+            "pass_rate": sum(1 for item in items if item.passed) / len(items),
+        }
+        for category, items in sorted(by_category.items())
+    }
+    return summary
