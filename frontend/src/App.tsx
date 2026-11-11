@@ -10,8 +10,11 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Chat from "./pages/Chat";
 import Admin from "./pages/Admin";
+import Evaluations from "./pages/Evaluations";
+import AdminSettings from "./pages/AdminSettings";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 import Layout from "./components/Layout";
 
 function App() {
@@ -75,11 +78,14 @@ function App() {
       <Route
         path="/admin"
         element={
-          <ProtectedRoute>
+          <AdminRoute>
             <Admin />
-          </ProtectedRoute>
+          </AdminRoute>
         }
       />
+
+      <Route path="/admin/evaluations" element={<AdminRoute><Evaluations /></AdminRoute>} />
+      <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
 
       {/* ============================== */}
       {/* Fallback */}

@@ -13,6 +13,7 @@ USER_AGENT = (
     "Chrome/150.0.0.0 "
     "Safari/537.36"
 )
+MAX_WEB_PAGE_BYTES = 5 * 1024 * 1024
 
 
 def validate_url(url: str) -> str:
@@ -49,27 +50,43 @@ def validate_url(url: str) -> str:
     return url
 
 
+def _read_bounded_html(response: httpx.Response) -> str:
+    content_length = response.headers.get("content-length")
+    if content_length:
+        try:
+            declared_length = int(content_length)
+        except ValueError:
+            declared_length = 0
+        if declared_length > MAX_WEB_PAGE_BYTES:
+            raise ValueError("Web pages larger than 5 MiB are not supported.")
+
+    body = bytearray()
+    for part in response.iter_bytes(chunk_size=64 * 1024):
+        if len(body) + len(part) > MAX_WEB_PAGE_BYTES:
+            raise ValueError("Web pages larger than 5 MiB are not supported.")
+        body.extend(part)
+    return bytes(body).decode(response.encoding or "utf-8", errors="replace")
+
+
 def extract_webpage_text(
     url: str,
 ) -> str:
     validate_url(url)
 
-    response = httpx.get(
-        url,
-        headers={
-            "User-Agent": USER_AGENT,
-        },
+    with httpx.Client(
+        headers={"User-Agent": USER_AGENT},
         timeout=20.0,
         follow_redirects=False,
-    )
+    ) as client:
+        with client.stream("GET", url) as response:
+            if response.is_redirect:
+                raise ValueError("Redirecting URLs are not supported.")
 
-    if response.is_redirect:
-        raise ValueError("Redirecting URLs are not supported.")
-
-    response.raise_for_status()
+            response.raise_for_status()
+            html = _read_bounded_html(response)
 
     soup = BeautifulSoup(
-        response.text,
+        html,
         "html.parser",
     )
 

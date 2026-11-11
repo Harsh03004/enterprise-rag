@@ -8,10 +8,12 @@ from app.tasks import process_document_task
 def enqueue_document_processing(
     db: Session,
     document: Document,
+    rebuild_chunks: bool = False,
 ) -> ProcessingJob:
     job = ProcessingJob(
         document_id=document.id,
         status="queued",
+        rebuild_chunks=rebuild_chunks,
     )
     document.status = "processing"
     document.processing_error = None

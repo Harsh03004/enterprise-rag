@@ -16,6 +16,7 @@ RUN pip install --no-cache-dir uv \
 COPY app ./app
 COPY alembic ./alembic
 COPY alembic.ini ./alembic.ini
+COPY evaluation ./evaluation
 
 ENV PATH="/app/.venv/bin:$PATH"
 

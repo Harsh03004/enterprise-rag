@@ -1,3 +1,4 @@
+import re
 from io import BytesIO
 from pathlib import Path
 from typing import cast
@@ -20,9 +21,7 @@ def extract_text_blocks(file_path: str) -> list[tuple[str, int | None]]:
         return [(extract_text(file_path), None)]
 
     if suffix == ".pdf":
-        return [
-            (page, index) for index, page in enumerate(extract_pdf_pages(path), start=1)
-        ]
+        return extract_pdf_page_blocks(path)
 
     raise ValueError(f"Unsupported file type: {suffix}")
 
@@ -88,29 +87,42 @@ def extract_pdf(path: Path) -> str:
 
 
 def extract_pdf_pages(path: Path) -> list[str]:
+    return [text for text, _page_number in extract_pdf_page_blocks(path)]
+
+
+def extract_pdf_page_blocks(path: Path) -> list[tuple[str, int]]:
     reader = PdfReader(path)
-
-    normal_pages = []
-
-    for page in reader.pages:
-        text = page.extract_text() or ""
-        normal_pages.append(text.strip())
-
+    normal_pages = [(page.extract_text() or "").strip() for page in reader.pages]
     document = fitz.open(path)
-
-    pages = []
+    pages: list[tuple[str, int]] = []
 
     try:
         for index, normal_text in enumerate(normal_pages):
             if is_usable_text(normal_text):
-                pages.append(normal_text)
+                page_text = normal_text
             else:
                 page = cast(fitz.Page, document[index])
+                page_text = ocr_page(page)
 
-                ocr_text = ocr_page(page)
+            # Preserve detected PDF tables in a stable, chunkable markdown
+            # representation alongside normal page text.
+            if is_usable_text(normal_text):
+                try:
+                    table_blocks = []
+                    for table in cast(fitz.Page, document[index]).find_tables().tables:
+                        rows = table.extract()
+                        for row in rows:
+                            cells = [str(cell or "").replace("\n", " / ").strip() for cell in row]
+                            if any(cells):
+                                table_blocks.append("| " + " | ".join(cells) + " |")
+                    if table_blocks:
+                        page_text = f"{page_text}\n\n" + "\n".join(table_blocks)
+                except (AttributeError, RuntimeError, ValueError):
+                    # Some PDFs contain vector layouts that are not tables.
+                    pass
 
-                if ocr_text:
-                    pages.append(ocr_text)
+            if page_text.strip():
+                pages.append((page_text.strip(), index + 1))
 
     finally:
         document.close()
@@ -185,7 +197,13 @@ def extract_docx(path: Path) -> str:
         text = paragraph.text.strip()
 
         if text:
-            sections.append(text)
+            style_name = paragraph.style.name if paragraph.style is not None else ""
+            heading = re.fullmatch(r"Heading\s+(\d+)", style_name, flags=re.IGNORECASE)
+            if heading:
+                level = min(6, max(1, int(heading.group(1))))
+                sections.append(f"{'#' * level} {text}")
+            else:
+                sections.append(text)
 
     # ---------------------------------------------------------
     # Tables
@@ -195,10 +213,10 @@ def extract_docx(path: Path) -> str:
         rows = []
 
         for row in table.rows:
-            cells = [cell.text.strip() for cell in row.cells]
+            cells = [cell.text.strip().replace("\n", " / ") for cell in row.cells]
 
             if any(cells):
-                rows.append(" | ".join(cells))
+                rows.append("| " + " | ".join(cells) + " |")
 
         if rows:
             sections.append("\n".join(rows))

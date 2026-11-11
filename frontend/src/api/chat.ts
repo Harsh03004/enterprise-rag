@@ -17,13 +17,15 @@ export interface ChatSource {
 }
 
 export interface ChatStreamEvent {
-  type: "token" | "final" | "sources" | "conversation" | "complete" | "error";
+  type: "token" | "final" | "sources" | "conversation" | "complete" | "error" | "metrics" | "verifying";
 
   content?: string;
 
   sources?: ChatSource[];
 
   conversation?: Conversation;
+
+  metrics?: Record<string, number | string | boolean>;
 }
 
 interface StreamChatOptions {
@@ -45,6 +47,8 @@ interface StreamChatOptions {
 
   onConversation: (conversation: Conversation) => void;
 
+  onVerifying?: () => void;
+
   onComplete?: () => void;
 }
 
@@ -58,6 +62,7 @@ export async function streamChat({
   onSources,
   onFinal,
   onConversation,
+  onVerifying,
   onComplete,
 }: StreamChatOptions): Promise<void> {
   const token = localStorage.getItem(TOKEN_KEY);
@@ -144,6 +149,10 @@ export async function streamChat({
 
         if (parsed.type === "final") {
           onFinal(parsed.content ?? "");
+        }
+
+        if (parsed.type === "verifying") {
+          onVerifying?.();
         }
 
         if (parsed.type === "sources") {

@@ -19,6 +19,10 @@ export interface User {
   created_at: string;
 }
 
+export interface CurrentUser extends User {
+  is_admin: boolean;
+}
+
 export interface LoginResponse {
   access_token: string;
   token_type: string;
@@ -43,5 +47,10 @@ export async function login(
     body: JSON.stringify(data),
   });
 
+  return response.json();
+}
+
+export async function getCurrentUser(): Promise<CurrentUser> {
+  const response = await apiFetch("/users/me");
   return response.json();
 }

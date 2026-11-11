@@ -1,9 +1,9 @@
 from datetime import datetime
 
 from sqlalchemy import (
+    DateTime,
     ForeignKey,
     String,
-    DateTime,
     func,
 )
 from sqlalchemy.orm import (

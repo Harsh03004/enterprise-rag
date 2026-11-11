@@ -16,6 +16,12 @@ celery_app.conf.update(
     task_acks_late=True,
     task_reject_on_worker_lost=True,
     broker_connection_retry_on_startup=True,
+    beat_schedule={
+        "recover-stale-document-jobs-every-minute": {
+            "task": "documents.recover_stale",
+            "schedule": 60.0,
+        }
+    },
 )
 
 celery_app.autodiscover_tasks(["app"])

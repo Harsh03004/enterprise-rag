@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.jwt import create_access_token
 from app.core.security import verify_password
-from app.crud.user import create_user, get_user_by_email
+from app.crud.user import create_user, get_user_by_email, get_user_by_username
 from app.db.dependencies import get_db
 from app.schemas.auth import LoginRequest, Token
 from app.schemas.user import UserCreate, UserResponse
-
 
 router = APIRouter(
     prefix="/auth",
@@ -25,14 +25,20 @@ def register_user(
     db: Session = Depends(get_db),
 ):
     existing_user = get_user_by_email(db, user.email)
-
-    if existing_user:
+    if existing_user or get_user_by_username(db, user.username):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered",
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email or username is already registered.",
         )
 
-    return create_user(db, user)
+    try:
+        return create_user(db, user)
+    except IntegrityError as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email or username is already registered.",
+        ) from exc
 
 
 @router.post(
@@ -45,7 +51,7 @@ def login(
 ):
     user = get_user_by_email(db, credentials.email)
 
-    if not user:
+    if not user or not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",

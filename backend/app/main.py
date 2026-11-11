@@ -23,6 +23,7 @@ from app.api.routes.documents import router as documents_router
 from app.api.routes.users import router as users_router
 from app.core.config import settings
 from app.db.session import engine
+from app.services.document_service import check_storage_ready
 
 app = FastAPI(
     title=settings.app_name,
@@ -92,7 +93,7 @@ async def health():
 
 @app.get("/ready")
 def readiness():
-    checks = {"database": False, "redis": False}
+    checks = {"database": False, "redis": False, "storage": False}
 
     try:
         with engine.connect() as connection:
@@ -107,6 +108,8 @@ def readiness():
         redis_client.close()
     except RedisError as exc:
         logger.warning("redis_readiness_failed error=%s", exc)
+
+    checks["storage"] = check_storage_ready()
 
     ready = all(checks.values())
     payload = {

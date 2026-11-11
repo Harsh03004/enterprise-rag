@@ -4,9 +4,10 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import get_current_user
+from app.core.config import is_admin_email
 from app.db.dependencies import get_db
 from app.models.user import User
-from app.schemas.user import UserResponse
+from app.schemas.user import CurrentUserResponse
 from app.services.analytics import get_query_summary
 
 router = APIRouter(
@@ -17,12 +18,19 @@ router = APIRouter(
 
 @router.get(
     "/me",
-    response_model=UserResponse,
+    response_model=CurrentUserResponse,
 )
 def get_me(
     current_user: User = Depends(get_current_user),
 ):
-    return current_user
+    return {
+        "id": current_user.id,
+        "email": current_user.email,
+        "username": current_user.username,
+        "is_active": current_user.is_active,
+        "created_at": current_user.created_at,
+        "is_admin": is_admin_email(current_user.email),
+    }
 
 
 @router.get("/me/analytics")

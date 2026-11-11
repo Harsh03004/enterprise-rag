@@ -21,7 +21,6 @@ from app.schemas.collection import (
     CollectionUpdate,
 )
 
-
 router = APIRouter(
     prefix="/collections",
     tags=["Collections"],
@@ -97,7 +96,6 @@ def rename_collection(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Collection not found.",
         )
-
     return collection
 
 
@@ -121,5 +119,3 @@ def remove_collection(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Collection not found.",
         )
-
-    return None

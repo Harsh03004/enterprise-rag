@@ -23,9 +23,21 @@ dependencies = [
     "python-jose[cryptography]>=3.5.0",
     "python-multipart>=0.0.32",
     "sentence-transformers>=5.7.0",
+    "torch>=2.13.0",
     "sqlalchemy>=2.0.51",
     "tiktoken>=0.13.0",
     "beautifulsoup4>=4.14.2",
     "uvicorn[standard]>=0.51.0",
     "pytesseract>=0.3.13",
+    "boto3>=1.35",
 ]
+
+# CPU-only PyTorch: the default PyPI wheel bundles ~3.5 GB of CUDA libraries
+# (nvidia-*, triton) that this CPU-only service never uses.
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

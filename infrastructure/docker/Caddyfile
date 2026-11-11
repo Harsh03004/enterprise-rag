@@ -1,0 +1,7 @@
+{$APP_DOMAIN} {
+	encode zstd gzip
+
+	@api path /auth* /users* /documents* /chat* /admin* /conversations* /collections* /health /ready /openapi.json /docs* /redoc*
+	reverse_proxy @api backend:8000
+	reverse_proxy frontend:80
+}

@@ -1,7 +1,6 @@
 from app.db.session import SessionLocal
-from app.services.retrieval import search_similar_chunks
 from app.services.reranking import score_chunks
-
+from app.services.retrieval import search_similar_chunks
 
 db = SessionLocal()
 

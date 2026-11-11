@@ -4,6 +4,7 @@ const API_URL =
 
 const TOKEN_KEY =
   "enterprise_rag_token";
+export const AUTH_EXPIRED_EVENT = "enterprise-rag:unauthorized";
 
 
 export async function apiFetch(
@@ -46,6 +47,10 @@ export async function apiFetch(
   );
 
   if (!response.ok) {
+    if (response.status === 401 && token) {
+      window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT));
+    }
+
     let message =
       `Request failed with status ${response.status}`;
 

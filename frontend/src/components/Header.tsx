@@ -1,7 +1,8 @@
 import { useAuth } from "../context/useAuth";
+import { Link } from "react-router-dom";
 
 export default function Header() {
-  const { logout } = useAuth();
+  const { logout, isAdmin } = useAuth();
 
   return (
     <header className="app-header">
@@ -10,6 +11,7 @@ export default function Header() {
       </div>
 
       <div className="header-actions">
+        {isAdmin && <Link to="/admin">Administration</Link>}
         <button onClick={logout}>
           Logout
         </button>
