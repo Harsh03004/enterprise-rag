@@ -155,3 +155,19 @@ class ConfidenceGateTests(unittest.TestCase):
         self.assertTrue(has_sufficient_confidence([("chunk", -1.19)]))
         self.assertFalse(has_sufficient_confidence([("chunk", -7.9)]))
         self.assertFalse(has_sufficient_confidence([]))
+
+
+class PassageRerankTests(unittest.TestCase):
+    def test_chunk_is_ranked_by_its_best_passage(self):
+        from app.services import reranking
+
+        mixed = SimpleNamespace(content="Visual Studio Code for development.\nPostman for API testing.\nGit for version control.\nMongoDB Compass for data.")
+        plain = SimpleNamespace(content="General overview text.")
+
+        def fake_predict(pairs, **_kwargs):
+            return [5.0 if passage.startswith("Visual Studio Code for development. Postman") else 1.0 for _q, passage in pairs]
+
+        with patch.object(reranking.model, "predict", side_effect=fake_predict):
+            ranked = reranking.rerank_chunks("api testing tool", [(plain, None, 0.1), (mixed, None, 0.2)], limit=2)
+        self.assertIs(ranked[0][0][0], mixed)
+        self.assertEqual(ranked[0][1], 5.0)

@@ -1,9 +1,22 @@
+import re
+
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models.document import Document
 from app.models.document_chunk import DocumentChunk
 from app.services.embedding import generate_embedding
+
+
+def keyword_query(question: str) -> str:
+    """OR-combine the question's words for websearch_to_tsquery.
+
+    Stop words are removed by the "english" text-search configuration; quotes
+    and operators are stripped so user text cannot change query semantics.
+    """
+    words = re.findall(r"[A-Za-z0-9][A-Za-z0-9._-]*", question)
+    terms = [word for word in words if len(word) > 1 and word.lower() not in {"or", "and", "not"}]
+    return " or ".join(dict.fromkeys(terms)) or question
 
 
 def search_similar_chunks(
@@ -67,9 +80,13 @@ def search_similar_chunks(
     # 2. Keyword / full-text search
     # ---------------------------------------------------------
 
+    # Match chunks containing ANY of the question's terms, ranked by
+    # ts_rank_cd. websearch_to_tsquery on the raw question ANDs every word,
+    # so natural-language questions usually matched nothing and retrieval
+    # silently became vector-only.
     keyword_vector = func.websearch_to_tsquery(
         "english",
-        query,
+        keyword_query(query),
     )
 
     keyword_rank = func.ts_rank_cd(

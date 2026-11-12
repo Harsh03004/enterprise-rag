@@ -27,34 +27,31 @@
   },
   "summary": {
     "total": 75,
-    "passed": 73,
-    "failed": 2,
-    "pass_rate": 0.9733333333333334,
+    "passed": 74,
+    "failed": 1,
+    "pass_rate": 0.9866666666666667,
     "answerable_cases": 67,
     "unanswerable_cases": 8,
-    "answer_accuracy": 0.9701492537313433,
-    "fact_recall": 0.9701492537313433,
+    "answer_accuracy": 0.9850746268656716,
+    "fact_recall": 0.996268656716418,
     "refusal_accuracy": 1.0,
-    "false_refusal_rate": 0.029850746268656716,
-    "retrieval_hit_rate": 0.9402985074626866,
-    "passage_recall": 0.9328358208955224,
-    "mrr": 0.8606965174129353,
-    "retrieval_precision": 0.20597014925373136,
-    "citation_precision": 0.9230769230769231,
-    "citation_recall": 0.9920634920634921,
-    "partial_answer_rate": 0.015384615384615385,
-    "statements_removed": 2,
-    "citations_corrected": 0,
+    "false_refusal_rate": 0.0,
+    "retrieval_hit_rate": 1.0,
+    "passage_recall": 0.9850746268656716,
+    "mrr": 0.8786069651741294,
+    "retrieval_precision": 0.2208955223880597,
+    "citation_precision": 0.9353233830845771,
+    "citation_recall": 0.9776119402985075,
+    "partial_answer_rate": 0.014925373134328358,
+    "statements_removed": 1,
+    "citations_corrected": 1,
     "status_counts": {
-      "answered": 65,
-      "grounding_failed": 1,
-      "model_declined": 5,
+      "answered": 67,
+      "model_declined": 4,
       "no_context": 4
     },
     "failure_reasons": {
-      "evidence_not_retrieved": 4,
-      "unexpected_grounding_failed": 1,
-      "unexpected_model_declined": 1
+      "missing_required_facts": 1
     },
     "categories": {
       "Basic": {
@@ -74,8 +71,8 @@
       },
       "List": {
         "total": 12,
-        "passed": 12,
-        "pass_rate": 1.0
+        "passed": 11,
+        "pass_rate": 0.9166666666666666
       },
       "NearMiss": {
         "total": 5,
@@ -84,8 +81,8 @@
       },
       "Specific": {
         "total": 35,
-        "passed": 33,
-        "pass_rate": 0.9428571428571428
+        "passed": 35,
+        "pass_rate": 1.0
       },
       "Synthesis": {
         "total": 2,
@@ -111,13 +108,11 @@
       "question": "What is StuMeet?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "StuMeet is a secure, user-friendly, and feature-rich online meeting platform designed to enhance virtual collaboration for students, educators, and professional teams [Source 1] [Source 2].",
-      "draft_answer": "StuMeet is a secure, user-friendly, and feature-rich online meeting platform designed to enhance virtual collaboration for students, educators, and professional teams [Source 1, Source 2].",
+      "answer": "StuMeet is a secure, feature-rich, and customizable collaborative meeting platform designed to enhance virtual communication for students, educators, and professional teams [Source 1] [Source 2] [Source 4].",
+      "draft_answer": "StuMeet is a secure, feature-rich, and customizable collaborative meeting platform designed to enhance virtual communication for students, educators, and professional teams [Source 1, Source 2, Source 4].",
       "passed": true,
       "refused": false,
-      "failure_reasons": [
-        "evidence_not_retrieved"
-      ],
+      "failure_reasons": [],
       "facts_matched": [
         true,
         true
@@ -136,152 +131,52 @@
         {
           "rank": 2,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 11,
+          "chunk_index": 9,
           "page_number": null,
-          "reranker_score": 5.6559,
-          "relevant": false
+          "reranker_score": 6.3786,
+          "relevant": true
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
           "chunk_index": 17,
           "page_number": null,
-          "reranker_score": 5.5239,
+          "reranker_score": 6.1273,
           "relevant": false
         },
         {
           "rank": 4,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 13,
-          "page_number": null,
-          "reranker_score": 4.5611,
-          "relevant": false
-        },
-        {
-          "rank": 5,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 12,
-          "page_number": null,
-          "reranker_score": 4.56,
-          "relevant": false
-        }
-      ],
-      "passage_recall": 0.0,
-      "retrieval_hit": 0.0,
-      "mrr": 0.0,
-      "retrieval_precision": 0.0,
-      "statements_removed": 0,
-      "citations_corrected": 0,
-      "grounding_verdicts": [
-        {
-          "claim": "StuMeet is a secure, user-friendly, and feature-rich online meeting platform designed to enhance virtual collaboration for students, educators, and professional teams .",
-          "cited": [
-            1,
-            2
-          ],
-          "supported_by": 2,
-          "entailment": 0.9697,
-          "action": "kept",
-          "basis": "entailment"
-        }
-      ],
-      "citation_ids": [
-        1,
-        2
-      ],
-      "citation_precision": 0.0,
-      "citation_recall": null
-    },
-    {
-      "case_id": "stumeet-features",
-      "category": "List",
-      "question": "What are the main features of StuMeet?",
-      "should_fallback": false,
-      "status": "answered",
-      "answer": "StuMeet features include a user-friendly interface, real-time engagement tools, chat capabilities, and a guided onboarding experience [Source 1]. It also offers one-click instant meetings, custom room creation, secure user management with role-specific access, and a logging system for tracking meeting activity and participation [Source 2] [Source 3] [Source 4] [Source 5].",
-      "draft_answer": "StuMeet features include a user-friendly interface, real-time engagement tools, chat capabilities, and a guided onboarding experience [Source 1]. It also offers one-click instant meetings, custom room creation, secure user management with role-specific access, and a logging system for tracking meeting activity and participation [Source 2, Source 3, Source 4, Source 5].",
-      "passed": true,
-      "refused": false,
-      "failure_reasons": [
-        "evidence_not_retrieved"
-      ],
-      "facts_matched": [
-        true,
-        true,
-        true,
-        true
-      ],
-      "fact_recall": 1.0,
-      "forbidden_found": [],
-      "retrieved": [
-        {
-          "rank": 1,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 12,
-          "page_number": null,
-          "reranker_score": 4.9849,
-          "relevant": false
-        },
-        {
-          "rank": 2,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 10,
-          "page_number": null,
-          "reranker_score": 4.8868,
-          "relevant": false
-        },
-        {
-          "rank": 3,
           "filename": "stumeet_project_report.docx",
           "chunk_index": 11,
           "page_number": null,
-          "reranker_score": 4.4515,
-          "relevant": false
-        },
-        {
-          "rank": 4,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 16,
-          "page_number": null,
-          "reranker_score": 4.3561,
+          "reranker_score": 5.7354,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 13,
+          "chunk_index": 12,
           "page_number": null,
-          "reranker_score": 3.631,
+          "reranker_score": 5.0616,
           "relevant": false
         }
       ],
-      "passage_recall": 0.0,
-      "retrieval_hit": 0.0,
-      "mrr": 0.0,
-      "retrieval_precision": 0.0,
+      "passage_recall": 0.5,
+      "retrieval_hit": 1.0,
+      "mrr": 0.5,
+      "retrieval_precision": 0.2,
       "statements_removed": 0,
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "StuMeet features include a user-friendly interface, real-time engagement tools, chat capabilities, and a guided onboarding experience .",
+          "claim": "StuMeet is a secure, feature-rich, and customizable collaborative meeting platform designed to enhance virtual communication for students, educators, and professional teams .",
           "cited": [
-            1
-          ],
-          "supported_by": 1,
-          "entailment": 0.9913,
-          "action": "kept",
-          "basis": "entailment"
-        },
-        {
-          "claim": "It also offers one-click instant meetings, custom room creation, secure user management with role-specific access, and a logging system for tracking meeting activity and participation .",
-          "cited": [
+            1,
             2,
-            3,
-            4,
-            5
+            4
           ],
           "supported_by": 4,
-          "entailment": 0.9397,
+          "entailment": 0.9838,
           "action": "kept",
           "basis": "entailment"
         }
@@ -289,12 +184,97 @@
       "citation_ids": [
         1,
         2,
-        3,
-        4,
-        5
+        4
+      ],
+      "citation_precision": 0.3333333333333333,
+      "citation_recall": 1.0
+    },
+    {
+      "case_id": "stumeet-features",
+      "category": "List",
+      "question": "What are the main features of StuMeet?",
+      "should_fallback": false,
+      "status": "answered",
+      "answer": "StuMeet features instant meeting creation and customizable rooms, real-time chat with media sharing and reactions, secure authentication using OAuth and JWT, and meeting logs for tracking attendance and participation [Source 1].",
+      "draft_answer": "StuMeet features instant meeting creation and customizable rooms, real-time chat with media sharing and reactions, secure authentication using OAuth and JWT, and meeting logs for tracking attendance and participation [Source 1].",
+      "passed": false,
+      "refused": false,
+      "failure_reasons": [
+        "missing_required_facts"
+      ],
+      "facts_matched": [
+        true,
+        true,
+        true,
+        false
+      ],
+      "fact_recall": 0.75,
+      "forbidden_found": [],
+      "retrieved": [
+        {
+          "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 9,
+          "page_number": null,
+          "reranker_score": 7.2052,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 1,
+          "page_number": null,
+          "reranker_score": 6.0312,
+          "relevant": true
+        },
+        {
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 12,
+          "page_number": null,
+          "reranker_score": 4.9849,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 10,
+          "page_number": null,
+          "reranker_score": 4.8868,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 16,
+          "page_number": null,
+          "reranker_score": 4.6118,
+          "relevant": false
+        }
+      ],
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 0.5,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
+      "citations_corrected": 0,
+      "grounding_verdicts": [
+        {
+          "claim": "StuMeet features instant meeting creation and customizable rooms, real-time chat with media sharing and reactions, secure authentication using OAuth and JWT, and meeting logs for tracking attendance and participation .",
+          "cited": [
+            1
+          ],
+          "supported_by": 1,
+          "entailment": 0.7776,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        1
       ],
       "citation_precision": 0.0,
-      "citation_recall": null
+      "citation_recall": 0.0
     },
     {
       "case_id": "stumeet-problem",
@@ -319,7 +299,7 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 6,
           "page_number": null,
-          "reranker_score": 7.792,
+          "reranker_score": 7.9835,
           "relevant": false
         },
         {
@@ -327,7 +307,7 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 9,
           "page_number": null,
-          "reranker_score": 7.1252,
+          "reranker_score": 7.732,
           "relevant": false
         },
         {
@@ -351,7 +331,7 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 3,
           "page_number": null,
-          "reranker_score": 4.6544,
+          "reranker_score": 5.0378,
           "relevant": false
         }
       ],
@@ -401,8 +381,8 @@
       "question": "What is WebRTC used for in StuMeet?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "In StuMeet, WebRTC is used for high-quality video and audio streaming [Source 1].",
-      "draft_answer": "In StuMeet, WebRTC is used for high-quality video and audio streaming [Source 1].",
+      "answer": "In StuMeet, WebRTC (with the Agora SDK) is used for high-quality video and audio streaming [Source 2].",
+      "draft_answer": "In StuMeet, WebRTC (with the Agora SDK) is used for high-quality video and audio streaming [Source 2].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -416,64 +396,64 @@
         {
           "rank": 1,
           "filename": "stumeet_project_report.docx",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": 5.458,
+          "relevant": false
+        },
+        {
+          "rank": 2,
+          "filename": "stumeet_project_report.docx",
           "chunk_index": 23,
           "page_number": null,
           "reranker_score": 3.1564,
           "relevant": true
         },
         {
-          "rank": 2,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 3,
-          "page_number": null,
-          "reranker_score": 2.1757,
-          "relevant": false
-        },
-        {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
           "chunk_index": 22,
           "page_number": null,
-          "reranker_score": 0.919,
+          "reranker_score": 2.8137,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 13,
+          "chunk_index": 6,
           "page_number": null,
-          "reranker_score": -0.4636,
+          "reranker_score": 1.0349,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 16,
+          "chunk_index": 13,
           "page_number": null,
-          "reranker_score": -0.4841,
+          "reranker_score": -0.4636,
           "relevant": false
         }
       ],
       "passage_recall": 1.0,
       "retrieval_hit": 1.0,
-      "mrr": 1.0,
+      "mrr": 0.5,
       "retrieval_precision": 0.2,
       "statements_removed": 0,
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "In StuMeet, WebRTC is used for high-quality video and audio streaming .",
+          "claim": "In StuMeet, WebRTC (with the Agora SDK) is used for high-quality video and audio streaming .",
           "cited": [
-            1
+            2
           ],
-          "supported_by": 1,
-          "entailment": 0.9378,
+          "supported_by": 2,
+          "entailment": 0.91,
           "action": "kept",
           "basis": "entailment"
         }
       ],
       "citation_ids": [
-        1
+        2
       ],
       "citation_precision": 1.0,
       "citation_recall": 1.0
@@ -484,8 +464,8 @@
       "question": "Which SDK does StuMeet use together with WebRTC?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "StuMeet uses the Agora SDK in conjunction with WebRTC for high-quality video and audio streaming [Source 1].",
-      "draft_answer": "StuMeet uses the Agora SDK in conjunction with WebRTC for high-quality video and audio streaming [Source 1].",
+      "answer": "StuMeet uses the Agora SDK in conjunction with WebRTC for video and audio streaming [Source 1].",
+      "draft_answer": "StuMeet uses the Agora SDK in conjunction with WebRTC for video and audio streaming [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -508,7 +488,7 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 3,
           "page_number": null,
-          "reranker_score": -1.464,
+          "reranker_score": 1.8007,
           "relevant": false
         },
         {
@@ -516,23 +496,23 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 6,
           "page_number": null,
-          "reranker_score": -1.9338,
+          "reranker_score": -0.365,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 13,
+          "chunk_index": 22,
           "page_number": null,
-          "reranker_score": -2.1657,
+          "reranker_score": -0.536,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 17,
+          "chunk_index": 13,
           "page_number": null,
-          "reranker_score": -2.1857,
+          "reranker_score": -2.1315,
           "relevant": false
         }
       ],
@@ -544,12 +524,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "StuMeet uses the Agora SDK in conjunction with WebRTC for high-quality video and audio streaming .",
+          "claim": "StuMeet uses the Agora SDK in conjunction with WebRTC for video and audio streaming .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.97,
+          "entailment": 0.971,
           "action": "kept",
           "basis": "entailment"
         }
@@ -566,8 +546,8 @@
       "question": "What is Socket.IO used for in StuMeet?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "In StuMeet, Socket.IO is used to enable real-time messaging, emoji reactions, and notifications, ensuring smooth and uninterrupted communication during meetings [1], [2], [3].",
-      "draft_answer": "In StuMeet, Socket.IO is used to enable real-time messaging, emoji reactions, and notifications, ensuring smooth and uninterrupted communication during meetings [1], [2], [3].",
+      "answer": "In StuMeet, Socket.IO is used for real-time messaging, emoji reactions, notifications, and in-meeting chat announcements [Source 1] [Source 4] [Source 5].",
+      "draft_answer": "In StuMeet, Socket.IO is used for real-time messaging, emoji reactions, notifications, and in-meeting chat announcements [Source 1, Source 4, Source 5].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -583,66 +563,66 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 6,
           "page_number": null,
-          "reranker_score": 3.631,
+          "reranker_score": 7.2841,
           "relevant": false
         },
         {
           "rank": 2,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 20,
+          "chunk_index": 3,
           "page_number": null,
-          "reranker_score": 3.3656,
-          "relevant": true
+          "reranker_score": 5.9943,
+          "relevant": false
         },
         {
           "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": 4.6935,
+          "relevant": false
+        },
+        {
+          "rank": 4,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 20,
+          "page_number": null,
+          "reranker_score": 3.3716,
+          "relevant": true
+        },
+        {
+          "rank": 5,
           "filename": "stumeet_project_report.docx",
           "chunk_index": 23,
           "page_number": null,
           "reranker_score": 3.3083,
           "relevant": true
-        },
-        {
-          "rank": 4,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 3,
-          "page_number": null,
-          "reranker_score": 1.0448,
-          "relevant": false
-        },
-        {
-          "rank": 5,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 14,
-          "page_number": null,
-          "reranker_score": 0.9933,
-          "relevant": false
         }
       ],
       "passage_recall": 1.0,
       "retrieval_hit": 1.0,
-      "mrr": 0.5,
+      "mrr": 0.25,
       "retrieval_precision": 0.4,
       "statements_removed": 0,
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "In StuMeet, Socket.IO is used to enable real-time messaging, emoji reactions, and notifications, ensuring smooth and uninterrupted communication during meetings , , .",
+          "claim": "In StuMeet, Socket.IO is used for real-time messaging, emoji reactions, notifications, and in-meeting chat announcements .",
           "cited": [
             1,
-            2,
-            3
+            4,
+            5
           ],
-          "supported_by": 2,
-          "entailment": 0.8446,
+          "supported_by": 4,
+          "entailment": 0.9709,
           "action": "kept",
           "basis": "entailment"
         }
       ],
       "citation_ids": [
         1,
-        2,
-        3
+        4,
+        5
       ],
       "citation_precision": 0.6666666666666666,
       "citation_recall": 1.0
@@ -653,8 +633,8 @@
       "question": "What authentication mechanisms does StuMeet use?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "StuMeet uses JWT (JSON Web Token) and OAuth-based authentication mechanisms to safeguard user identities and ensure secure access [Source 1], [Source 2].",
-      "draft_answer": "StuMeet uses JWT (JSON Web Token) and OAuth-based authentication mechanisms to safeguard user identities and ensure secure access [Source 1], [Source 2].",
+      "answer": "StuMeet uses OAuth and JWT-based authentication to secure user identities and access [Source 1], [Source 2].",
+      "draft_answer": "StuMeet uses OAuth and JWT-based authentication to secure user identities and access [Source 1], [Source 2].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -668,18 +648,18 @@
         {
           "rank": 1,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 14,
+          "chunk_index": 6,
           "page_number": null,
-          "reranker_score": 4.8945,
-          "relevant": false
+          "reranker_score": 6.2005,
+          "relevant": true
         },
         {
           "rank": 2,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 6,
+          "chunk_index": 14,
           "page_number": null,
-          "reranker_score": 1.9559,
-          "relevant": true
+          "reranker_score": 5.1093,
+          "relevant": false
         },
         {
           "rank": 3,
@@ -692,35 +672,35 @@
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 10,
+          "chunk_index": 3,
           "page_number": null,
-          "reranker_score": 0.3537,
+          "reranker_score": 0.7532,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 13,
+          "chunk_index": 10,
           "page_number": null,
-          "reranker_score": 0.1921,
+          "reranker_score": 0.3537,
           "relevant": false
         }
       ],
       "passage_recall": 1.0,
       "retrieval_hit": 1.0,
-      "mrr": 0.5,
+      "mrr": 1.0,
       "retrieval_precision": 0.2,
       "statements_removed": 0,
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "StuMeet uses JWT (JSON Web Token) and OAuth-based authentication mechanisms to safeguard user identities and ensure secure access , .",
+          "claim": "StuMeet uses OAuth and JWT-based authentication to secure user identities and access , .",
           "cited": [
             1,
             2
           ],
           "supported_by": 2,
-          "entailment": 0.9516,
+          "entailment": 0.9484,
           "action": "kept",
           "basis": "entailment"
         }
@@ -738,8 +718,8 @@
       "question": "Which library does StuMeet use for password hashing?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "StuMeet uses bcrypt.js for password hashing [Source 1].",
-      "draft_answer": "StuMeet uses bcrypt.js for password hashing [Source 1].",
+      "answer": "StuMeet uses bcrypt.js for password hashing [Source 3], [Source 4].",
+      "draft_answer": "StuMeet uses bcrypt.js for password hashing [Source 3], [Source 4].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -752,64 +732,66 @@
         {
           "rank": 1,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 23,
+          "chunk_index": 3,
           "page_number": null,
-          "reranker_score": -1.192,
-          "relevant": true
+          "reranker_score": 0.2849,
+          "relevant": false
         },
         {
           "rank": 2,
           "filename": "stumeet_project_report.docx",
           "chunk_index": 6,
           "page_number": null,
-          "reranker_score": -3.2118,
+          "reranker_score": -1.0643,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 31,
+          "chunk_index": 23,
           "page_number": null,
-          "reranker_score": -3.4751,
-          "relevant": false
+          "reranker_score": -1.192,
+          "relevant": true
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 24,
+          "chunk_index": 21,
           "page_number": null,
-          "reranker_score": -3.5367,
-          "relevant": false
+          "reranker_score": -3.2089,
+          "relevant": true
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 14,
+          "chunk_index": 22,
           "page_number": null,
-          "reranker_score": -3.8717,
+          "reranker_score": -3.2659,
           "relevant": false
         }
       ],
       "passage_recall": 1.0,
       "retrieval_hit": 1.0,
-      "mrr": 1.0,
-      "retrieval_precision": 0.2,
+      "mrr": 0.3333333333333333,
+      "retrieval_precision": 0.4,
       "statements_removed": 0,
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "StuMeet uses bcrypt.js for password hashing .",
+          "claim": "StuMeet uses bcrypt.js for password hashing , .",
           "cited": [
-            1
+            3,
+            4
           ],
-          "supported_by": 1,
-          "entailment": 0.9311,
+          "supported_by": 3,
+          "entailment": 0.7702,
           "action": "kept",
           "basis": "entailment"
         }
       ],
       "citation_ids": [
-        1
+        3,
+        4
       ],
       "citation_precision": 1.0,
       "citation_recall": 1.0
@@ -820,8 +802,8 @@
       "question": "What database does StuMeet use?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "StuMeet uses a cloud-hosted NoSQL database, specifically MongoDB (via MongoDB Atlas), to store user, meeting, chat, and room data [Source 1], [Source 2].",
-      "draft_answer": "StuMeet uses a cloud-hosted NoSQL database, specifically MongoDB (via MongoDB Atlas), to store user, meeting, chat, and room data [Source 1], [Source 2].",
+      "answer": "StuMeet uses a cloud-hosted NoSQL database, specifically MongoDB Atlas, to store user data, meeting sessions, chat logs, and room details [Source 1] [Source 2].",
+      "draft_answer": "StuMeet uses a cloud-hosted NoSQL database, specifically MongoDB Atlas, to store user data, meeting sessions, chat logs, and room details [Source 1, Source 2].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -836,7 +818,7 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 22,
           "page_number": null,
-          "reranker_score": 4.7198,
+          "reranker_score": 6.4705,
           "relevant": true
         },
         {
@@ -844,11 +826,19 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 23,
           "page_number": null,
-          "reranker_score": 4.3852,
+          "reranker_score": 4.3883,
           "relevant": true
         },
         {
           "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
+          "page_number": null,
+          "reranker_score": 3.6892,
+          "relevant": false
+        },
+        {
+          "rank": 4,
           "filename": "stumeet_project_report.docx",
           "chunk_index": 10,
           "page_number": null,
@@ -856,19 +846,11 @@
           "relevant": false
         },
         {
-          "rank": 4,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 16,
-          "page_number": null,
-          "reranker_score": 1.722,
-          "relevant": false
-        },
-        {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 6,
+          "chunk_index": 9,
           "page_number": null,
-          "reranker_score": 0.9533,
+          "reranker_score": 1.7688,
           "relevant": false
         }
       ],
@@ -880,13 +862,13 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "StuMeet uses a cloud-hosted NoSQL database, specifically MongoDB (via MongoDB Atlas), to store user, meeting, chat, and room data , .",
+          "claim": "StuMeet uses a cloud-hosted NoSQL database, specifically MongoDB Atlas, to store user data, meeting sessions, chat logs, and room details .",
           "cited": [
             1,
             2
           ],
-          "supported_by": 1,
-          "entailment": 0.1006,
+          "supported_by": 2,
+          "entailment": 0.052,
           "action": "kept",
           "basis": "lexical"
         }
@@ -904,8 +886,8 @@
       "question": "What frontend and backend technologies does StuMeet use?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "StuMeet uses React.js for its frontend, along with Tailwind CSS and Magic UI for styling [Source 1]. Its backend is built with Node.js and Express.js to manage server-side logic and RESTful APIs [Source 1].",
-      "draft_answer": "StuMeet uses React.js for its frontend, along with Tailwind CSS and Magic UI for styling [Source 1]. Its backend is built with Node.js and Express.js to manage server-side logic and RESTful APIs [Source 1].",
+      "answer": "StuMeet uses React.js, Tailwind CSS, and Magic UI for its frontend, while its backend utilizes Node.js with Express.js [Source 1].",
+      "draft_answer": "StuMeet uses React.js, Tailwind CSS, and Magic UI for its frontend, while its backend utilizes Node.js with Express.js [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -922,7 +904,7 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 23,
           "page_number": null,
-          "reranker_score": 5.5304,
+          "reranker_score": 6.1045,
           "relevant": true
         },
         {
@@ -930,31 +912,31 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 6,
           "page_number": null,
-          "reranker_score": 0.5661,
+          "reranker_score": 2.7732,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 17,
+          "chunk_index": 3,
           "page_number": null,
-          "reranker_score": 0.5406,
+          "reranker_score": 2.6923,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 13,
+          "chunk_index": 22,
           "page_number": null,
-          "reranker_score": 0.5234,
+          "reranker_score": 1.3987,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 3,
+          "chunk_index": 17,
           "page_number": null,
-          "reranker_score": -0.5276,
+          "reranker_score": 0.9402,
           "relevant": false
         }
       ],
@@ -966,22 +948,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "StuMeet uses React.js for its frontend, along with Tailwind CSS and Magic UI for styling .",
+          "claim": "StuMeet uses React.js, Tailwind CSS, and Magic UI for its frontend, while its backend utilizes Node.js with Express.js .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.9774,
-          "action": "kept",
-          "basis": "entailment"
-        },
-        {
-          "claim": "Its backend is built with Node.js and Express.js to manage server-side logic and RESTful APIs .",
-          "cited": [
-            1
-          ],
-          "supported_by": 1,
-          "entailment": 0.8846,
+          "entailment": 0.9838,
           "action": "kept",
           "basis": "entailment"
         }
@@ -998,8 +970,8 @@
       "question": "Which libraries are used for styling the StuMeet frontend?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "Tailwind CSS and Magic UI are used for styling the StuMeet frontend [Source 1], [Source 2].",
-      "draft_answer": "Tailwind CSS and Magic UI are used for styling the StuMeet frontend [Source 1], [Source 2].",
+      "answer": "The StuMeet frontend uses Tailwind CSS and Magic UI for styling [Source 1], [Source 2].",
+      "draft_answer": "The StuMeet frontend uses Tailwind CSS and Magic UI for styling [Source 1], [Source 2].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -1031,23 +1003,23 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 3,
           "page_number": null,
-          "reranker_score": -2.3927,
+          "reranker_score": 0.6801,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 6,
+          "chunk_index": 22,
           "page_number": null,
-          "reranker_score": -4.1439,
+          "reranker_score": -3.0791,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 17,
+          "chunk_index": 6,
           "page_number": null,
-          "reranker_score": -4.5106,
+          "reranker_score": -4.078,
           "relevant": false
         }
       ],
@@ -1059,13 +1031,13 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "Tailwind CSS and Magic UI are used for styling the StuMeet frontend , .",
+          "claim": "The StuMeet frontend uses Tailwind CSS and Magic UI for styling , .",
           "cited": [
             1,
             2
           ],
           "supported_by": 1,
-          "entailment": 0.7658,
+          "entailment": 0.959,
           "action": "kept",
           "basis": "entailment"
         }
@@ -1083,8 +1055,8 @@
       "question": "What user roles does StuMeet support?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "StuMeet supports the roles of student, host, moderator, and participant [Source 1] [Source 3].",
-      "draft_answer": "StuMeet supports the roles of student, host, moderator, and participant [Source 1, Source 3].",
+      "answer": "StuMeet supports the roles of students, hosts, moderators, and participants [Source 1] [Source 5].",
+      "draft_answer": "StuMeet supports the roles of students, hosts, moderators, and participants [Source 1, Source 5].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -1109,56 +1081,56 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 14,
           "page_number": null,
-          "reranker_score": 4.9186,
+          "reranker_score": 4.9461,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 24,
+          "chunk_index": 6,
           "page_number": null,
-          "reranker_score": 4.5928,
-          "relevant": true
+          "reranker_score": 4.9399,
+          "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
           "chunk_index": 12,
           "page_number": null,
-          "reranker_score": 4.5028,
+          "reranker_score": 4.8111,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 6,
+          "chunk_index": 24,
           "page_number": null,
-          "reranker_score": 4.1936,
-          "relevant": false
+          "reranker_score": 4.5928,
+          "relevant": true
         }
       ],
       "passage_recall": 0.5,
       "retrieval_hit": 1.0,
-      "mrr": 0.3333333333333333,
+      "mrr": 0.2,
       "retrieval_precision": 0.2,
       "statements_removed": 0,
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "StuMeet supports the roles of student, host, moderator, and participant .",
+          "claim": "StuMeet supports the roles of students, hosts, moderators, and participants .",
           "cited": [
             1,
-            3
+            5
           ],
           "supported_by": 1,
-          "entailment": 0.6794,
+          "entailment": 0.9244,
           "action": "kept",
           "basis": "entailment"
         }
       ],
       "citation_ids": [
         1,
-        3
+        5
       ],
       "citation_precision": 0.5,
       "citation_recall": 1.0
@@ -1169,8 +1141,8 @@
       "question": "What meeting activity does StuMeet's logging system track?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "StuMeet's logging system tracks meeting activity such as participant count, join times, and chat history [Source 1].",
-      "draft_answer": "StuMeet's logging system tracks meeting activity such as participant count, join times, and chat history [Source 1].",
+      "answer": "StuMeet's logging system tracks meeting activity including participant count, join times, and chat history [Source 1].",
+      "draft_answer": "StuMeet's logging system tracks meeting activity including participant count, join times, and chat history [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -1203,23 +1175,23 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 9,
           "page_number": null,
-          "reranker_score": 1.5115,
+          "reranker_score": 4.9037,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 24,
+          "chunk_index": 6,
           "page_number": null,
-          "reranker_score": 0.7315,
+          "reranker_score": 1.0904,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 13,
+          "chunk_index": 24,
           "page_number": null,
-          "reranker_score": 0.2699,
+          "reranker_score": 0.7315,
           "relevant": false
         }
       ],
@@ -1231,12 +1203,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "StuMeet's logging system tracks meeting activity such as participant count, join times, and chat history .",
+          "claim": "StuMeet's logging system tracks meeting activity including participant count, join times, and chat history .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.9698,
+          "entailment": 0.9823,
           "action": "kept",
           "basis": "entailment"
         }
@@ -1253,8 +1225,8 @@
       "question": "What limitation of Microsoft Teams does the StuMeet report describe?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "Microsoft Teams is described as having a complexity and steep learning curve that makes it less accessible for students and educators, and it is often considered overwhelming for users needing quick, no-setup meetings [Source 2].",
-      "draft_answer": "Microsoft Teams is described as having a complexity and steep learning curve that makes it less accessible for students and educators, and it is often considered overwhelming for users needing quick, no-setup meetings [Source 2].",
+      "answer": "The StuMeet report describes Microsoft Teams as having a complexity and steep learning curve that makes it less accessible for students and educators, noting it can be overwhelming for users needing quick, no-setup meetings [Source 2].",
+      "draft_answer": "The StuMeet report describes Microsoft Teams as having a complexity and steep learning curve that makes it less accessible for students and educators, noting it can be overwhelming for users needing quick, no-setup meetings [Source 2].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -1299,9 +1271,9 @@
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 3,
+          "chunk_index": 9,
           "page_number": null,
-          "reranker_score": 0.4944,
+          "reranker_score": 2.0623,
           "relevant": false
         }
       ],
@@ -1313,12 +1285,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "Microsoft Teams is described as having a complexity and steep learning curve that makes it less accessible for students and educators, and it is often considered overwhelming for users needing quick, no-setup meetings .",
+          "claim": "The StuMeet report describes Microsoft Teams as having a complexity and steep learning curve that makes it less accessible for students and educators, noting it can be overwhelming for users needing quick, no-setup meetings .",
           "cited": [
             2
           ],
           "supported_by": 2,
-          "entailment": 0.9897,
+          "entailment": 0.9885,
           "action": "kept",
           "basis": "entailment"
         }
@@ -1334,23 +1306,28 @@
       "category": "Specific",
       "question": "What security concern about Zoom does the StuMeet report mention?",
       "should_fallback": false,
-      "status": "grounding_failed",
-      "answer": "I could not verify that the generated answer is fully supported by your uploaded documents.",
-      "draft_answer": "The provided documents do not mention specific security concerns regarding Zoom; they only cite Zoom as an example of a platform that requires scheduled meetings or links [Source 1] and serves general purposes [Source 2].",
-      "passed": false,
-      "refused": true,
-      "failure_reasons": [
-        "unexpected_grounding_failed",
-        "evidence_not_retrieved"
-      ],
+      "status": "answered",
+      "answer": "The StuMeet report mentions security concerns regarding \"Zoom bombing\" [Source 1].",
+      "draft_answer": "The StuMeet report mentions security concerns regarding \"Zoom bombing\" [Source 1].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
       "facts_matched": [
-        false
+        true
       ],
-      "fact_recall": 0.0,
+      "fact_recall": 1.0,
       "forbidden_found": [],
       "retrieved": [
         {
           "rank": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 5,
+          "page_number": null,
+          "reranker_score": 1.8384,
+          "relevant": true
+        },
+        {
+          "rank": 2,
           "filename": "stumeet_project_report.docx",
           "chunk_index": 6,
           "page_number": null,
@@ -1358,7 +1335,15 @@
           "relevant": false
         },
         {
-          "rank": 2,
+          "rank": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 23,
+          "page_number": null,
+          "reranker_score": -2.9122,
+          "relevant": false
+        },
+        {
+          "rank": 4,
           "filename": "stumeet_project_report.docx",
           "chunk_index": 2,
           "page_number": null,
@@ -1366,71 +1351,53 @@
           "relevant": false
         },
         {
-          "rank": 3,
+          "rank": 5,
           "filename": "stumeet_project_report.docx",
           "chunk_index": 3,
           "page_number": null,
-          "reranker_score": -3.5054,
-          "relevant": false
-        },
-        {
-          "rank": 4,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 14,
-          "page_number": null,
-          "reranker_score": -3.7205,
-          "relevant": false
-        },
-        {
-          "rank": 5,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 10,
-          "page_number": null,
-          "reranker_score": -3.7354,
+          "reranker_score": -3.3112,
           "relevant": false
         }
       ],
-      "passage_recall": 0.0,
-      "retrieval_hit": 0.0,
-      "mrr": 0.0,
-      "retrieval_precision": 0.0,
-      "statements_removed": 1,
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 1.0,
+      "retrieval_precision": 0.2,
+      "statements_removed": 0,
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "The provided documents do not mention specific security concerns regarding Zoom; they only cite Zoom as an example of a platform that requires scheduled meetings or links and serves general purposes .",
+          "claim": "The StuMeet report mentions security concerns regarding \"Zoom bombing\" .",
           "cited": [
-            1,
-            2
+            1
           ],
-          "supported_by": 2,
-          "entailment": 0.0067,
-          "action": "removed",
-          "basis": "none"
+          "supported_by": 1,
+          "entailment": 0.973,
+          "action": "kept",
+          "basis": "entailment"
         }
       ],
-      "citation_ids": [],
-      "citation_precision": null,
-      "citation_recall": null
+      "citation_ids": [
+        1
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
     },
     {
       "case_id": "stumeet-api-testing",
       "category": "Specific",
       "question": "Which tool did the StuMeet team use for API testing?",
       "should_fallback": false,
-      "status": "model_declined",
-      "answer": "I could not find the answer in the uploaded documents.",
-      "draft_answer": "I could not find the answer in the uploaded documents.",
-      "passed": false,
-      "refused": true,
-      "failure_reasons": [
-        "unexpected_model_declined",
-        "evidence_not_retrieved"
-      ],
+      "status": "answered",
+      "answer": "The StuMeet team used Postman for API testing [Source 2].",
+      "draft_answer": "The StuMeet team used Postman for API testing [Source 2].",
+      "passed": true,
+      "refused": false,
+      "failure_reasons": [],
       "facts_matched": [
-        false
+        true
       ],
-      "fact_recall": 0.0,
+      "fact_recall": 1.0,
       "forbidden_found": [],
       "retrieved": [
         {
@@ -1438,52 +1405,65 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 6,
           "page_number": null,
-          "reranker_score": 0.0408,
+          "reranker_score": 2.3677,
           "relevant": false
         },
         {
           "rank": 2,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 11,
+          "chunk_index": 21,
           "page_number": null,
-          "reranker_score": -0.4685,
-          "relevant": false
+          "reranker_score": 0.1674,
+          "relevant": true
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 13,
+          "chunk_index": 9,
           "page_number": null,
-          "reranker_score": -0.8557,
+          "reranker_score": -0.0306,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 23,
+          "chunk_index": 11,
           "page_number": null,
-          "reranker_score": -1.1912,
+          "reranker_score": -0.3206,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 12,
+          "chunk_index": 23,
           "page_number": null,
-          "reranker_score": -1.2293,
+          "reranker_score": -0.6473,
           "relevant": false
         }
       ],
-      "passage_recall": 0.0,
-      "retrieval_hit": 0.0,
-      "mrr": 0.0,
-      "retrieval_precision": 0.0,
+      "passage_recall": 1.0,
+      "retrieval_hit": 1.0,
+      "mrr": 0.5,
+      "retrieval_precision": 0.2,
       "statements_removed": 0,
       "citations_corrected": 0,
-      "grounding_verdicts": [],
-      "citation_ids": [],
-      "citation_precision": null,
-      "citation_recall": null
+      "grounding_verdicts": [
+        {
+          "claim": "The StuMeet team used Postman for API testing .",
+          "cited": [
+            2
+          ],
+          "supported_by": 2,
+          "entailment": 0.8222,
+          "action": "kept",
+          "basis": "entailment"
+        }
+      ],
+      "citation_ids": [
+        2
+      ],
+      "citation_precision": 1.0,
+      "citation_recall": 1.0
     },
     {
       "case_id": "stumeet-cloud-options",
@@ -1491,8 +1471,8 @@
       "question": "Which cloud platforms does the StuMeet report mention for deploying the platform?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "StuMeet is designed to be deployed on scalable cloud infrastructure platforms such as AWS, Google Cloud, or Vercel [Source 1].",
-      "draft_answer": "StuMeet is designed to be deployed on scalable cloud infrastructure platforms such as AWS, Google Cloud, or Vercel [Source 1].",
+      "answer": "StuMeet is designed to be deployed on scalable cloud infrastructure such as AWS, Google Cloud, or Vercel [Source 1].",
+      "draft_answer": "StuMeet is designed to be deployed on scalable cloud infrastructure such as AWS, Google Cloud, or Vercel [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -1509,7 +1489,7 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 22,
           "page_number": null,
-          "reranker_score": 4.4997,
+          "reranker_score": 5.6637,
           "relevant": true
         },
         {
@@ -1517,7 +1497,7 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 17,
           "page_number": null,
-          "reranker_score": 1.964,
+          "reranker_score": 2.3097,
           "relevant": false
         },
         {
@@ -1533,15 +1513,15 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": 0.5967,
+          "reranker_score": 0.9678,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 11,
+          "chunk_index": 3,
           "page_number": null,
-          "reranker_score": 0.1277,
+          "reranker_score": 0.4021,
           "relevant": false
         }
       ],
@@ -1553,12 +1533,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "StuMeet is designed to be deployed on scalable cloud infrastructure platforms such as AWS, Google Cloud, or Vercel .",
+          "claim": "StuMeet is designed to be deployed on scalable cloud infrastructure such as AWS, Google Cloud, or Vercel .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.9432,
+          "entailment": 0.9315,
           "action": "kept",
           "basis": "entailment"
         }
@@ -1599,17 +1579,17 @@
         {
           "rank": 2,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 13,
+          "chunk_index": 25,
           "page_number": null,
-          "reranker_score": -0.4823,
+          "reranker_score": 0.2417,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 11,
+          "chunk_index": 13,
           "page_number": null,
-          "reranker_score": -2.2943,
+          "reranker_score": -0.4607,
           "relevant": false
         },
         {
@@ -1617,15 +1597,15 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 6,
           "page_number": null,
-          "reranker_score": -3.7351,
+          "reranker_score": -2.1091,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 16,
+          "chunk_index": 11,
           "page_number": null,
-          "reranker_score": -3.9184,
+          "reranker_score": -2.1398,
           "relevant": false
         }
       ],
@@ -1659,8 +1639,8 @@
       "question": "How does StuMeet improve virtual collaboration compared with existing platforms?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "StuMeet improves virtual collaboration by offering instant meeting creation and personalized rooms, enhanced role-based moderator controls, real-time messaging via Socket.IO, secure OAuth and JWT-based authentication, and activity logs for attendance and participation insights [Source 1] [Source 5].",
-      "draft_answer": "StuMeet improves virtual collaboration by offering instant meeting creation and personalized rooms, enhanced role-based moderator controls, real-time messaging via Socket.IO, secure OAuth and JWT-based authentication, and activity logs for attendance and participation insights [Source 1, Source 5].",
+      "answer": "StuMeet improves virtual collaboration by providing instant meeting access, customizable rooms, real-time messaging via Socket.IO, and enhanced role-based moderator controls [Source 1] [Source 4]. Additionally, it utilizes OAuth and JWT-based authentication for secure access and includes activity logs to provide insights into attendance and participation [Source 5].",
+      "draft_answer": "StuMeet improves virtual collaboration by providing instant meeting access, customizable rooms, real-time messaging via Socket.IO, and enhanced role-based moderator controls [Source 1, Source 4]. Additionally, it utilizes OAuth and JWT-based authentication for secure access and includes activity logs to provide insights into attendance and participation [Source 1, Source 4].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -1685,7 +1665,7 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 11,
           "page_number": null,
-          "reranker_score": 6.4561,
+          "reranker_score": 6.4937,
           "relevant": false
         },
         {
@@ -1693,23 +1673,23 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 1,
           "page_number": null,
-          "reranker_score": 4.917,
+          "reranker_score": 5.5259,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 10,
+          "chunk_index": 9,
           "page_number": null,
-          "reranker_score": 4.152,
+          "reranker_score": 4.761,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 9,
+          "chunk_index": 10,
           "page_number": null,
-          "reranker_score": 3.6977,
+          "reranker_score": 4.152,
           "relevant": false
         }
       ],
@@ -1718,25 +1698,37 @@
       "mrr": 1.0,
       "retrieval_precision": 0.2,
       "statements_removed": 0,
-      "citations_corrected": 0,
+      "citations_corrected": 1,
       "grounding_verdicts": [
         {
-          "claim": "StuMeet improves virtual collaboration by offering instant meeting creation and personalized rooms, enhanced role-based moderator controls, real-time messaging via Socket.IO, secure OAuth and JWT-based authentication, and activity logs for attendance and participation insights .",
+          "claim": "StuMeet improves virtual collaboration by providing instant meeting access, customizable rooms, real-time messaging via Socket.IO, and enhanced role-based moderator controls .",
           "cited": [
             1,
-            5
+            4
+          ],
+          "supported_by": 4,
+          "entailment": 0.8053,
+          "action": "kept",
+          "basis": "entailment"
+        },
+        {
+          "claim": "Additionally, it utilizes OAuth and JWT-based authentication for secure access and includes activity logs to provide insights into attendance and participation .",
+          "cited": [
+            1,
+            4
           ],
           "supported_by": 5,
-          "entailment": 0.91,
-          "action": "kept",
+          "entailment": 0.6795,
+          "action": "corrected",
           "basis": "entailment"
         }
       ],
       "citation_ids": [
         1,
+        4,
         5
       ],
-      "citation_precision": 0.5,
+      "citation_precision": 0.3333333333333333,
       "citation_recall": 1.0
     },
     {
@@ -1745,8 +1737,8 @@
       "question": "How do WebRTC and Socket.IO each contribute to StuMeet's real-time experience?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "WebRTC is used for high-quality video and audio streaming [Source 1], while Socket.IO enables real-time messaging, emoji reactions, and notifications [Source 2].",
-      "draft_answer": "WebRTC is used for high-quality video and audio streaming [Source 1], while Socket.IO enables real-time messaging, emoji reactions, and notifications [Source 2].",
+      "answer": "WebRTC (with Agora SDK) is used for high-quality video and audio streaming, while Socket.IO enables real-time messaging and notifications [Source 4].",
+      "draft_answer": "WebRTC (with Agora SDK) is used for high-quality video and audio streaming, while Socket.IO enables real-time messaging and notifications [Source 4].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -1760,68 +1752,66 @@
         {
           "rank": 1,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 23,
+          "chunk_index": 3,
           "page_number": null,
-          "reranker_score": 1.5835,
-          "relevant": true
+          "reranker_score": 5.1497,
+          "relevant": false
         },
         {
           "rank": 2,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 20,
+          "chunk_index": 6,
           "page_number": null,
-          "reranker_score": 0.4621,
+          "reranker_score": 3.7715,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 3,
+          "chunk_index": 7,
           "page_number": null,
-          "reranker_score": -0.0013,
+          "reranker_score": 2.3905,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 12,
+          "chunk_index": 23,
           "page_number": null,
-          "reranker_score": -0.2136,
-          "relevant": false
+          "reranker_score": 1.9078,
+          "relevant": true
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
           "chunk_index": 24,
           "page_number": null,
-          "reranker_score": -0.9933,
+          "reranker_score": 0.5325,
           "relevant": false
         }
       ],
       "passage_recall": 1.0,
       "retrieval_hit": 1.0,
-      "mrr": 1.0,
+      "mrr": 0.25,
       "retrieval_precision": 0.2,
       "statements_removed": 0,
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "WebRTC is used for high-quality video and audio streaming , while Socket.IO enables real-time messaging, emoji reactions, and notifications .",
+          "claim": "WebRTC (with Agora SDK) is used for high-quality video and audio streaming, while Socket.IO enables real-time messaging and notifications .",
           "cited": [
-            1,
-            2
+            4
           ],
-          "supported_by": 1,
-          "entailment": 0.0361,
+          "supported_by": 4,
+          "entailment": 0.9695,
           "action": "kept",
-          "basis": "lexical"
+          "basis": "entailment"
         }
       ],
       "citation_ids": [
-        1,
-        2
+        4
       ],
-      "citation_precision": 0.5,
+      "citation_precision": 1.0,
       "citation_recall": 1.0
     },
     {
@@ -1862,7 +1852,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -0.0434,
+          "reranker_score": 0.2002,
           "relevant": false
         },
         {
@@ -2011,23 +2001,23 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 5,
           "page_number": null,
-          "reranker_score": 6.368,
+          "reranker_score": 8.2053,
           "relevant": true
         },
         {
           "rank": 2,
           "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
+          "chunk_index": 4,
           "page_number": null,
-          "reranker_score": -8.5376,
+          "reranker_score": -7.6627,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "northwind_employee_handbook.md",
-          "chunk_index": 4,
+          "chunk_index": 3,
           "page_number": null,
-          "reranker_score": -8.8307,
+          "reranker_score": -8.5376,
           "relevant": false
         },
         {
@@ -2041,9 +2031,9 @@
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 4,
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -10.6411,
+          "reranker_score": -9.4423,
           "relevant": false
         }
       ],
@@ -2102,7 +2092,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 4,
           "page_number": null,
-          "reranker_score": -4.1694,
+          "reranker_score": -3.2784,
           "relevant": false
         },
         {
@@ -2110,15 +2100,15 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 5,
           "page_number": null,
-          "reranker_score": -5.1982,
+          "reranker_score": -4.8818,
           "relevant": false
         },
         {
           "rank": 4,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
-          "page_number": null,
-          "reranker_score": -9.6911,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -8.0892,
           "relevant": false
         },
         {
@@ -2126,7 +2116,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 7,
           "page_number": null,
-          "reranker_score": -10.2262,
+          "reranker_score": -8.5932,
           "relevant": false
         }
       ],
@@ -2258,7 +2248,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 7,
           "page_number": null,
-          "reranker_score": 8.2249,
+          "reranker_score": 9.4046,
           "relevant": true
         },
         {
@@ -2266,15 +2256,15 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -9.6351,
+          "reranker_score": -8.3617,
           "relevant": false
         },
         {
           "rank": 3,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 4,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -10.5865,
+          "reranker_score": -9.7651,
           "relevant": false
         },
         {
@@ -2282,15 +2272,15 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -10.7919,
+          "reranker_score": -10.1404,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 4,
           "page_number": null,
-          "reranker_score": -10.8154,
+          "reranker_score": -10.5865,
           "relevant": false
         }
       ],
@@ -2340,7 +2330,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 7,
           "page_number": null,
-          "reranker_score": 9.348,
+          "reranker_score": 9.9751,
           "relevant": true
         },
         {
@@ -2348,7 +2338,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 4,
           "page_number": null,
-          "reranker_score": -9.2231,
+          "reranker_score": -8.8805,
           "relevant": false
         },
         {
@@ -2356,7 +2346,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 5,
           "page_number": null,
-          "reranker_score": -9.5521,
+          "reranker_score": -9.4458,
           "relevant": false
         },
         {
@@ -2369,10 +2359,10 @@
         },
         {
           "rank": 5,
-          "filename": "orion_thermostat_spec.pdf",
-          "chunk_index": 1,
-          "page_number": 2,
-          "reranker_score": -10.6281,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 3,
+          "page_number": null,
+          "reranker_score": -10.1032,
           "relevant": false
         }
       ],
@@ -2423,7 +2413,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 1,
           "page_number": null,
-          "reranker_score": 4.3755,
+          "reranker_score": 5.5209,
           "relevant": true
         },
         {
@@ -2447,7 +2437,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -6.0451,
+          "reranker_score": -5.2653,
           "relevant": false
         },
         {
@@ -2511,34 +2501,34 @@
         },
         {
           "rank": 2,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 4,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -8.5345,
+          "reranker_score": -4.4992,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "northwind_employee_handbook.md",
-          "chunk_index": 5,
+          "chunk_index": 4,
           "page_number": null,
-          "reranker_score": -8.6674,
+          "reranker_score": -6.15,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "northwind_employee_handbook.md",
-          "chunk_index": 6,
+          "chunk_index": 5,
           "page_number": null,
-          "reranker_score": -8.7867,
+          "reranker_score": -6.8975,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 8,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -9.1634,
+          "reranker_score": -7.3087,
           "relevant": false
         }
       ],
@@ -2572,8 +2562,8 @@
       "question": "What is the notice period for people managers after probation?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "The notice period for people managers after probation is 60 days [Source 1].",
-      "draft_answer": "The notice period for people managers after probation is 60 days [Source 1].",
+      "answer": "After probation, the notice period for people managers is 60 days [Source 1].",
+      "draft_answer": "After probation, the notice period for people managers is 60 days [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -2593,34 +2583,34 @@
         },
         {
           "rank": 2,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -10.3068,
+          "reranker_score": -9.3276,
           "relevant": false
         },
         {
           "rank": 3,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -10.3601,
+          "reranker_score": -10.1984,
           "relevant": false
         },
         {
           "rank": 4,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 0,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -10.456,
+          "reranker_score": -10.3443,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 7,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 31,
           "page_number": null,
-          "reranker_score": -10.6859,
+          "reranker_score": -10.4078,
           "relevant": false
         }
       ],
@@ -2632,12 +2622,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "The notice period for people managers after probation is 60 days .",
+          "claim": "After probation, the notice period for people managers is 60 days .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.9857,
+          "entailment": 0.9793,
           "action": "kept",
           "basis": "entailment"
         }
@@ -2670,11 +2660,19 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 8,
           "page_number": null,
-          "reranker_score": 9.5432,
+          "reranker_score": 9.9516,
           "relevant": true
         },
         {
           "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": 0.6481,
+          "relevant": false
+        },
+        {
+          "rank": 3,
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 4,
           "page_number": null,
@@ -2682,27 +2680,19 @@
           "relevant": false
         },
         {
-          "rank": 3,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 7,
-          "page_number": null,
-          "reranker_score": -2.3102,
-          "relevant": false
-        },
-        {
           "rank": 4,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 9,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -5.6375,
+          "reranker_score": -3.8045,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -7.1108,
+          "reranker_score": -5.1537,
           "relevant": false
         }
       ],
@@ -2752,7 +2742,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 8,
           "page_number": null,
-          "reranker_score": 7.0654,
+          "reranker_score": 8.2138,
           "relevant": true
         },
         {
@@ -2760,31 +2750,31 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 7,
           "page_number": null,
-          "reranker_score": -10.4942,
+          "reranker_score": -9.4665,
           "relevant": false
         },
         {
           "rank": 3,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -10.9249,
+          "reranker_score": -10.1959,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 4,
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -11.1125,
+          "reranker_score": -10.3734,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 31,
           "page_number": null,
-          "reranker_score": -11.1232,
+          "reranker_score": -10.8251,
           "relevant": false
         }
       ],
@@ -2818,8 +2808,8 @@
       "question": "What is the daily meal allowance for international travel?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "The daily meal allowance for international travel is 90 USD [Source 1].",
-      "draft_answer": "The daily meal allowance for international travel is 90 USD [Source 1].",
+      "answer": "The daily meal allowance for international travel is capped at 90 USD [Source 1].",
+      "draft_answer": "The daily meal allowance for international travel is capped at 90 USD [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -2834,39 +2824,39 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 8,
           "page_number": null,
-          "reranker_score": 7.4125,
+          "reranker_score": 9.6251,
           "relevant": true
         },
         {
           "rank": 2,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -10.994,
+          "reranker_score": -10.593,
           "relevant": false
         },
         {
           "rank": 3,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 31,
           "page_number": null,
-          "reranker_score": -11.1752,
+          "reranker_score": -10.6002,
           "relevant": false
         },
         {
           "rank": 4,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 7,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -11.1958,
+          "reranker_score": -10.6692,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "orion_thermostat_spec.pdf",
-          "chunk_index": 1,
-          "page_number": 2,
-          "reranker_score": -11.209,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 25,
+          "page_number": null,
+          "reranker_score": -10.8756,
           "relevant": false
         }
       ],
@@ -2878,12 +2868,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "The daily meal allowance for international travel is 90 USD .",
+          "claim": "The daily meal allowance for international travel is capped at 90 USD .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.9708,
+          "entailment": 0.9724,
           "action": "kept",
           "basis": "entailment"
         }
@@ -2900,8 +2890,8 @@
       "question": "When are employees allowed to book premium economy flights?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "Employees are permitted to book premium economy for flights longer than 8 hours [Source 1].",
-      "draft_answer": "Employees are permitted to book premium economy for flights longer than 8 hours [Source 1].",
+      "answer": "Employees are permitted to book premium economy flights for trips longer than 8 hours [Source 1].",
+      "draft_answer": "Employees are permitted to book premium economy flights for trips longer than 8 hours [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -2916,7 +2906,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 8,
           "page_number": null,
-          "reranker_score": 2.6484,
+          "reranker_score": 4.8246,
           "relevant": true
         },
         {
@@ -2930,25 +2920,25 @@
         {
           "rank": 3,
           "filename": "northwind_employee_handbook.md",
-          "chunk_index": 9,
+          "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -10.5333,
+          "reranker_score": -10.0963,
           "relevant": false
         },
         {
           "rank": 4,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 0,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
           "page_number": null,
-          "reranker_score": -10.7173,
+          "reranker_score": -10.2435,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 7,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -10.7961,
+          "reranker_score": -10.3639,
           "relevant": false
         }
       ],
@@ -2960,12 +2950,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "Employees are permitted to book premium economy for flights longer than 8 hours .",
+          "claim": "Employees are permitted to book premium economy flights for trips longer than 8 hours .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.9599,
+          "entailment": 0.9797,
           "action": "kept",
           "basis": "entailment"
         }
@@ -2998,7 +2988,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 8,
           "page_number": null,
-          "reranker_score": 4.9962,
+          "reranker_score": 5.8016,
           "relevant": true
         },
         {
@@ -3006,7 +2996,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 7,
           "page_number": null,
-          "reranker_score": -9.1458,
+          "reranker_score": -4.0913,
           "relevant": false
         },
         {
@@ -3014,7 +3004,7 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -9.2746,
+          "reranker_score": -7.8759,
           "relevant": false
         },
         {
@@ -3022,15 +3012,15 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -10.5716,
+          "reranker_score": -9.6188,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 31,
           "page_number": null,
-          "reranker_score": -11.0811,
+          "reranker_score": -10.7615,
           "relevant": false
         }
       ],
@@ -3064,8 +3054,8 @@
       "question": "How often are Northwind company laptops refreshed?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "Every Northwind Analytics company laptop is refreshed every 3 years [Source 1].",
-      "draft_answer": "Every Northwind Analytics company laptop is refreshed every 3 years [Source 1].",
+      "answer": "Northwind company laptops are refreshed every 3 years [Source 1].",
+      "draft_answer": "Northwind company laptops are refreshed every 3 years [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -3104,15 +3094,15 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -6.7205,
+          "reranker_score": -5.7469,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 29,
-          "page_number": null,
-          "reranker_score": -8.1145,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -8.0168,
           "relevant": false
         }
       ],
@@ -3124,12 +3114,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "Every Northwind Analytics company laptop is refreshed every 3 years .",
+          "claim": "Northwind company laptops are refreshed every 3 years .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.8643,
+          "entailment": 0.7546,
           "action": "kept",
           "basis": "entailment"
         }
@@ -3186,7 +3176,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -4.8844,
+          "reranker_score": -4.4301,
           "relevant": false
         },
         {
@@ -3194,7 +3184,7 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -10.8035,
+          "reranker_score": -10.5347,
           "relevant": false
         }
       ],
@@ -3268,7 +3258,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -1.6659,
+          "reranker_score": -1.1346,
           "relevant": false
         },
         {
@@ -3276,7 +3266,7 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 28,
           "page_number": null,
-          "reranker_score": -10.2476,
+          "reranker_score": -8.8073,
           "relevant": false
         }
       ],
@@ -3310,8 +3300,8 @@
       "question": "Do Northwind passwords have to be changed on a regular schedule?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "No, passwords do not need to be changed on a schedule, though they must be changed immediately if a compromise is suspected [Source 1].",
-      "draft_answer": "No, passwords do not need to be changed on a schedule, though they must be changed immediately if a compromise is suspected [Source 1].",
+      "answer": "No, passwords do not need to be changed on a schedule; they must only be changed immediately if a compromise is suspected [Source 1].",
+      "draft_answer": "No, passwords do not need to be changed on a schedule; they must only be changed immediately if a compromise is suspected [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -3334,7 +3324,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 10,
           "page_number": null,
-          "reranker_score": -1.231,
+          "reranker_score": 0.2473,
           "relevant": false
         },
         {
@@ -3350,15 +3340,15 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -7.4416,
+          "reranker_score": -6.1336,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 19,
           "page_number": null,
-          "reranker_score": -10.5193,
+          "reranker_score": -9.0177,
           "relevant": false
         }
       ],
@@ -3370,12 +3360,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "No, passwords do not need to be changed on a schedule, though they must be changed immediately if a compromise is suspected .",
+          "claim": "No, passwords do not need to be changed on a schedule; they must only be changed immediately if a compromise is suspected .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.9849,
+          "entailment": 0.9815,
           "action": "kept",
           "basis": "entailment"
         }
@@ -3408,11 +3398,19 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": 4.2014,
+          "reranker_score": 6.2303,
           "relevant": true
         },
         {
           "rank": 2,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 23,
+          "page_number": null,
+          "reranker_score": -8.2605,
+          "relevant": false
+        },
+        {
+          "rank": 3,
           "filename": "stumeet_project_report.docx",
           "chunk_index": 27,
           "page_number": null,
@@ -3420,19 +3418,11 @@
           "relevant": false
         },
         {
-          "rank": 3,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 14,
-          "page_number": null,
-          "reranker_score": -10.4835,
-          "relevant": false
-        },
-        {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 18,
+          "chunk_index": 31,
           "page_number": null,
-          "reranker_score": -10.5406,
+          "reranker_score": -9.8285,
           "relevant": false
         },
         {
@@ -3440,7 +3430,7 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 9,
           "page_number": null,
-          "reranker_score": -10.5491,
+          "reranker_score": -9.8969,
           "relevant": false
         }
       ],
@@ -3490,39 +3480,39 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": 2.9023,
+          "reranker_score": 7.1447,
           "relevant": true
         },
         {
           "rank": 2,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 18,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
           "page_number": null,
-          "reranker_score": -9.3114,
+          "reranker_score": -9.1214,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 14,
+          "chunk_index": 18,
           "page_number": null,
-          "reranker_score": -10.1122,
+          "reranker_score": -9.2585,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 26,
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -10.4219,
+          "reranker_score": -9.6427,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 27,
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -10.4957,
+          "reranker_score": -9.6427,
           "relevant": false
         }
       ],
@@ -3572,39 +3562,39 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": 1.1808,
+          "reranker_score": 9.3166,
           "relevant": true
         },
         {
           "rank": 2,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 14,
+          "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -10.0787,
+          "reranker_score": -6.8847,
           "relevant": false
         },
         {
           "rank": 3,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 29,
-          "page_number": null,
-          "reranker_score": -10.2764,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -9.5196,
           "relevant": false
         },
         {
           "rank": 4,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 14,
           "page_number": null,
-          "reranker_score": -10.834,
+          "reranker_score": -9.9885,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 6,
           "page_number": null,
-          "reranker_score": -11.1343,
+          "reranker_score": -10.6796,
           "relevant": false
         }
       ],
@@ -3654,7 +3644,7 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": 2.377,
+          "reranker_score": 6.913,
           "relevant": true
         },
         {
@@ -3662,7 +3652,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 9,
           "page_number": null,
-          "reranker_score": -0.9449,
+          "reranker_score": -0.5905,
           "relevant": false
         },
         {
@@ -3670,23 +3660,23 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -9.5665,
+          "reranker_score": -8.3208,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "northwind_employee_handbook.md",
-          "chunk_index": 7,
+          "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -10.6703,
+          "reranker_score": -10.1154,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 24,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
           "page_number": null,
-          "reranker_score": -11.1886,
+          "reranker_score": -10.1724,
           "relevant": false
         }
       ],
@@ -3720,8 +3710,8 @@
       "question": "How quickly must a lost company device be reported, and to whom?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "A lost or stolen company device must be reported to the IT Service Desk within 1 hour of discovering the loss [Source 4].",
-      "draft_answer": "A lost or stolen company device must be reported to the IT Service Desk within 1 hour of discovering the loss [Source 4].",
+      "answer": "A lost or stolen company device must be reported to the IT Service Desk within 1 hour of discovering the loss [Source 1].",
+      "draft_answer": "A lost or stolen company device must be reported to the IT Service Desk within 1 hour of discovering the loss [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -3734,19 +3724,19 @@
       "retrieved": [
         {
           "rank": 1,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 7,
-          "page_number": null,
-          "reranker_score": 0.1266,
-          "relevant": false
-        },
-        {
-          "rank": 2,
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -0.0126,
+          "reranker_score": 9.2394,
           "relevant": true
+        },
+        {
+          "rank": 2,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
+          "page_number": null,
+          "reranker_score": 4.5068,
+          "relevant": false
         },
         {
           "rank": 3,
@@ -3761,7 +3751,7 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -0.5451,
+          "reranker_score": -0.2191,
           "relevant": false
         },
         {
@@ -3769,13 +3759,13 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 8,
           "page_number": null,
-          "reranker_score": -8.2887,
+          "reranker_score": -5.562,
           "relevant": false
         }
       ],
       "passage_recall": 1.0,
       "retrieval_hit": 1.0,
-      "mrr": 0.5,
+      "mrr": 1.0,
       "retrieval_precision": 0.2,
       "statements_removed": 0,
       "citations_corrected": 0,
@@ -3783,16 +3773,16 @@
         {
           "claim": "A lost or stolen company device must be reported to the IT Service Desk within 1 hour of discovering the loss .",
           "cited": [
-            4
+            1
           ],
-          "supported_by": 4,
+          "supported_by": 1,
           "entailment": 0.5406,
           "action": "kept",
           "basis": "entailment"
         }
       ],
       "citation_ids": [
-        4
+        1
       ],
       "citation_precision": 1.0,
       "citation_recall": 1.0
@@ -3822,7 +3812,7 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": 1.0025,
+          "reranker_score": 2.0088,
           "relevant": true
         },
         {
@@ -3830,7 +3820,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -3.8991,
+          "reranker_score": -3.5368,
           "relevant": false
         },
         {
@@ -3838,7 +3828,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 9,
           "page_number": null,
-          "reranker_score": -6.7496,
+          "reranker_score": -6.5293,
           "relevant": false
         },
         {
@@ -3852,9 +3842,9 @@
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 28,
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -11.0953,
+          "reranker_score": -10.5193,
           "relevant": false
         }
       ],
@@ -3904,7 +3894,7 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 1,
           "page_number": null,
-          "reranker_score": 8.3184,
+          "reranker_score": 10.5704,
           "relevant": true
         },
         {
@@ -3912,31 +3902,31 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": 3.9301,
+          "reranker_score": 10.5087,
           "relevant": true
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 9,
+          "chunk_index": 22,
           "page_number": null,
-          "reranker_score": -9.9563,
+          "reranker_score": -8.0813,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 22,
+          "chunk_index": 23,
           "page_number": null,
-          "reranker_score": -10.1272,
+          "reranker_score": -8.6249,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -10.5533,
+          "reranker_score": -9.2637,
           "relevant": false
         }
       ],
@@ -3988,7 +3978,7 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": 0.5807,
+          "reranker_score": 7.6071,
           "relevant": true
         },
         {
@@ -3996,7 +3986,7 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -7.686,
+          "reranker_score": -6.6798,
           "relevant": false
         },
         {
@@ -4010,17 +4000,17 @@
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 14,
+          "chunk_index": 19,
           "page_number": null,
-          "reranker_score": -10.6946,
+          "reranker_score": -10.4062,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 4,
+          "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -10.7156,
+          "reranker_score": -10.5094,
           "relevant": false
         }
       ],
@@ -4075,34 +4065,34 @@
         },
         {
           "rank": 2,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 0,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -9.8796,
+          "reranker_score": -8.2463,
           "relevant": false
         },
         {
           "rank": 3,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 7,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -10.6586,
+          "reranker_score": -8.9467,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "northwind_employee_handbook.md",
-          "chunk_index": 6,
+          "chunk_index": 8,
           "page_number": null,
-          "reranker_score": -10.6797,
+          "reranker_score": -9.4698,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 8,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -10.7653,
+          "reranker_score": -9.5643,
           "relevant": false
         }
       ],
@@ -4165,26 +4155,26 @@
         },
         {
           "rank": 3,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 10,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -9.6073,
+          "reranker_score": -8.3361,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "northwind_employee_handbook.md",
-          "chunk_index": 7,
+          "chunk_index": 10,
           "page_number": null,
-          "reranker_score": -9.9555,
+          "reranker_score": -8.8727,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 26,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -10.3849,
+          "reranker_score": -9.5999,
           "relevant": false
         }
       ],
@@ -4234,19 +4224,11 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 1,
           "page_number": null,
-          "reranker_score": 4.9585,
+          "reranker_score": 8.751,
           "relevant": true
         },
         {
           "rank": 2,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 7,
-          "page_number": null,
-          "reranker_score": -5.2223,
-          "relevant": false
-        },
-        {
-          "rank": 3,
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
@@ -4254,7 +4236,7 @@
           "relevant": false
         },
         {
-          "rank": 4,
+          "rank": 3,
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 9,
           "page_number": null,
@@ -4262,11 +4244,19 @@
           "relevant": false
         },
         {
-          "rank": 5,
+          "rank": 4,
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 10,
           "page_number": null,
-          "reranker_score": -8.9944,
+          "reranker_score": -7.7601,
+          "relevant": false
+        },
+        {
+          "rank": 5,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
+          "page_number": null,
+          "reranker_score": -7.9234,
           "relevant": false
         }
       ],
@@ -4324,7 +4314,7 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": 2.3265,
+          "reranker_score": 3.4045,
           "relevant": true
         },
         {
@@ -4332,7 +4322,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 7,
           "page_number": null,
-          "reranker_score": 1.2587,
+          "reranker_score": 2.4402,
           "relevant": true
         },
         {
@@ -4348,7 +4338,7 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -3.3302,
+          "reranker_score": -2.9428,
           "relevant": false
         }
       ],
@@ -4382,8 +4372,8 @@
       "question": "When an employee leaves Northwind, how soon must they return their laptop, and how soon after it is received does IT wipe it?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "Employees must return company equipment within 5 business days of their final working day [Source 1], and IT securely wipes returned laptops within 24 hours of receipt [Source 4].",
-      "draft_answer": "Employees must return company equipment within 5 business days of their final working day [Source 1], and IT securely wipes returned laptops within 24 hours of receipt [Source 4].",
+      "answer": "Employees must return company equipment within 5 business days of their final working day [Source 1], and IT securely wipes returned laptops within 24 hours of receipt [Source 5].",
+      "draft_answer": "Employees must return company equipment within 5 business days of their final working day [Source 1], and IT securely wipes returned laptops within 24 hours of receipt [Source 5].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -4407,7 +4397,7 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": 2.2178,
+          "reranker_score": 4.0498,
           "relevant": true
         },
         {
@@ -4423,15 +4413,15 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -5.1223,
+          "reranker_score": -3.7836,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 1,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 7,
           "page_number": null,
-          "reranker_score": -6.5816,
+          "reranker_score": -4.4226,
           "relevant": false
         }
       ],
@@ -4446,9 +4436,9 @@
           "claim": "Employees must return company equipment within 5 business days of their final working day , and IT securely wipes returned laptops within 24 hours of receipt .",
           "cited": [
             1,
-            4
+            5
           ],
-          "supported_by": 4,
+          "supported_by": 5,
           "entailment": 0.0424,
           "action": "kept",
           "basis": "lexical"
@@ -4456,7 +4446,7 @@
       ],
       "citation_ids": [
         1,
-        4
+        5
       ],
       "citation_precision": 1.0,
       "citation_recall": 1.0
@@ -4507,7 +4497,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -3.9217,
+          "reranker_score": -3.3299,
           "relevant": false
         },
         {
@@ -4579,25 +4569,25 @@
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 1,
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -11.1504,
+          "reranker_score": -10.3712,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 10,
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -11.1784,
+          "reranker_score": -10.4993,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 17,
+          "chunk_index": 28,
           "page_number": null,
-          "reranker_score": -11.191,
+          "reranker_score": -10.6582,
           "relevant": false
         }
       ],
@@ -4647,7 +4637,7 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 0,
           "page_number": 1,
-          "reranker_score": 5.3545,
+          "reranker_score": 7.1728,
           "relevant": true
         },
         {
@@ -4655,31 +4645,31 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 1,
           "page_number": 2,
-          "reranker_score": -3.0498,
+          "reranker_score": -2.1793,
           "relevant": false
         },
         {
           "rank": 3,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -11.1841,
+          "reranker_score": -10.7496,
           "relevant": false
         },
         {
           "rank": 4,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -11.3252,
+          "reranker_score": -10.8009,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 0,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 31,
           "page_number": null,
-          "reranker_score": -11.3432,
+          "reranker_score": -10.9224,
           "relevant": false
         }
       ],
@@ -4737,31 +4727,31 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 1,
           "page_number": 2,
-          "reranker_score": -6.1863,
+          "reranker_score": -5.727,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 17,
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -11.2549,
+          "reranker_score": -10.4644,
           "relevant": false
         },
         {
           "rank": 4,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -11.2846,
+          "reranker_score": -10.4644,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 0,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -11.2928,
+          "reranker_score": -10.8297,
           "relevant": false
         }
       ],
@@ -4795,8 +4785,8 @@
       "question": "How long is the warranty on the Orion X2?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "The warranty for the Orion X2 is 3 years [Source 1].",
-      "draft_answer": "The warranty for the Orion X2 is 3 years [Source 1].",
+      "answer": "The warranty on the Orion X2 is 3 years [Source 1].",
+      "draft_answer": "The warranty on the Orion X2 is 3 years [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -4819,31 +4809,31 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 1,
           "page_number": 2,
-          "reranker_score": 1.5425,
+          "reranker_score": 3.4789,
           "relevant": false
         },
         {
           "rank": 3,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 2,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -9.3657,
+          "reranker_score": -7.0521,
           "relevant": false
         },
         {
           "rank": 4,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 9,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 1,
           "page_number": null,
-          "reranker_score": -9.3682,
+          "reranker_score": -7.2666,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 0,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 4,
           "page_number": null,
-          "reranker_score": -10.1449,
+          "reranker_score": -9.2861,
           "relevant": false
         }
       ],
@@ -4855,12 +4845,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "The warranty for the Orion X2 is 3 years .",
+          "claim": "The warranty on the Orion X2 is 3 years .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.9807,
+          "entailment": 0.982,
           "action": "kept",
           "basis": "entailment"
         }
@@ -4901,31 +4891,31 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 1,
           "page_number": 2,
-          "reranker_score": 2.6533,
+          "reranker_score": 3.8934,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 9,
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -11.0111,
+          "reranker_score": -10.6411,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 7,
+          "chunk_index": 5,
           "page_number": null,
-          "reranker_score": -11.0263,
+          "reranker_score": -10.696,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 5,
+          "chunk_index": 18,
           "page_number": null,
-          "reranker_score": -11.1322,
+          "reranker_score": -10.9517,
           "relevant": false
         }
       ],
@@ -4959,8 +4949,8 @@
       "question": "Which wireless standards does the Orion X2 support?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "The Orion X2 supports Wi-Fi 6 and Thread [Source 1].",
-      "draft_answer": "The Orion X2 supports Wi-Fi 6 and Thread [Source 1].",
+      "answer": "The Orion X2 supports Wi-Fi 6 and Thread wireless standards [Source 1].",
+      "draft_answer": "The Orion X2 supports Wi-Fi 6 and Thread wireless standards [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -4984,31 +4974,31 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 1,
           "page_number": 2,
-          "reranker_score": -1.5392,
+          "reranker_score": -0.3285,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 22,
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -11.038,
+          "reranker_score": -10.1522,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 9,
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -11.0658,
+          "reranker_score": -10.2572,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 30,
+          "chunk_index": 18,
           "page_number": null,
-          "reranker_score": -11.0826,
+          "reranker_score": -10.455,
           "relevant": false
         }
       ],
@@ -5020,12 +5010,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "The Orion X2 supports Wi-Fi 6 and Thread .",
+          "claim": "The Orion X2 supports Wi-Fi 6 and Thread wireless standards .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.9685,
+          "entailment": 0.9667,
           "action": "kept",
           "basis": "entailment"
         }
@@ -5042,8 +5032,8 @@
       "question": "Does the Orion X2 require a C-wire?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "No, the Orion X2 does not require a C-wire, as every unit ships with a power extender kit for homes without one [Source 1].",
-      "draft_answer": "No, the Orion X2 does not require a C-wire, as every unit ships with a power extender kit for homes without one [Source 1].",
+      "answer": "No, the Orion X2 does not require a C-wire, as every unit includes a power extender kit for homes without one [Source 1].",
+      "draft_answer": "No, the Orion X2 does not require a C-wire, as every unit includes a power extender kit for homes without one [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -5058,7 +5048,7 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 0,
           "page_number": 1,
-          "reranker_score": 5.8293,
+          "reranker_score": 10.5686,
           "relevant": true
         },
         {
@@ -5066,7 +5056,7 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 1,
           "page_number": 2,
-          "reranker_score": -5.7253,
+          "reranker_score": -4.7641,
           "relevant": false
         },
         {
@@ -5074,7 +5064,7 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -11.2216,
+          "reranker_score": -10.3096,
           "relevant": false
         },
         {
@@ -5082,15 +5072,15 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -11.2413,
+          "reranker_score": -10.763,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 30,
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -11.263,
+          "reranker_score": -10.7768,
           "relevant": false
         }
       ],
@@ -5102,12 +5092,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "No, the Orion X2 does not require a C-wire, as every unit ships with a power extender kit for homes without one .",
+          "claim": "No, the Orion X2 does not require a C-wire, as every unit includes a power extender kit for homes without one .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.9907,
+          "entailment": 0.9921,
           "action": "kept",
           "basis": "entailment"
         }
@@ -5140,7 +5130,7 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 0,
           "page_number": 1,
-          "reranker_score": 3.7394,
+          "reranker_score": 7.7914,
           "relevant": true
         },
         {
@@ -5148,31 +5138,31 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 1,
           "page_number": 2,
-          "reranker_score": -6.9745,
+          "reranker_score": -4.261,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 4,
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -9.2186,
+          "reranker_score": -8.6876,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 28,
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -11.2556,
+          "reranker_score": -9.023,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 7,
+          "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -11.267,
+          "reranker_score": -9.0798,
           "relevant": false
         }
       ],
@@ -5236,25 +5226,25 @@
         {
           "rank": 3,
           "filename": "northwind_employee_handbook.md",
-          "chunk_index": 7,
+          "chunk_index": 8,
           "page_number": null,
-          "reranker_score": -10.9648,
+          "reranker_score": -10.3059,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "northwind_employee_handbook.md",
-          "chunk_index": 8,
+          "chunk_index": 7,
           "page_number": null,
-          "reranker_score": -11.0751,
+          "reranker_score": -10.6082,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 7,
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -11.1847,
+          "reranker_score": -10.9102,
           "relevant": false
         }
       ],
@@ -5317,26 +5307,26 @@
         },
         {
           "rank": 3,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 9,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -8.5955,
+          "reranker_score": -7.4898,
           "relevant": false
         },
         {
           "rank": 4,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 0,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 4,
           "page_number": null,
-          "reranker_score": -10.3079,
+          "reranker_score": -8.1715,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "northwind_employee_handbook.md",
-          "chunk_index": 4,
+          "chunk_index": 9,
           "page_number": null,
-          "reranker_score": -10.3675,
+          "reranker_score": -8.5955,
           "relevant": false
         }
       ],
@@ -5402,25 +5392,25 @@
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 22,
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -11.0103,
+          "reranker_score": -10.4572,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 7,
+          "chunk_index": 31,
           "page_number": null,
-          "reranker_score": -11.2758,
+          "reranker_score": -10.8641,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 24,
+          "chunk_index": 25,
           "page_number": null,
-          "reranker_score": -11.2814,
+          "reranker_score": -10.8915,
           "relevant": false
         }
       ],
@@ -5471,7 +5461,7 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 1,
           "page_number": 2,
-          "reranker_score": 7.2453,
+          "reranker_score": 10.1621,
           "relevant": true
         },
         {
@@ -5479,7 +5469,7 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 0,
           "page_number": 1,
-          "reranker_score": -3.1218,
+          "reranker_score": -0.7996,
           "relevant": false
         },
         {
@@ -5487,7 +5477,7 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -9.3556,
+          "reranker_score": -8.2815,
           "relevant": false
         },
         {
@@ -5495,15 +5485,15 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -10.5436,
+          "reranker_score": -9.9411,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 30,
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -10.9447,
+          "reranker_score": -9.9411,
           "relevant": false
         }
       ],
@@ -5537,8 +5527,8 @@
       "question": "When does software support for the Orion X1 end?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "Software support for the Orion X1 ends in 2028 [Source 1].",
-      "draft_answer": "Software support for the Orion X1 ends in 2028 [Source 1].",
+      "answer": "Support for the Orion X1 ends in 2028 [Source 1].",
+      "draft_answer": "Support for the Orion X1 ends in 2028 [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -5553,7 +5543,7 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 1,
           "page_number": 2,
-          "reranker_score": 7.0432,
+          "reranker_score": 8.3597,
           "relevant": true
         },
         {
@@ -5566,26 +5556,26 @@
         },
         {
           "rank": 3,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 27,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -10.0642,
+          "reranker_score": -9.0625,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 29,
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -10.9863,
+          "reranker_score": -9.6149,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 30,
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -11.0871,
+          "reranker_score": -9.6149,
           "relevant": false
         }
       ],
@@ -5597,12 +5587,12 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "Software support for the Orion X1 ends in 2028 .",
+          "claim": "Support for the Orion X1 ends in 2028 .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.9563,
+          "entailment": 0.9339,
           "action": "kept",
           "basis": "entailment"
         }
@@ -5619,8 +5609,8 @@
       "question": "When was the Orion X2 released?",
       "should_fallback": false,
       "status": "answered",
-      "answer": "The Orion X2 was released in March 2026 [Source 1].",
-      "draft_answer": "The Orion X2 was released in March 2026 [Source 1].",
+      "answer": "The Orion X2 smart thermostat was released in March 2026 [Source 1].",
+      "draft_answer": "The Orion X2 smart thermostat was released in March 2026 [Source 1].",
       "passed": true,
       "refused": false,
       "failure_reasons": [],
@@ -5635,7 +5625,7 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 0,
           "page_number": 1,
-          "reranker_score": 8.0824,
+          "reranker_score": 8.9184,
           "relevant": true
         },
         {
@@ -5643,7 +5633,7 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 1,
           "page_number": 2,
-          "reranker_score": -0.1457,
+          "reranker_score": 3.5343,
           "relevant": false
         },
         {
@@ -5651,23 +5641,23 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -10.9806,
+          "reranker_score": -7.9291,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 17,
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -11.056,
+          "reranker_score": -7.9291,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 14,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -11.0755,
+          "reranker_score": -7.944,
           "relevant": false
         }
       ],
@@ -5679,14 +5669,14 @@
       "citations_corrected": 0,
       "grounding_verdicts": [
         {
-          "claim": "The Orion X2 was released in March 2026 .",
+          "claim": "The Orion X2 smart thermostat was released in March 2026 .",
           "cited": [
             1
           ],
           "supported_by": 1,
-          "entailment": 0.0363,
+          "entailment": 0.9782,
           "action": "kept",
-          "basis": "lexical"
+          "basis": "entailment"
         }
       ],
       "citation_ids": [
@@ -5715,39 +5705,39 @@
           "filename": "stumeet_project_report.docx",
           "chunk_index": 17,
           "page_number": null,
-          "reranker_score": -1.7595,
+          "reranker_score": -1.5637,
           "relevant": false
         },
         {
           "rank": 2,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 0,
+          "chunk_index": 6,
           "page_number": null,
-          "reranker_score": -3.196,
+          "reranker_score": -1.9618,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 6,
+          "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -3.2967,
+          "reranker_score": -2.3984,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 11,
+          "chunk_index": 23,
           "page_number": null,
-          "reranker_score": -3.7839,
+          "reranker_score": -2.7119,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 14,
+          "chunk_index": 3,
           "page_number": null,
-          "reranker_score": -4.2112,
+          "reranker_score": -2.8042,
           "relevant": false
         }
       ],
@@ -5782,7 +5772,7 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 0,
           "page_number": 1,
-          "reranker_score": 4.1603,
+          "reranker_score": 5.8167,
           "relevant": false
         },
         {
@@ -5790,31 +5780,31 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 1,
           "page_number": 2,
-          "reranker_score": -5.7096,
+          "reranker_score": -4.0357,
           "relevant": false
         },
         {
           "rank": 3,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -11.1481,
+          "reranker_score": -10.656,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 10,
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -11.2962,
+          "reranker_score": -10.7317,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 28,
           "page_number": null,
-          "reranker_score": -11.3237,
+          "reranker_score": -10.8271,
           "relevant": false
         }
       ],
@@ -5849,7 +5839,7 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 0,
           "page_number": 1,
-          "reranker_score": -0.2408,
+          "reranker_score": 0.4376,
           "relevant": false
         },
         {
@@ -5857,31 +5847,31 @@
           "filename": "orion_thermostat_spec.pdf",
           "chunk_index": 1,
           "page_number": 2,
-          "reranker_score": -4.1751,
+          "reranker_score": -4.0918,
           "relevant": false
         },
         {
           "rank": 3,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -11.1732,
+          "reranker_score": -10.3888,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 29,
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -11.2345,
+          "reranker_score": -10.4687,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 17,
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -11.2396,
+          "reranker_score": -10.4687,
           "relevant": false
         }
       ],
@@ -5913,6 +5903,14 @@
       "retrieved": [
         {
           "rank": 1,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -4.9066,
+          "relevant": false
+        },
+        {
+          "rank": 2,
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 9,
           "page_number": null,
@@ -5920,35 +5918,27 @@
           "relevant": false
         },
         {
-          "rank": 2,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 10,
-          "page_number": null,
-          "reranker_score": -8.9883,
-          "relevant": false
-        },
-        {
           "rank": 3,
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -9.1375,
+          "reranker_score": -8.0363,
           "relevant": false
         },
         {
           "rank": 4,
-          "filename": "northwind_it_security_policy.txt",
-          "chunk_index": 0,
+          "filename": "northwind_employee_handbook.md",
+          "chunk_index": 8,
           "page_number": null,
-          "reranker_score": -9.6872,
+          "reranker_score": -8.0768,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 8,
+          "filename": "northwind_it_security_policy.txt",
+          "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -10.1355,
+          "reranker_score": -8.1381,
           "relevant": false
         }
       ],
@@ -5983,7 +5973,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -4.1421,
+          "reranker_score": -3.2719,
           "relevant": false
         },
         {
@@ -5991,7 +5981,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 9,
           "page_number": null,
-          "reranker_score": -5.0044,
+          "reranker_score": -4.8316,
           "relevant": false
         },
         {
@@ -5999,7 +5989,7 @@
           "filename": "northwind_it_security_policy.txt",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -7.9986,
+          "reranker_score": -7.4904,
           "relevant": false
         },
         {
@@ -6013,9 +6003,9 @@
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 4,
+          "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -10.9282,
+          "reranker_score": -10.5456,
           "relevant": false
         }
       ],
@@ -6058,7 +6048,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 0,
           "page_number": null,
-          "reranker_score": -1.7038,
+          "reranker_score": -0.8336,
           "relevant": false
         },
         {
@@ -6066,7 +6056,7 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 9,
           "page_number": null,
-          "reranker_score": -2.1991,
+          "reranker_score": -1.9742,
           "relevant": false
         },
         {
@@ -6074,15 +6064,15 @@
           "filename": "northwind_employee_handbook.md",
           "chunk_index": 10,
           "page_number": null,
-          "reranker_score": -5.1844,
+          "reranker_score": -3.6136,
           "relevant": false
         },
         {
           "rank": 5,
-          "filename": "stumeet_project_report.docx",
-          "chunk_index": 23,
-          "page_number": null,
-          "reranker_score": -10.2545,
+          "filename": "orion_thermostat_spec.pdf",
+          "chunk_index": 1,
+          "page_number": 2,
+          "reranker_score": -8.6544,
           "relevant": false
         }
       ],
@@ -6115,41 +6105,41 @@
         {
           "rank": 1,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 4,
+          "chunk_index": 31,
           "page_number": null,
-          "reranker_score": -10.8393,
+          "reranker_score": -10.1927,
           "relevant": false
         },
         {
           "rank": 2,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 27,
           "page_number": null,
-          "reranker_score": -11.0225,
+          "reranker_score": -10.2403,
           "relevant": false
         },
         {
           "rank": 3,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 14,
+          "chunk_index": 25,
           "page_number": null,
-          "reranker_score": -11.0967,
+          "reranker_score": -10.3576,
           "relevant": false
         },
         {
           "rank": 4,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 1,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -11.1029,
+          "reranker_score": -10.3933,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 10,
+          "chunk_index": 4,
           "page_number": null,
-          "reranker_score": -11.1292,
+          "reranker_score": -10.8393,
           "relevant": false
         }
       ],
@@ -6182,41 +6172,41 @@
         {
           "rank": 1,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 4,
+          "chunk_index": 25,
           "page_number": null,
-          "reranker_score": -10.8489,
+          "reranker_score": -10.0237,
           "relevant": false
         },
         {
           "rank": 2,
-          "filename": "orion_thermostat_spec.pdf",
-          "chunk_index": 0,
-          "page_number": 1,
-          "reranker_score": -10.9777,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 27,
+          "page_number": null,
+          "reranker_score": -10.1789,
           "relevant": false
         },
         {
           "rank": 3,
-          "filename": "northwind_employee_handbook.md",
-          "chunk_index": 3,
+          "filename": "stumeet_project_report.docx",
+          "chunk_index": 26,
           "page_number": null,
-          "reranker_score": -11.0519,
+          "reranker_score": -10.1789,
           "relevant": false
         },
         {
           "rank": 4,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 25,
+          "chunk_index": 29,
           "page_number": null,
-          "reranker_score": -11.1277,
+          "reranker_score": -10.3778,
           "relevant": false
         },
         {
           "rank": 5,
           "filename": "stumeet_project_report.docx",
-          "chunk_index": 17,
+          "chunk_index": 31,
           "page_number": null,
-          "reranker_score": -11.1764,
+          "reranker_score": -10.6912,
           "relevant": false
         }
       ],
