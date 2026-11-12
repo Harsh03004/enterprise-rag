@@ -34,6 +34,11 @@ function TrendChart({ data, metric }: { data: AdminAnalytics["daily"]; metric: "
   );
 }
 
+function formatDuration(ms: number) {
+  if (!Number.isFinite(ms)) return "—";
+  return ms >= 1000 ? `${(ms / 1000).toFixed(1)} s` : `${Math.round(ms)} ms`;
+}
+
 export default function Admin() {
   const [summary, setSummary] = useState<AdminSummary | null>(null);
   const [analytics, setAnalytics] = useState<AdminAnalytics | null>(null);
@@ -103,11 +108,11 @@ export default function Admin() {
             <article><span>Failures</span><strong>{analytics.failed_queries}</strong></article>
             <article><span>Fallback answers</span><strong>{analytics.fallback_queries}</strong></article>
             <article><span>Answer cache hits</span><strong>{analytics.cache_hits}</strong></article>
-            <article><span>Average latency</span><strong>{analytics.average_latency_ms} ms</strong></article>
-            <article><span>95th percentile</span><strong>{analytics.p95_latency_ms} ms</strong></article>
-            <article><span>Retrieval + reranking</span><strong>{analytics.retrieval_latency_ms} ms</strong></article>
-            <article><span>Generation</span><strong>{analytics.generation_latency_ms} ms</strong></article>
-            <article><span>Citation verification</span><strong>{analytics.verification_latency_ms} ms</strong></article>
+            <article><span>Average latency</span><strong>{formatDuration(analytics.average_latency_ms)}</strong></article>
+            <article><span>95th percentile</span><strong>{formatDuration(analytics.p95_latency_ms)}</strong></article>
+            <article><span>Retrieval + reranking</span><strong>{formatDuration(analytics.retrieval_latency_ms)}</strong></article>
+            <article><span>Generation</span><strong>{formatDuration(analytics.generation_latency_ms)}</strong></article>
+            <article><span>Citation verification</span><strong>{formatDuration(analytics.verification_latency_ms)}</strong></article>
             <article><span>Retrieved chunks</span><strong>{analytics.retrieved_chunks}</strong></article>
             <article><span>Citations</span><strong>{analytics.citations}</strong></article>
             <article><span>Estimated tokens</span><strong>{(analytics.prompt_tokens + analytics.completion_tokens).toLocaleString()}</strong></article>
@@ -127,7 +132,7 @@ export default function Admin() {
               {analytics.providers.length ? analytics.providers.map((provider) => (
                 <div className="provider-row" key={`${provider.provider}-${provider.model}`}>
                   <div><strong>{provider.provider} · {provider.model}</strong><span>{provider.queries} queries · {provider.failures} failures</span></div>
-                  <div><strong>{provider.average_latency_ms} ms</strong><span>{(provider.prompt_tokens + provider.completion_tokens).toLocaleString()} estimated tokens · ${provider.estimated_cost_usd.toFixed(4)}</span></div>
+                  <div><strong>{formatDuration(provider.average_latency_ms)}</strong><span>{(provider.prompt_tokens + provider.completion_tokens).toLocaleString()} estimated tokens · ${provider.estimated_cost_usd.toFixed(4)}</span></div>
                 </div>
               )) : <p className="dashboard-empty">No provider usage recorded.</p>}
             </section>

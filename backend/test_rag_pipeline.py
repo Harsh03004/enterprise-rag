@@ -124,6 +124,30 @@ class ChatEntryPointTests(PipelineTestCase):
         final = next(event for event in events if event["type"] == "final")
         self.assertEqual(final["content"], "The answer is 42 [Source 1].")
 
+    def test_stream_timings_survive_per_step_context_copies(self):
+        """Starlette runs each generator step in a fresh context copy (the bug
+        that stored 0 ms for every stage)."""
+        import contextvars
+        import time as real_time
+
+        self.start(_patch_pipeline("The answer is 42 [Source 1].", grounded=True))
+
+        def slow_search(*_args, **_kwargs):
+            real_time.sleep(0.02)
+            return ["candidate"]
+
+        self.start([patch.object(rag, "search_similar_chunks", side_effect=slow_search)])
+        generator = rag.stream_answer(db=None, user_id=1, question="Q?", config=CONFIG)
+        outer = contextvars.copy_context()
+        events = []
+        while True:
+            try:
+                events.append(outer.copy().run(next, generator))
+            except StopIteration:
+                break
+        metrics = next(event for event in events if event["type"] == "metrics")["metrics"]
+        self.assertGreaterEqual(metrics["retrieval_latency_ms"], 15)
+
     def test_stream_answer_replaces_ungrounded_answer(self):
         self.start(_patch_pipeline("Unsupported claim [Source 1].", grounded=False))
         events = list(rag.stream_answer(db=None, user_id=1, question="Q?", config=CONFIG))

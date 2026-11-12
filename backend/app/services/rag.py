@@ -75,19 +75,30 @@ trailing source list; citations belong inline after the statements they support.
 Do not add general knowledge, assumptions, comparisons, or filler. If the
 context does not support an answer, reply exactly: "I could not find the answer
 in the uploaded documents."""
-_RAG_TIMINGS: ContextVar[dict[str, int]] = ContextVar("rag_timings", default={})
+# One mutable dict per request, updated in place. Streaming responses run each
+# generator step in a fresh copy of the request context, so a ContextVar.set()
+# made in one step is invisible in the next; stream_answer therefore re-binds
+# the same dict before each stage (see _bind_timings).
+_RAG_TIMINGS: ContextVar[dict[str, int] | None] = ContextVar("rag_timings", default=None)
 
 
-def begin_rag_request() -> None:
+def begin_rag_request() -> dict[str, int]:
     """Reset per-request provider tracking and stage timings."""
     reset_last_used_provider()
-    _RAG_TIMINGS.set({"retrieval_latency_ms": 0, "generation_latency_ms": 0, "verification_latency_ms": 0})
+    timings = {"retrieval_latency_ms": 0, "generation_latency_ms": 0, "verification_latency_ms": 0}
+    _RAG_TIMINGS.set(timings)
+    return timings
+
+
+def _bind_timings(timings: dict[str, int]) -> None:
+    _RAG_TIMINGS.set(timings)
 
 
 def _record_stage(name: str, started: float) -> None:
-    timings = dict(_RAG_TIMINGS.get())
+    timings = _RAG_TIMINGS.get()
+    if timings is None:
+        return
     timings[name] = timings.get(name, 0) + round((time.perf_counter() - started) * 1000)
-    _RAG_TIMINGS.set(timings)
 
 
 def _query_metrics(
@@ -129,7 +140,7 @@ def _query_metrics(
         "fallback": fallback,
         "source_count": len(sources),
         "cache_hit": False,
-        **_RAG_TIMINGS.get(),
+        **(_RAG_TIMINGS.get() or {}),
     }
 
 
@@ -1052,7 +1063,7 @@ def stream_answer(
     config: dict | None = None,
 ):
     rag_config = config or {}
-    begin_rag_request()
+    timings = begin_rag_request()
     result_limit = limit or int(rag_config.get("retrieval_top_k", 5))
     # ---------------------------------------------------------
     # 1. Resolve/create conversation
@@ -1179,6 +1190,7 @@ def stream_answer(
                 yield {"type": "token", "content": answer[offset : offset + 64]}
             yield {"type": "final", "content": answer, "conversation_id": conversation_id}
             yield {"type": "sources", "sources": sources, "conversation_id": conversation_id}
+            _bind_timings(timings)
             metrics = _query_metrics("", answer, 0, sources, rag_config)
             metrics.update({"prompt_tokens": 0, "completion_tokens": 0, "estimated_cost_usd": 0.0, "cache_hit": True})
             yield {"type": "metrics", "metrics": metrics}
@@ -1189,6 +1201,7 @@ def stream_answer(
     # 5-6. Retrieve and rerank candidate chunks
     # ---------------------------------------------------------
 
+    _bind_timings(timings)
     ranked_results = retrieve_ranked_chunks(
         db, user_id, search_query, document_id, collection_id, result_limit, rag_config
     )
@@ -1217,6 +1230,7 @@ def stream_answer(
         yield {"type": "final", "content": answer, "conversation_id": conversation_id}
         yield {"type": "sources", "sources": [], "conversation_id": conversation_id}
 
+        _bind_timings(timings)
         yield {
             "type": "metrics",
             "metrics": _query_metrics("", answer, len(ranked_results), [], rag_config),
@@ -1246,6 +1260,7 @@ def stream_answer(
         ):
             full_answer += token
             yield {"type": "token", "content": token}
+        _bind_timings(timings)
         _record_stage("generation_latency_ms", generation_started)
 
     except RuntimeError:
@@ -1264,6 +1279,7 @@ def stream_answer(
     # 11. Verify citations and grounding after streaming completes
     # ---------------------------------------------------------
 
+    _bind_timings(timings)
     verified_answer, verified_sources, status, _grounding = finalize_answer(full_answer, sources, question)
 
     public_verified_sources = public_sources(verified_sources)
@@ -1307,6 +1323,7 @@ def stream_answer(
         "conversation_id": conversation_id,
     }
 
+    _bind_timings(timings)
     yield {
         "type": "metrics",
         "metrics": _query_metrics(prompt, verified_answer, len(ranked_results), verified_sources, rag_config),

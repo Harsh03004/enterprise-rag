@@ -1702,10 +1702,27 @@
 
 /* Admin content management */
 .admin-content-filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-.admin-content-filters input, .admin-content-filters select { margin-left: 4px; }
-.admin-content-row { flex-wrap: wrap; }
+/* Five columns: file, owner, collection, status, actions; errors span the row. */
+.admin-content-row {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.6fr) minmax(0, 1.2fr) minmax(0, 1.1fr) auto;
+  align-items: center;
+}
+.admin-content-row > span { overflow-wrap: anywhere; }
+.admin-row-error { grid-column: 1 / -1; }
+.admin-content-filters input,
+.admin-content-filters select {
+  padding: 7px 10px;
+  font: inherit;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+}
+@media (max-width: 700px) {
+  .admin-content-row { grid-template-columns: 1fr; }
+}
 .admin-row-actions { display: flex; gap: 6px; }
-.admin-row-error { flex-basis: 100%; margin: 4px 0 0; }
+.admin-row-error { margin: 4px 0 0; }
 .admin-status-failed { color: #b42318; font-weight: 600; }
 .admin-status-processing, .admin-status-uploaded { color: #5875a5; }
 
