@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass, field
 
@@ -196,6 +197,16 @@ SUMMARY_METRICS = (
 )
 
 
+def _median_words(results: list[EvaluationResult]) -> float | None:
+    counts = sorted(
+        len(re.sub(r"\[Source \d+\]", "", result.answer).split()) for result in results if not result.refused
+    )
+    if not counts:
+        return None
+    middle = len(counts) // 2
+    return float(counts[middle]) if len(counts) % 2 else (counts[middle - 1] + counts[middle]) / 2
+
+
 def summarize_results(results: list[EvaluationResult]) -> dict:
     """Aggregate scores; each metric averages only the cases it applies to."""
     answerable = [result for result in results if not result.should_fallback]
@@ -227,6 +238,8 @@ def summarize_results(results: list[EvaluationResult]) -> dict:
             (1.0 if result.statements_removed else 0.0) for result in results if not result.refused
         ),
         "statements_removed": sum(result.statements_removed for result in results),
+        # Conciseness: words per answered response, citations excluded.
+        "median_answer_words": _median_words(results),
         "citations_corrected": sum(result.citations_corrected for result in results),
         "status_counts": dict(Counter(result.status for result in results)),
         "failure_reasons": dict(
