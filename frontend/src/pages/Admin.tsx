@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import AdminNav from "../components/AdminNav";
 
 import {
   getAdminAnalytics,
@@ -84,11 +84,7 @@ export default function Admin() {
           <h1>Administration</h1>
           <p>Usage, latency, and platform activity</p>
         </div>
-        <nav className="dashboard-nav" aria-label="Admin dashboards">
-          <Link className="dashboard-nav-active" to="/admin">Analytics</Link>
-          <Link to="/admin/evaluations">Evaluations</Link>
-          <Link to="/admin/settings">RAG settings</Link>
-        </nav>
+        <AdminNav active="/admin" />
       </header>
 
       {error && <div className="chat-error" role="alert">{error}</div>}

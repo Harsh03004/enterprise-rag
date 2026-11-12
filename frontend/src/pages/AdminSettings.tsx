@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import AdminNav from "../components/AdminNav";
 import { getRagSettings, updateRagSettings, type RagSettings } from "../api/admin";
 
 export default function AdminSettings() {
@@ -34,7 +34,7 @@ export default function AdminSettings() {
   return (
     <main className="admin-page dashboard-page">
       <header className="chat-header dashboard-header"><div className="chat-header-info"><h1>RAG settings</h1><p>Adjust generation, retrieval, reranking, and ingestion defaults</p></div>
-        <nav className="dashboard-nav" aria-label="Admin dashboards"><Link to="/admin">Analytics</Link><Link to="/admin/evaluations">Evaluations</Link><Link className="dashboard-nav-active" to="/admin/settings">RAG settings</Link></nav>
+        <AdminNav active="/admin/settings" />
       </header>
       {loading && <p className="dashboard-empty">Loading settings…</p>}
       {error && <div className="chat-error" role="alert">{error}</div>}

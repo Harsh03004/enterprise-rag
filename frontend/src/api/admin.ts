@@ -153,3 +153,55 @@ export async function updateRagSettings(settings: Partial<RagSettings>): Promise
   });
   return response.json();
 }
+
+export type DocumentStatus = "uploaded" | "processing" | "processed" | "failed";
+
+export interface AdminDocument {
+  id: number;
+  filename: string;
+  source_url: string | null;
+  status: DocumentStatus;
+  processing_error: string | null;
+  chunk_count: number;
+  owner_id: number;
+  owner_email: string;
+  collection_id: number | null;
+  collection_name: string | null;
+  created_at: string;
+}
+
+export interface AdminCollection {
+  id: number;
+  name: string;
+  owner_id: number;
+  owner_email: string;
+  document_count: number;
+  created_at: string;
+}
+
+export async function getAdminDocuments(filters: { status?: string; search?: string; limit?: number; offset?: number } = {}): Promise<{ total: number; items: AdminDocument[] }> {
+  const params = new URLSearchParams();
+  if (filters.status) params.set("status", filters.status);
+  if (filters.search) params.set("search", filters.search);
+  params.set("limit", String(filters.limit ?? 50));
+  params.set("offset", String(filters.offset ?? 0));
+  const response = await apiFetch(`/admin/documents?${params.toString()}`);
+  return response.json();
+}
+
+export async function retryAdminDocument(id: number): Promise<void> {
+  await apiFetch(`/admin/documents/${id}/retry`, { method: "POST" });
+}
+
+export async function deleteAdminDocument(id: number): Promise<void> {
+  await apiFetch(`/admin/documents/${id}`, { method: "DELETE" });
+}
+
+export async function getAdminCollections(): Promise<AdminCollection[]> {
+  const response = await apiFetch("/admin/collections");
+  return response.json();
+}
+
+export async function deleteAdminCollection(id: number): Promise<void> {
+  await apiFetch(`/admin/collections/${id}`, { method: "DELETE" });
+}

@@ -5,7 +5,7 @@ import {
   type EvaluationRun,
   type EvaluationRunSummary,
 } from "../api/admin";
-import { Link } from "react-router-dom";
+import AdminNav from "../components/AdminNav";
 
 // Higher is better for every metric except false_refusal_rate.
 const METRICS = [
@@ -61,9 +61,7 @@ export default function Evaluations() {
     <main className="admin-page dashboard-page">
       <header className="chat-header dashboard-header">
         <div className="chat-header-info"><h1>RAG evaluations</h1><p>Benchmark history, metric changes, and case failures</p></div>
-        <nav className="dashboard-nav" aria-label="Admin dashboards">
-          <Link to="/admin">Analytics</Link><Link className="dashboard-nav-active" to="/admin/evaluations">Evaluations</Link><Link to="/admin/settings">RAG settings</Link>
-        </nav>
+        <AdminNav active="/admin/evaluations" />
       </header>
       {error && <div className="chat-error" role="alert">{error}</div>}
       {loading && <p className="dashboard-empty">Loading evaluation history…</p>}

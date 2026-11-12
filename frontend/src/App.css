@@ -1699,3 +1699,12 @@
   .dashboard-users .admin-row span { min-width: 40%; overflow-wrap: anywhere; }
   .dashboard-users .admin-row button { margin-left: auto; }
 }
+
+/* Admin content management */
+.admin-content-filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.admin-content-filters input, .admin-content-filters select { margin-left: 4px; }
+.admin-content-row { flex-wrap: wrap; }
+.admin-row-actions { display: flex; gap: 6px; }
+.admin-row-error { flex-basis: 100%; margin: 4px 0 0; }
+.admin-status-failed { color: #b42318; font-weight: 600; }
+.admin-status-processing, .admin-status-uploaded { color: #5875a5; }
