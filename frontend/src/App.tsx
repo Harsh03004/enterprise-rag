@@ -13,6 +13,7 @@ import Admin from "./pages/Admin";
 import Evaluations from "./pages/Evaluations";
 import AdminSettings from "./pages/AdminSettings";
 import AdminContent from "./pages/AdminContent";
+import Settings from "./pages/Settings";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
@@ -85,6 +86,7 @@ function App() {
         }
       />
 
+      <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
       <Route path="/admin/content" element={<AdminRoute><AdminContent /></AdminRoute>} />
       <Route path="/admin/evaluations" element={<AdminRoute><Evaluations /></AdminRoute>} />
       <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />

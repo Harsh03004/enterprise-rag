@@ -29,6 +29,7 @@ export default function Header({ sidebarOpen = false, onToggleSidebar }: HeaderP
       </div>
 
       <div className="header-actions">
+        <Link to="/settings">Settings</Link>
         {isAdmin && <Link to="/admin">Administration</Link>}
         <button onClick={logout}>
           Logout

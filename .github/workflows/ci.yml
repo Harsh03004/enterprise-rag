@@ -38,7 +38,7 @@ jobs:
         run: uv run python -m compileall app
       - name: Run focused tests
         working-directory: backend
-        run: uv run python -m unittest test_hardening.py test_rag_pipeline.py test_evaluation.py test_grounding.py test_logging.py test_admin_content.py -v
+        run: uv run python -m unittest test_hardening.py test_rag_pipeline.py test_evaluation.py test_grounding.py test_logging.py test_admin_content.py test_account_settings.py -v
 
   frontend:
     runs-on: ubuntu-latest

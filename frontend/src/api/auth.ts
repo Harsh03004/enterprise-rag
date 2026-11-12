@@ -54,3 +54,18 @@ export async function getCurrentUser(): Promise<CurrentUser> {
   const response = await apiFetch("/users/me");
   return response.json();
 }
+
+export async function updateUsername(username: string): Promise<CurrentUser> {
+  const response = await apiFetch("/users/me", {
+    method: "PATCH",
+    body: JSON.stringify({ username }),
+  });
+  return response.json();
+}
+
+export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
+  await apiFetch("/users/me/password", {
+    method: "POST",
+    body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+  });
+}
