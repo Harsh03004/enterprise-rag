@@ -1821,3 +1821,8 @@
 /* One spacing rule for answer lists (earlier duplicates in index.css/App.css disagree). */
 .message-content ul,
 .message-content ol { margin: 8px 0 10px; }
+
+/* Touch screens have no hover: keep the per-item options menus visible. */
+@media (hover: none) {
+  .sidebar-menu-button { opacity: 1; }
+}
