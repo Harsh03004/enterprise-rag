@@ -1,3 +1,4 @@
+import { startAdaptivePolling, isProcessing } from "../utils/adaptivePolling";
 import { useEffect, useRef, useState } from "react";
 
 import {
@@ -154,6 +155,12 @@ export default function Sidebar({
    * Load documents.
    */
 
+  // Latest documents for the poller (it decides how often to fetch).
+  const documentsRef = useRef(documents);
+  useEffect(() => {
+    documentsRef.current = documents;
+  }, [documents]);
+
   useEffect(() => {
     const loadDocuments = async () => {
       try {
@@ -169,13 +176,9 @@ export default function Sidebar({
       }
     };
 
-    loadDocuments();
-
-    const interval = setInterval(loadDocuments, 3000);
-
-    return () => {
-      clearInterval(interval);
-    };
+    return startAdaptivePolling(loadDocuments, () =>
+      documentsRef.current.some((document) => isProcessing(document.status)),
+    );
   }, []);
 
   /*
@@ -982,7 +985,7 @@ export default function Sidebar({
 
           <button
             type="button"
-            className="website-button"
+            className="upload-button website-button"
             onClick={() => setAddingWebsite((previous) => !previous)}
           >
             + Add Website

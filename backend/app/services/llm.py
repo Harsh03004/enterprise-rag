@@ -1,6 +1,7 @@
 from collections.abc import Generator
 from contextvars import ContextVar
 
+import httpx
 from openai import OpenAI
 
 from app.core.config import settings
@@ -8,6 +9,9 @@ from app.core.config import settings
 GEMINI_BASE_URL = (
     "https://generativelanguage.googleapis.com/v1beta/openai/"
 )
+# Unreachable providers fail within seconds (connect timeout) while slow
+# generations, e.g. a CPU-only local model, still get time to finish.
+_TIMEOUT = httpx.Timeout(settings.llm_timeout_seconds, connect=5.0)
 _LAST_USED: ContextVar[tuple[str, str] | None] = ContextVar("llm_last_used", default=None)
 
 
@@ -80,7 +84,11 @@ def _get_client(config: dict | None = None, provider: str | None = None) -> tupl
     if provider == "ollama":
         return (
             OpenAI(
+                timeout=_TIMEOUT,
                 api_key="ollama",
+                # A local server that refuses or drops connections will not
+                # recover within the retry window; fail fast instead.
+                max_retries=1,
                 base_url=settings.ollama_base_url,
             ),
             str(config.get("ollama_model", settings.ollama_model)),
@@ -94,7 +102,7 @@ def _get_client(config: dict | None = None, provider: str | None = None) -> tupl
                 # Free-tier 429s are retried with backoff (honours Retry-After);
                 # a stalled request fails after 90 s instead of the default 10 min.
                 max_retries=3,
-                timeout=90,
+                timeout=httpx.Timeout(90.0, connect=5.0),
             ),
             str(config.get("gemini_model", settings.gemini_model)),
         )
@@ -109,7 +117,7 @@ def _get_client(config: dict | None = None, provider: str | None = None) -> tupl
                 # Free models return 429 under load; the client backs off and
                 # honours Retry-After.
                 max_retries=3,
-                timeout=90,
+                timeout=httpx.Timeout(90.0, connect=5.0),
             ),
             str(config.get("openrouter_model", settings.openrouter_model)),
         )

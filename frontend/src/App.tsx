@@ -56,13 +56,13 @@ function App() {
                 onConversationUpdated,
                 onDocumentStatusChange,
               ) => {
-                void selectedCollection;
 
                 return (
                   <Chat
                     selectedDocumentId={selectedDocumentId}
                     selectedDocument={selectedDocument}
                     collectionId={selectedCollectionId}
+                    selectedCollection={selectedCollection}
                     selectedConversationId={selectedConversationId}
                     chatResetKey={chatResetKey}
                     onConversationCreated={onConversationCreated}

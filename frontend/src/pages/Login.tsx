@@ -42,17 +42,20 @@ export default function Login() {
   }
 
   return (
-    <main>
-      <h1>Enterprise RAG</h1>
+    <main className="auth-page">
+      <div className="auth-card">
+      <p className="auth-brand">Enterprise RAG</p>
 
-      <h2>Login</h2>
+      <h1 className="auth-title">Login</h1>
+      <p className="auth-subtitle">Sign in to chat with your documents.</p>
 
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="auth-field">
           <label htmlFor="email">Email</label>
 
           <input
             id="email"
+            autoComplete="email"
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
@@ -60,11 +63,12 @@ export default function Login() {
           />
         </div>
 
-        <div>
+        <div className="auth-field">
           <label htmlFor="password">Password</label>
 
           <input
             id="password"
+            autoComplete="current-password"
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
@@ -72,17 +76,18 @@ export default function Login() {
           />
         </div>
 
-        {error && <p>{error}</p>}
+        {error && <p className="auth-error" role="alert">{error}</p>}
 
-        <button type="submit" disabled={loading}>
+        <button className="auth-submit" type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>
 
-      <p>
+      <p className="auth-switch">
         Don't have an account?{" "}
         <Link to="/register">Create one</Link>
       </p>
+      </div>
     </main>
   );
 }

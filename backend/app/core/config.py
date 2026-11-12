@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     grounding_model: str = "cross-encoder/nli-deberta-v3-xsmall"
     grounding_min_entailment: float = 0.5
 
+    llm_timeout_seconds: float = 300.0
     log_level: str = "INFO"
     log_format: str = "json"
 

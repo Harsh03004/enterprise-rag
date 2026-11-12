@@ -12,6 +12,7 @@ import {
 } from '../api/conversations'
 
 import { retryDocumentProcessing, type Document } from '../api/documents'
+import type { Collection } from '../api/collections'
 
 interface ChatProps {
   selectedDocumentId: number | null
@@ -19,6 +20,8 @@ interface ChatProps {
   selectedDocument: Document | null
 
   collectionId: number | null;
+
+  selectedCollection?: Collection | null
 
   selectedConversationId: number | null
 
@@ -55,6 +58,7 @@ export default function Chat({
   selectedDocumentId,
   selectedDocument,
   collectionId,
+  selectedCollection = null,
   selectedConversationId,
   chatResetKey,
   onConversationCreated,
@@ -393,7 +397,6 @@ export default function Chat({
                   <span>Chunk {source.chunk_index + 1}</span>
                   {source.page_number !== null && source.page_number !== undefined && <span>Page {source.page_number}</span>}
                   {source.section_heading && <span>{source.section_heading}</span>}
-                  <span>Distance {source.distance.toFixed(4)}</span>
                 </div>
               </div>
             )
@@ -779,6 +782,13 @@ await streamChat({
 
   const documentName = selectedDocument?.filename ?? 'All Documents'
 
+  // What the next question searches: one document, a project, or everything.
+  const scopeLabel = isDocumentSelected
+    ? `Searching ${documentName}`
+    : selectedCollection
+      ? `Searching project ${selectedCollection.name}`
+      : 'Searching all documents'
+
   const hasMessages = messages.length > 0 || answer.length > 0
 
   const documentStatus = selectedDocument?.status ?? null
@@ -805,11 +815,7 @@ await streamChat({
         <div className='chat-header-info'>
           <h1>Document Chat</h1>
 
-          <p>
-            {isDocumentSelected
-              ? `Searching ${documentName}`
-              : 'Searching all documents'}
-          </p>
+          <p>{scopeLabel}</p>
         </div>
 
         <div className='selected-document'>
@@ -818,6 +824,12 @@ await streamChat({
               <span>📄</span>
 
               <span>{documentName}</span>
+            </>
+          ) : selectedCollection ? (
+            <>
+              <span>📁</span>
+
+              <span>{selectedCollection.name}</span>
             </>
           ) : (
             <>

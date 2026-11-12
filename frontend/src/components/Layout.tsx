@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { startAdaptivePolling, isProcessing } from "../utils/adaptivePolling";
 import type { ReactNode } from "react";
 
 import Header from "./Header";
@@ -77,6 +78,8 @@ export default function Layout({
   children,
 }: LayoutProps) {
   const [initialChatSelection] = useState(readPersistedChatSelection);
+  // Phone widths show the sidebar as a drawer (CSS); this toggles it.
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [
     selectedDocumentId,
@@ -134,6 +137,12 @@ export default function Layout({
    * Load documents.
    */
 
+  // Latest documents for the poller (it decides how often to fetch).
+  const documentsRef = useRef(documents);
+  useEffect(() => {
+    documentsRef.current = documents;
+  }, [documents]);
+
   useEffect(() => {
     async function loadDocuments() {
       try {
@@ -149,17 +158,9 @@ export default function Layout({
       }
     }
 
-    loadDocuments();
-
-    const interval =
-      setInterval(
-        loadDocuments,
-        3000,
-      );
-
-    return () => {
-      clearInterval(interval);
-    };
+    return startAdaptivePolling(loadDocuments, () =>
+      documentsRef.current.some((document) => isProcessing(document.status)),
+    );
   }, []);
 
 
@@ -561,11 +562,26 @@ export default function Layout({
   }
 
 
+  const closeSidebarThen = <Args extends unknown[]>(handler: (...args: Args) => void) =>
+    (...args: Args) => {
+      setSidebarOpen(false);
+      handler(...args);
+    };
+
   return (
-    <div className="app">
-      <Header />
+    <div className="app" onKeyDown={(event) => { if (event.key === "Escape") setSidebarOpen(false); }}>
+      <Header sidebarOpen={sidebarOpen} onToggleSidebar={() => setSidebarOpen((open) => !open)} />
 
       <div className="app-body">
+        {sidebarOpen && (
+          <button
+            type="button"
+            className="sidebar-backdrop"
+            aria-label="Close projects and chats"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+        <div id="app-sidebar" className={sidebarOpen ? "sidebar-drawer sidebar-drawer-open" : "sidebar-drawer"}>
         <Sidebar
           selectedDocumentId={
             selectedDocumentId
@@ -580,7 +596,7 @@ export default function Layout({
           }
 
           onSelectDocument={
-            handleSelectDocument
+            closeSidebarThen(handleSelectDocument)
           }
 
           onSelectCollection={
@@ -588,11 +604,11 @@ export default function Layout({
           }
 
           onSelectConversation={
-            handleSelectConversation
+            closeSidebarThen(handleSelectConversation)
           }
 
           onNewChat={
-            handleNewChat
+            closeSidebarThen(handleNewChat)
           }
 
           conversations={
@@ -627,6 +643,7 @@ export default function Layout({
             handleConversationUpdated
           }
         />
+        </div>
 
         <main className="main-content">
           {children(

@@ -40,17 +40,20 @@ export default function Register() {
   }
 
   return (
-    <main>
-      <h1>Enterprise RAG</h1>
+    <main className="auth-page">
+      <div className="auth-card">
+      <p className="auth-brand">Enterprise RAG</p>
 
-      <h2>Create account</h2>
+      <h1 className="auth-title">Create account</h1>
+      <p className="auth-subtitle">Upload documents and get cited answers.</p>
 
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="auth-field">
           <label htmlFor="email">Email</label>
 
           <input
             id="email"
+            autoComplete="email"
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
@@ -58,11 +61,12 @@ export default function Register() {
           />
         </div>
 
-        <div>
+        <div className="auth-field">
           <label htmlFor="username">Username</label>
 
           <input
             id="username"
+            autoComplete="username"
             type="text"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
@@ -70,11 +74,12 @@ export default function Register() {
           />
         </div>
 
-        <div>
+        <div className="auth-field">
           <label htmlFor="password">Password</label>
 
           <input
             id="password"
+            autoComplete="new-password"
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
@@ -82,17 +87,18 @@ export default function Register() {
           />
         </div>
 
-        {error && <p>{error}</p>}
+        {error && <p className="auth-error" role="alert">{error}</p>}
 
-        <button type="submit" disabled={loading}>
+        <button className="auth-submit" type="submit" disabled={loading}>
           {loading ? "Creating account..." : "Create account"}
         </button>
       </form>
 
-      <p>
+      <p className="auth-switch">
         Already have an account?{" "}
         <Link to="/login">Login</Link>
       </p>
+      </div>
     </main>
   );
 }
