@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     grounding_model: str = "cross-encoder/nli-deberta-v3-xsmall"
     grounding_min_entailment: float = 0.5
 
+    log_level: str = "INFO"
+    log_format: str = "json"
+
     storage_backend: str = "local"
     s3_bucket: str = ""
     s3_region: str = "us-east-1"

@@ -24,6 +24,8 @@ services:
       ADMIN_EMAILS: ${ADMIN_EMAILS:?ADMIN_EMAILS is required}
       DATABASE_URL: ${DATABASE_URL:?DATABASE_URL for managed PostgreSQL is required}
       REDIS_URL: redis://redis:6379/0
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      LOG_FORMAT: ${LOG_FORMAT:-json}
       SECRET_KEY: ${SECRET_KEY:?SECRET_KEY is required}
       ALGORITHM: ${ALGORITHM:-HS256}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
@@ -64,6 +66,8 @@ services:
       ENVIRONMENT: production
       DATABASE_URL: ${DATABASE_URL:?DATABASE_URL for managed PostgreSQL is required}
       REDIS_URL: redis://redis:6379/0
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      LOG_FORMAT: ${LOG_FORMAT:-json}
       SECRET_KEY: ${SECRET_KEY:?SECRET_KEY is required}
       ALGORITHM: ${ALGORITHM:-HS256}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
@@ -100,6 +104,8 @@ services:
       ENVIRONMENT: production
       DATABASE_URL: ${DATABASE_URL:?DATABASE_URL for managed PostgreSQL is required}
       REDIS_URL: redis://redis:6379/0
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      LOG_FORMAT: ${LOG_FORMAT:-json}
       SECRET_KEY: ${SECRET_KEY:?SECRET_KEY is required}
       ALGORITHM: ${ALGORITHM:-HS256}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}

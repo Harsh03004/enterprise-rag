@@ -1,3 +1,5 @@
+import logging
+
 from sqlalchemy.orm import Session
 
 from app.models.document import Document
@@ -8,6 +10,8 @@ from app.services.embedding import generate_embedding
 from app.services.rag_settings import get_rag_config
 from app.services.text_extraction import extract_text_blocks
 from app.services.web_extraction import extract_webpage_text
+
+logger = logging.getLogger(__name__)
 
 
 def process_document(db: Session, document: Document, rebuild_chunks: bool = False) -> int:
@@ -89,10 +93,9 @@ def process_document(db: Session, document: Document, rebuild_chunks: bool = Fal
         document.processing_error = None
         db.commit()
 
-        print(
-            f"Processed document {document.id}: "
-            f"{len(db_chunks)} chunks, "
-            f"{embedded_count} embeddings"
+        logger.info(
+            "document_processed",
+            extra={"document_id": document.id, "chunks": len(db_chunks), "embeddings": embedded_count},
         )
 
         return len(db_chunks)

@@ -1,8 +1,12 @@
+import logging
 from datetime import UTC, datetime, timedelta
+
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models.query_event import QueryEvent
+
+logger = logging.getLogger(__name__)
 
 
 def record_query_event(
@@ -23,6 +27,27 @@ def record_query_event(
     generation_latency_ms: int = 0,
     verification_latency_ms: int = 0,
 ) -> QueryEvent:
+    # One structured line per chat query: the request ID ties it to the HTTP
+    # request and to retrieval/grounding lines logged while answering.
+    logger.info(
+        "rag_query",
+        extra={
+            "user_id": user_id,
+            "status": status,
+            "latency_ms": latency_ms,
+            "retrieval_latency_ms": retrieval_latency_ms,
+            "generation_latency_ms": generation_latency_ms,
+            "verification_latency_ms": verification_latency_ms,
+            "provider": provider,
+            "model": model,
+            "retrieval_count": retrieval_count,
+            "citation_count": citation_count,
+            "prompt_tokens": prompt_tokens,
+            "completion_tokens": completion_tokens,
+            "fallback": fallback,
+            "cache_hit": cache_hit,
+        },
+    )
     event = QueryEvent(
         user_id=user_id,
         status=status,

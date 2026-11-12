@@ -1,3 +1,4 @@
+import logging
 import re
 from io import BytesIO
 from pathlib import Path
@@ -9,6 +10,8 @@ from docx import Document as load_docx
 from docx.document import Document as DocxDocumentType
 from PIL import Image
 from pypdf import PdfReader
+
+logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 
@@ -266,6 +269,6 @@ def extract_docx_images(
                 image_sections.append(f"[Image {image_index}]\n{text}")
 
         except (OSError, RuntimeError, ValueError) as error:
-            print(f"Failed to OCR DOCX image {image_index}: {error}")
+            logger.warning("docx_image_ocr_failed", extra={"image_index": image_index, "error": str(error)})
 
     return "\n\n".join(image_sections)

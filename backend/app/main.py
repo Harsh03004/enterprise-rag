@@ -22,6 +22,7 @@ from app.api.routes.conversations import (
 from app.api.routes.documents import router as documents_router
 from app.api.routes.users import router as users_router
 from app.core.config import settings
+from app.core.logging import configure_logging, request_id_var
 from app.db.session import engine
 from app.services.document_service import check_storage_ready
 
@@ -30,30 +31,41 @@ app = FastAPI(
     version="0.1.0",
 )
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s %(message)s",
-)
+configure_logging(settings.log_level, settings.log_format)
 logger = logging.getLogger("enterprise_rag.api")
 
 
 @app.middleware("http")
 async def request_logging_middleware(request, call_next):
-    request_id = request.headers.get("X-Request-ID", str(uuid4()))
+    # Accept a caller-supplied ID only if it is short and printable.
+    supplied = request.headers.get("X-Request-ID", "")
+    request_id = supplied if supplied.isprintable() and 0 < len(supplied) <= 64 else uuid4().hex
+    token = request_id_var.set(request_id)
     started = time.perf_counter()
+    try:
+        response = await call_next(request)
+    except Exception:
+        logger.exception(
+            "request_failed",
+            extra={"method": request.method, "path": request.url.path,
+                   "duration_ms": round((time.perf_counter() - started) * 1000, 2)},
+        )
+        raise
+    finally:
+        request_id_var.reset(token)
 
-    response = await call_next(request)
-
-    duration_ms = (time.perf_counter() - started) * 1000
     response.headers["X-Request-ID"] = request_id
-    logger.info(
-        "request_complete request_id=%s method=%s path=%s status=%s duration_ms=%.2f",
-        request_id,
-        request.method,
-        request.url.path,
-        response.status_code,
-        duration_ms,
-    )
+    if request.url.path not in {"/health", "/ready"}:
+        logger.info(
+            "request_complete",
+            extra={
+                "request_id": request_id,
+                "method": request.method,
+                "path": request.url.path,
+                "status": response.status_code,
+                "duration_ms": round((time.perf_counter() - started) * 1000, 2),
+            },
+        )
     return response
 
 
