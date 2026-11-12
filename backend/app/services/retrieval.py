@@ -7,6 +7,26 @@ from app.models.document import Document
 from app.models.document_chunk import DocumentChunk
 from app.services.embedding import generate_embedding
 
+PAGE_REFERENCE = re.compile(
+    r"\b(?:pages?|pp?\.)\s*(\d{1,4})(?:\s*(?:-|–|to|and|&)\s*(\d{1,4}))?",
+    re.IGNORECASE,
+)
+MAX_PAGE_SPAN = 50
+
+
+def requested_pages(question: str) -> set[int]:
+    """Page numbers a question refers to ("page 3", "p. 3", "pages 2-4", "pages 2 and 5")."""
+    pages: set[int] = set()
+    for match in PAGE_REFERENCE.finditer(question):
+        first = int(match.group(1))
+        last = int(match.group(2)) if match.group(2) else first
+        if 0 < first <= last and last - first <= MAX_PAGE_SPAN:
+            if match.group(2) and re.search(r"and|&", match.group(0), re.IGNORECASE):
+                pages.update({first, last})
+            else:
+                pages.update(range(first, last + 1))
+    return pages
+
 
 def keyword_query(question: str) -> str:
     """OR-combine the question's words for websearch_to_tsquery.
@@ -32,6 +52,22 @@ def search_similar_chunks(
         candidate_limit = limit
 
     query_embedding = generate_embedding(query)
+
+    # Restrict to the pages a question names, but only if such pages exist in
+    # scope; documents without page numbers (MD/TXT/DOCX) are never filtered out.
+    pages = requested_pages(query)
+    if pages:
+        page_scope = (
+            select(func.count(DocumentChunk.id))
+            .join(Document, Document.id == DocumentChunk.document_id)
+            .where(Document.user_id == user_id, DocumentChunk.page_number.in_(pages))
+        )
+        if document_id is not None:
+            page_scope = page_scope.where(Document.id == document_id)
+        if collection_id is not None:
+            page_scope = page_scope.where(Document.collection_id == collection_id)
+        if not db.scalar(page_scope):
+            pages = set()
 
     # ---------------------------------------------------------
     # 1. Semantic / vector search
@@ -66,6 +102,9 @@ def search_similar_chunks(
         vector_statement = vector_statement.where(
             Document.collection_id == collection_id
         )
+
+    if pages:
+        vector_statement = vector_statement.where(DocumentChunk.page_number.in_(pages))
 
     vector_results = (
         db.execute(
@@ -127,6 +166,9 @@ def search_similar_chunks(
         keyword_statement = keyword_statement.where(
             Document.collection_id == collection_id
         )
+
+    if pages:
+        keyword_statement = keyword_statement.where(DocumentChunk.page_number.in_(pages))
 
     keyword_results = (
         db.execute(

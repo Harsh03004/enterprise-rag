@@ -171,3 +171,15 @@ class PassageRerankTests(unittest.TestCase):
             ranked = reranking.rerank_chunks("api testing tool", [(plain, None, 0.1), (mixed, None, 0.2)], limit=2)
         self.assertIs(ranked[0][0][0], mixed)
         self.assertEqual(ranked[0][1], 5.0)
+
+
+class PageReferenceTests(unittest.TestCase):
+    def test_page_references_are_parsed(self):
+        from app.services.retrieval import requested_pages
+
+        self.assertEqual(requested_pages("What does page 3 say?"), {3})
+        self.assertEqual(requested_pages("Summarise pages 2-4 of the spec"), {2, 3, 4})
+        self.assertEqual(requested_pages("Compare pages 2 and 5"), {2, 5})
+        self.assertEqual(requested_pages("see p. 7"), {7})
+        self.assertEqual(requested_pages("What is the homepage URL?"), set())
+        self.assertEqual(requested_pages("pages 1-500"), set())
