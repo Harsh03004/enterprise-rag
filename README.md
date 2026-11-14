@@ -241,6 +241,79 @@ docker build -t enterprise-rag-frontend:latest \
   --build-arg VITE_API_URL=http://localhost:8000 frontend
 ```
 
+### Running the images with `docker run` (without Compose)
+
+Compose is the easiest way to run everything, but the images can also be run
+one by one. The containers find each other by name on a shared network.
+
+```bash
+# 1. Network and volumes (database data and uploaded files)
+docker network create rag-net
+docker volume create rag-postgres-data
+docker volume create rag-uploads
+
+# 2. PostgreSQL with pgvector, and Redis
+docker run -d --name rag-postgres --network rag-net \
+  -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=enterprise_rag \
+  -v rag-postgres-data:/var/lib/postgresql/data \
+  pgvector/pgvector:pg17
+docker run -d --name rag-redis --network rag-net redis:7-alpine
+```
+
+Create a settings file for the backend containers, for example `docker.env`
+(it holds secrets: keep it out of git; it is already listed in `.gitignore`):
+
+```ini
+APP_NAME=Enterprise RAG
+DATABASE_URL=postgresql+psycopg://postgres:postgres@rag-postgres:5432/enterprise_rag
+REDIS_URL=redis://rag-redis:6379/0
+SECRET_KEY=change-me-to-a-long-random-string
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+CORS_ORIGINS=http://localhost:5173
+ADMIN_EMAILS=you@example.com
+LLM_PROVIDER=gemini
+GEMINI_API_KEY=your-key
+GEMINI_MODEL=gemini-3.1-flash-lite
+```
+
+Wait a few seconds after starting Postgres (until `docker logs rag-postgres`
+shows "ready to accept connections"), otherwise the API's migration step can
+run before the database is up.
+
+```bash
+# 3. API: applies database migrations, then serves on port 8000
+docker run -d --name rag-backend --network rag-net --env-file docker.env \
+  -v rag-uploads:/storage -p 8000:8000 \
+  --add-host=host.docker.internal:host-gateway \
+  enterprise-rag-backend:latest \
+  sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+# 4. Worker (processes uploads) and scheduler (recovers stuck jobs): same image
+docker run -d --name rag-worker --network rag-net --env-file docker.env \
+  -v rag-uploads:/storage --add-host=host.docker.internal:host-gateway \
+  enterprise-rag-backend:latest \
+  celery -A app.worker.celery_app worker --loglevel=INFO --concurrency=2
+docker run -d --name rag-scheduler --network rag-net --env-file docker.env \
+  enterprise-rag-backend:latest \
+  celery -A app.worker.celery_app beat --loglevel=INFO
+
+# 5. Frontend on port 5173 (built with VITE_API_URL=http://localhost:8000)
+docker run -d --name rag-frontend -p 5173:80 enterprise-rag-frontend:latest
+```
+
+Open http://localhost:5173 once `curl http://localhost:8000/ready` reports
+`ready`. The API and the worker must share the `rag-uploads` volume. If you
+use Ollama on the host, set `LLM_PROVIDER=ollama` and
+`OLLAMA_BASE_URL=http://host.docker.internal:11434/v1` in `docker.env`.
+
+Stop and remove everything (add `docker volume rm rag-postgres-data rag-uploads` to also delete the data):
+
+```bash
+docker rm -f rag-frontend rag-scheduler rag-worker rag-backend rag-redis rag-postgres
+docker network rm rag-net
+```
+
 The backend image uses the **CPU-only build of PyTorch**, which keeps it to
 about 4 GB instead of about 17 GB with CUDA. On the first start the containers
 download the embedding, reranker and grounding models (about 0.5 GB) from
