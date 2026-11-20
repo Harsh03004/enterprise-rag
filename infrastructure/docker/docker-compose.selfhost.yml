@@ -1,0 +1,160 @@
+# Self-contained production stack for a single Linux server (x86-64 or ARM64,
+# e.g. an Oracle Cloud Always Free Ampere VM).
+#
+# Unlike docker-compose.production.yml (managed PostgreSQL + S3), everything
+# runs on the server: PostgreSQL/pgvector and uploaded files live in Docker
+# volumes, backed up by scripts/backup_selfhost.sh. Only Caddy is reachable
+# from the internet (ports 80/443); it obtains HTTPS certificates for
+# APP_DOMAIN automatically.
+#
+#   docker compose --env-file .env.production -f infrastructure/docker/docker-compose.selfhost.yml up -d --build
+
+# Distinct project name: the local dev stack lives in the same folder.
+name: enterprise-rag
+
+x-backend-environment: &backend-environment
+  APP_NAME: ${APP_NAME:-Enterprise RAG}
+  ENVIRONMENT: production
+  CORS_ORIGINS: https://${APP_DOMAIN:?APP_DOMAIN is required}
+  ADMIN_EMAILS: ${ADMIN_EMAILS:?ADMIN_EMAILS is required}
+  DATABASE_URL: postgresql+psycopg://postgres:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/enterprise_rag
+  REDIS_URL: redis://redis:6379/0
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  LOG_FORMAT: ${LOG_FORMAT:-json}
+  SECRET_KEY: ${SECRET_KEY:?SECRET_KEY is required}
+  ALGORITHM: ${ALGORITHM:-HS256}
+  ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
+  LLM_PROVIDER: ${LLM_PROVIDER:-gemini}
+  GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+  GEMINI_MODEL: ${GEMINI_MODEL:-gemini-3.1-flash-lite}
+  OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+  OPENROUTER_MODEL: ${OPENROUTER_MODEL:-google/gemma-4-31b-it:free}
+  OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:8b}
+  OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434/v1}
+  EMBEDDING_MODEL: ${EMBEDDING_MODEL:-BAAI/bge-small-en-v1.5}
+  GROUNDING_MODEL: ${GROUNDING_MODEL:-cross-encoder/nli-deberta-v3-xsmall}
+  GROUNDING_MIN_ENTAILMENT: ${GROUNDING_MIN_ENTAILMENT:-0.5}
+  STORAGE_BACKEND: local
+  # Keep downloaded Hugging Face models across container rebuilds.
+  HF_HOME: /models
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_DB: enterprise_rag
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d enterprise_rag"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # Application cache entries expire; Celery queue keys must never be evicted.
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "volatile-lru"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: enterprise-rag-backend:latest
+    build:
+      context: ../../backend
+    restart: unless-stopped
+    environment: *backend-environment
+    volumes:
+      - uploaded_files:/storage
+      - model_cache:/models
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/ready')"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers"]
+
+  worker:
+    image: enterprise-rag-backend:latest
+    # Same image as backend; build it here too so a fresh server never tries
+    # to pull enterprise-rag-backend from a registry.
+    build:
+      context: ../../backend
+    restart: unless-stopped
+    environment: *backend-environment
+    volumes:
+      - uploaded_files:/storage
+      - model_cache:/models
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      backend:
+        condition: service_healthy
+    command: ["celery", "-A", "app.worker.celery_app", "worker", "--loglevel=INFO", "--concurrency=${WORKER_CONCURRENCY:-2}"]
+
+  scheduler:
+    image: enterprise-rag-backend:latest
+    # Same image as backend; build it here too so a fresh server never tries
+    # to pull enterprise-rag-backend from a registry.
+    build:
+      context: ../../backend
+    restart: unless-stopped
+    environment: *backend-environment
+    depends_on:
+      backend:
+        condition: service_healthy
+    command: ["celery", "-A", "app.worker.celery_app", "beat", "--loglevel=INFO"]
+
+  frontend:
+    build:
+      context: ../../frontend
+      args:
+        VITE_API_URL: https://${APP_DOMAIN:?APP_DOMAIN is required}
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?APP_DOMAIN is required}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      frontend:
+        condition: service_started
+      backend:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
+  uploaded_files:
+  model_cache:
+  caddy_data:
+  caddy_config:

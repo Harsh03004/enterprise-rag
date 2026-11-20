@@ -42,3 +42,7 @@ graphify-out/*.sig
 
 # Settings file for running the images with docker run (see README)
 docker.env
+
+# Production secrets and server backups (self-hosted deployment)
+.env.production
+backups/

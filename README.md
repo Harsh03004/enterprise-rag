@@ -144,10 +144,11 @@ enterprise-rag/
 │   └── nginx.conf
 ├── infrastructure/docker/
 │   ├── docker-compose.yml             # local stack
-│   ├── docker-compose.production.yml  # single-host production stack
+│   ├── docker-compose.production.yml  # production with managed PostgreSQL + S3
+│   ├── docker-compose.selfhost.yml    # free all-in-one production (Postgres + files on the server)
 │   ├── docker-compose.evaluation.yml  # resource-limited evaluation runs
 │   └── Caddyfile                      # production reverse proxy / HTTPS
-├── scripts/                # backup/restore Postgres, run evaluation
+├── scripts/                # backups (managed + self-hosted), restore, run evaluation
 ├── .github/workflows/ci.yml
 ├── .env.example            # configuration template
 ├── DEPLOYMENT.md           # production runbook
@@ -577,7 +578,13 @@ uses no GPU). A manual GitHub Actions job runs the same benchmark against Gemini
 
 ## Production deployment
 
-`infrastructure/docker/docker-compose.production.yml` runs the API, worker,
+**Free option:** `infrastructure/docker/docker-compose.selfhost.yml` runs
+everything (including PostgreSQL and file storage) on one server, e.g. an
+Oracle Cloud Always Free ARM instance with a free DuckDNS domain and automatic
+HTTPS, with daily backups via `scripts/backup_selfhost.sh`. Step-by-step guide:
+[DEPLOYMENT.md → Free self-hosted deployment](DEPLOYMENT.md#free-self-hosted-deployment-oracle-cloud-always-free--duckdns).
+
+**Managed option:** `infrastructure/docker/docker-compose.production.yml` runs the API, worker,
 scheduler, frontend, Redis and **Caddy** (automatic HTTPS for `APP_DOMAIN`) on
 one Linux host, with a managed PostgreSQL/pgvector database and S3-compatible
 storage. `scripts/backup_postgres.sh` and `scripts/restore_postgres.sh` handle

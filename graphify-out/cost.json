@@ -23,9 +23,16 @@
       "input_tokens": 0,
       "output_tokens": 0,
       "files": 154
+    },
+    {
+      "date": "2026-11-20T11:23:05.413369+00:00",
+      "input_tokens": 91094,
+      "output_tokens": 0,
+      "files": 167,
+      "note": "subagent total tokens (input/output split unavailable)"
     }
   ],
-  "total_input_tokens": 0,
+  "total_input_tokens": 91094,
   "total_output_tokens": 0,
   "token_usage_complete": false,
   "token_usage_note": "Host-agent semantic extraction usage was unavailable; totals include only Graphify-reported tokens."
