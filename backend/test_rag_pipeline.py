@@ -207,3 +207,25 @@ class PageReferenceTests(unittest.TestCase):
         self.assertEqual(requested_pages("see p. 7"), {7})
         self.assertEqual(requested_pages("What is the homepage URL?"), set())
         self.assertEqual(requested_pages("pages 1-500"), set())
+
+
+class OverviewQuestionTests(unittest.TestCase):
+    def test_whole_document_requests_are_detected(self):
+        from app.services.retrieval import is_overview_question
+
+        for question in [
+            "Summarize my documents",
+            "what is this document about",
+            "What is the document report.pdf about?",
+            "give me an overview",
+            "key takeaways from the paper",
+        ]:
+            self.assertTrue(is_overview_question(question), question)
+        for question in ["What is the refund policy?", "What is RAG?", "who wrote the report"]:
+            self.assertFalse(is_overview_question(question), question)
+
+    def test_overview_question_bypasses_confidence_gate(self):
+        low = [(SimpleNamespace(id=70), -9.0)]
+        self.assertTrue(rag.passes_confidence_gate(low, {}, "Summarize my documents"))
+        self.assertFalse(rag.passes_confidence_gate(low, {}, "What is the refund policy?"))
+        self.assertFalse(rag.passes_confidence_gate([], {}, "Summarize my documents"))

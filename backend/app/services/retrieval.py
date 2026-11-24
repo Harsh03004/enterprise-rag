@@ -13,6 +13,19 @@ PAGE_REFERENCE = re.compile(
 )
 MAX_PAGE_SPAN = 50
 
+# Whole-document requests ("summarize my documents", "what is this file
+# about") match no single passage well, so the reranker gate would refuse
+# them. They are answered from each document's opening chunks instead.
+OVERVIEW_QUESTION = re.compile(
+    r"\b(?:summar(?:y|ies|i[sz]e[sd]?|i[sz]ing)|overview|tl;?\s?dr|gist|outline"
+    r"|(?:key|main) (?:points?|ideas?|topics?|themes?|takeaways?|findings?)"
+    r"|what(?:'s|\s+is|\s+are|\s+was)\s+(?:this|these|that|it|the|my|our)\b[^?]{0,80}?\babout\b"
+    r"|describe\s+(?:this|these|the|my|our)\s+(?:documents?|files?|pdfs?|papers?|reports?|uploads?))",
+    re.IGNORECASE,
+)
+OVERVIEW_CHUNK_BUDGET = 12
+OVERVIEW_MAX_DOCUMENTS = 6
+
 
 def requested_pages(question: str) -> set[int]:
     """Page numbers a question refers to ("page 3", "p. 3", "pages 2-4", "pages 2 and 5")."""
@@ -26,6 +39,52 @@ def requested_pages(question: str) -> set[int]:
             else:
                 pages.update(range(first, last + 1))
     return pages
+
+
+def is_overview_question(question: str) -> bool:
+    return bool(OVERVIEW_QUESTION.search(question or ""))
+
+
+def overview_chunks(
+    db: Session,
+    user_id: int,
+    document_id: int | None = None,
+    collection_id: int | None = None,
+) -> list[tuple]:
+    """Opening chunks of the most recent documents in scope, in reading order."""
+    documents = select(Document.id).where(
+        Document.user_id == user_id,
+        select(DocumentChunk.id).where(DocumentChunk.document_id == Document.id).exists(),
+    )
+    if document_id is not None:
+        documents = documents.where(Document.id == document_id)
+    if collection_id is not None:
+        documents = documents.where(Document.collection_id == collection_id)
+    document_ids = list(
+        db.scalars(documents.order_by(Document.created_at.desc()).limit(OVERVIEW_MAX_DOCUMENTS))
+    )
+    if not document_ids:
+        return []
+
+    per_document = max(2, OVERVIEW_CHUNK_BUDGET // len(document_ids))
+    position = (
+        func.row_number()
+        .over(partition_by=DocumentChunk.document_id, order_by=DocumentChunk.chunk_index)
+        .label("position")
+    )
+    numbered = (
+        select(DocumentChunk.id, position)
+        .where(DocumentChunk.document_id.in_(document_ids))
+        .subquery()
+    )
+    rows = db.execute(
+        select(DocumentChunk, Document)
+        .join(numbered, numbered.c.id == DocumentChunk.id)
+        .join(Document, Document.id == DocumentChunk.document_id)
+        .where(numbered.c.position <= per_document)
+        .order_by(Document.created_at.desc(), DocumentChunk.chunk_index)
+    ).all()
+    return [(chunk, document, 0.0) for chunk, document in rows]
 
 
 def keyword_query(question: str) -> str:

@@ -474,10 +474,10 @@
     "semantic_hash": "24bd16bfac5daf5008ba273774790dfc"
   },
   "backend/app/services/rag.py": {
-    "mtime": 1794652527.309019,
-    "seen": 1795173785.4057612,
-    "ast_hash": "327be8de909b98b078b06ed257db13df",
-    "semantic_hash": "327be8de909b98b078b06ed257db13df"
+    "mtime": 1795518386.8370135,
+    "seen": 1795518411.8191135,
+    "ast_hash": "331dcdc994253364bfea2cc8c570d0e6",
+    "semantic_hash": ""
   },
   "backend/app/services/reranking.py": {
     "mtime": 1794652527.3092923,
@@ -486,10 +486,10 @@
     "semantic_hash": "8e62d2d88604daef7c565b5a2fcaf421"
   },
   "backend/app/services/retrieval.py": {
-    "mtime": 1794652527.3094544,
-    "seen": 1795173785.405765,
-    "ast_hash": "bc150980711f2f2a500a69b6532b9362",
-    "semantic_hash": "bc150980711f2f2a500a69b6532b9362"
+    "mtime": 1795518386.8362067,
+    "seen": 1795518411.8191166,
+    "ast_hash": "62b4b5604f85ded560f70da455dc9592",
+    "semantic_hash": ""
   },
   "backend/app/services/text_extraction.py": {
     "mtime": 1794652527.3096,
@@ -726,16 +726,16 @@
     "semantic_hash": "abcfee8bcb27f4b583f597200b6097c3"
   },
   "DEPLOYMENT.md": {
-    "mtime": 1794652527.3007634,
-    "seen": 1795173785.4058588,
-    "ast_hash": "d55fac43a5007daedddbd4a937ad8e79",
-    "semantic_hash": "d55fac43a5007daedddbd4a937ad8e79"
+    "mtime": 1795194966.989789,
+    "seen": 1795518411.8191645,
+    "ast_hash": "45a3f24502f7f91d8c851c9e404c6bfd",
+    "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1794652527.3010483,
-    "seen": 1795173785.4058607,
-    "ast_hash": "626c2334131e88893904109f86837564",
-    "semantic_hash": "626c2334131e88893904109f86837564"
+    "mtime": 1795194973.0651422,
+    "seen": 1795518411.8191652,
+    "ast_hash": "cf0fda30d24ad426aa7b6c1361287577",
+    "semantic_hash": ""
   },
   "frontend/README.md": {
     "mtime": 1787065262.0,
@@ -882,10 +882,10 @@
     "semantic_hash": "793d812dd7ef849beeb190074b971ae7"
   },
   "backend/test_rag_pipeline.py": {
-    "mtime": 1794652527.3220525,
-    "seen": 1795173785.4057872,
-    "ast_hash": "256e035c7fb1a588fba38813865a24a7",
-    "semantic_hash": "256e035c7fb1a588fba38813865a24a7"
+    "mtime": 1795518409.1064525,
+    "seen": 1795518411.8191302,
+    "ast_hash": "82854a3a2eca2d1bb8a7bb7036aff45c",
+    "semantic_hash": ""
   },
   "scripts/run_evaluation.sh": {
     "mtime": 1794652527.3344,
@@ -1000,5 +1000,17 @@
     "seen": 1795173785.4058375,
     "ast_hash": "3af84ac7974e690b8ec2b1ef6039cca5",
     "semantic_hash": "3af84ac7974e690b8ec2b1ef6039cca5"
+  },
+  "scripts/backup_selfhost.sh": {
+    "mtime": 1795194479.7615464,
+    "seen": 1795518411.8191595,
+    "ast_hash": "5aabf3977d4894b3ac1db2015cf27eeb",
+    "semantic_hash": ""
+  },
+  "infrastructure/docker/docker-compose.selfhost.yml": {
+    "mtime": 1795194714.3876421,
+    "seen": 1795518411.8191736,
+    "ast_hash": "d2fc0310d6b2c29e50b038f863b486a7",
+    "semantic_hash": ""
   }
 }

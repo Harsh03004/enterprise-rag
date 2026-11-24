@@ -36,7 +36,7 @@ from app.services.reranking import (
     has_sufficient_confidence,
     rerank_chunks,
 )
-from app.services.retrieval import search_similar_chunks
+from app.services.retrieval import is_overview_question, overview_chunks, search_similar_chunks
 
 logger = logging.getLogger(__name__)
 
@@ -728,16 +728,26 @@ def retrieve_ranked_chunks(
         limit=result_limit,
         candidate_limit=result_limit * int(rag_config.get("candidate_multiplier", 4)),
     )
+    rerank_limit = int(rag_config.get("rerank_limit", result_limit))
+    if is_overview_question(search_query):
+        # Broad requests also see each document's opening chunks; the normal
+        # candidates stay so "summarize the refunds section" still finds it.
+        opening = overview_chunks(db, user_id, document_id, collection_id)
+        seen = {chunk.id for chunk, _document, _distance in opening}
+        candidates = opening + [row for row in candidates if row[0].id not in seen]
+        rerank_limit = max(rerank_limit, len(opening))
     ranked_results = rerank_chunks(
         query=search_query,
         results=candidates,
-        limit=int(rag_config.get("rerank_limit", result_limit)),
+        limit=rerank_limit,
     )
     _record_stage("retrieval_latency_ms", retrieval_started)
     return ranked_results
 
 
-def passes_confidence_gate(ranked_results: list, rag_config: dict) -> bool:
+def passes_confidence_gate(ranked_results: list, rag_config: dict, search_query: str = "") -> bool:
+    if ranked_results and is_overview_question(search_query):
+        return True
     return has_sufficient_confidence(
         ranked_results,
         minimum_score=float(rag_config.get("minimum_reranker_score", DEFAULT_MINIMUM_SCORE)),
@@ -821,7 +831,7 @@ def run_rag_pipeline(
     ranked_results = retrieve_ranked_chunks(
         db, user_id, search_query, document_id, collection_id, result_limit, rag_config
     )
-    if not passes_confidence_gate(ranked_results, rag_config):
+    if not passes_confidence_gate(ranked_results, rag_config, search_query):
         return RagOutcome(
             status="no_context",
             answer=NO_CONTEXT_ANSWER,
@@ -1210,7 +1220,7 @@ def stream_answer(
     # 7. Confidence check
     # ---------------------------------------------------------
 
-    if not passes_confidence_gate(ranked_results, rag_config):
+    if not passes_confidence_gate(ranked_results, rag_config, search_query):
         answer = NO_CONTEXT_ANSWER
 
         add_message(
