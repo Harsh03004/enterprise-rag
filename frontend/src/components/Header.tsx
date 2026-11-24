@@ -1,5 +1,5 @@
 import { useAuth } from "../context/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 interface HeaderProps {
   // Provided by the chat layout; the button only shows on narrow screens.
@@ -9,6 +9,7 @@ interface HeaderProps {
 
 export default function Header({ sidebarOpen = false, onToggleSidebar }: HeaderProps) {
   const { logout, isAdmin } = useAuth();
+  const { pathname } = useLocation();
 
   return (
     <header className="app-header">
@@ -29,6 +30,7 @@ export default function Header({ sidebarOpen = false, onToggleSidebar }: HeaderP
       </div>
 
       <div className="header-actions">
+        {!pathname.startsWith("/chat") && <Link to="/chat">Chat</Link>}
         <Link to="/settings">Settings</Link>
         {isAdmin && <Link to="/admin">Administration</Link>}
         <button onClick={logout}>

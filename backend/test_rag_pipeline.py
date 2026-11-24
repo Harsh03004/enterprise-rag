@@ -219,9 +219,18 @@ class OverviewQuestionTests(unittest.TestCase):
             "What is the document report.pdf about?",
             "give me an overview",
             "key takeaways from the paper",
+            "Explain this document in simple terms.",
+            "explain it like I'm five",
+            "what does this pdf say",
         ]:
             self.assertTrue(is_overview_question(question), question)
-        for question in ["What is the refund policy?", "What is RAG?", "who wrote the report"]:
+        for question in [
+            "What is the refund policy?",
+            "What is RAG?",
+            "who wrote the report",
+            "Explain the refund policy",
+            "explain this error code 42",
+        ]:
             self.assertFalse(is_overview_question(question), question)
 
     def test_overview_question_bypasses_confidence_gate(self):

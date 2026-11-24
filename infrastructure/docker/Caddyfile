@@ -1,7 +1,19 @@
 {$APP_DOMAIN} {
 	encode zstd gzip
 
+	# /chat and /admin are both React pages and API prefixes. A browser
+	# navigation or refresh (GET asking for HTML) must get the React app;
+	# API calls from the app ask for JSON and go to the backend.
+	@page {
+		method GET HEAD
+		path /chat /chat/* /admin /admin/*
+		header Accept *text/html*
+	}
 	@api path /auth* /users* /documents* /chat* /admin* /conversations* /collections* /health /ready /openapi.json /docs* /redoc*
-	reverse_proxy @api backend:8000
-	reverse_proxy frontend:80
+
+	route {
+		reverse_proxy @page frontend:80
+		reverse_proxy @api backend:8000
+		reverse_proxy frontend:80
+	}
 }

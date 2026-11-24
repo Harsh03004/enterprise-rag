@@ -20,7 +20,11 @@ OVERVIEW_QUESTION = re.compile(
     r"\b(?:summar(?:y|ies|i[sz]e[sd]?|i[sz]ing)|overview|tl;?\s?dr|gist|outline"
     r"|(?:key|main) (?:points?|ideas?|topics?|themes?|takeaways?|findings?)"
     r"|what(?:'s|\s+is|\s+are|\s+was)\s+(?:this|these|that|it|the|my|our)\b[^?]{0,80}?\babout\b"
-    r"|describe\s+(?:this|these|the|my|our)\s+(?:documents?|files?|pdfs?|papers?|reports?|uploads?))",
+    r"|(?:describe|explain|simplify|break\s+down|walk\s+me\s+through|tell\s+me\s+about)\s+"
+    r"(?:this|these|the|my|our)\s+(?:whole\s+|entire\s+)?(?:documents?|docs?|files?|pdfs?|papers?|reports?|uploads?)\b"
+    r"|(?:explain|simplify|break\s+down)\s+(?:it|this|that)\s*(?:$|[.?!]|(?:in|to|for|like)\b)"
+    r"|what\s+(?:does|do)\s+(?:this|these|the|my)\s+(?:documents?|docs?|files?|pdfs?|papers?|reports?)\s+"
+    r"(?:say|cover|contain|discuss|explain)\b)",
     re.IGNORECASE,
 )
 OVERVIEW_CHUNK_BUDGET = 12

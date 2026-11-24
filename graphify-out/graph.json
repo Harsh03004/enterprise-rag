@@ -5294,7 +5294,7 @@
       "file_type": "code",
       "norm_label": "keyword_query()",
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L90"
+      "source_location": "L94"
     },
     {
       "id": "backend_app_services_retrieval_overview_chunks",
@@ -5306,7 +5306,7 @@
       "file_type": "code",
       "norm_label": "overview_chunks()",
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L48"
+      "source_location": "L52"
     },
     {
       "id": "backend_app_services_retrieval_search_similar_chunks",
@@ -5318,7 +5318,7 @@
       "file_type": "code",
       "norm_label": "search_similar_chunks()",
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L101"
+      "source_location": "L105"
     },
     {
       "id": "backend_alembic_versions_7c0b8d0c9e1a_add_document_chunk_metadata_downgrade",
@@ -6782,7 +6782,7 @@
       "file_type": "code",
       "norm_label": "requested_pages()",
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L30"
+      "source_location": "L34"
     },
     {
       "id": "backend_test_rag_pipeline_confidencegatetests_test_default_gate_refuses_clearly_unrelated_questions",
@@ -6818,7 +6818,7 @@
       "file_type": "code",
       "norm_label": ".test_overview_question_bypasses_confidence_gate()",
       "source_file": "backend/test_rag_pipeline.py",
-      "source_location": "L227"
+      "source_location": "L236"
     },
     {
       "id": "backend_test_rag_pipeline_overviewquestiontests_test_whole_document_requests_are_detected",
@@ -7658,7 +7658,7 @@
       "file_type": "code",
       "norm_label": "is_overview_question()",
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L44"
+      "source_location": "L48"
     },
     {
       "id": "backend_alembic_versions_9f6316708db3_add_embeddings_to_document_chunks_downgrade",
@@ -10823,7 +10823,7 @@
       "source_location": ""
     },
     {
-      "id": "backend_app_services_retrieval_rationale_54",
+      "id": "backend_app_services_retrieval_rationale_58",
       "label": "Opening chunks of the most recent documents in scope, in reading order.",
       "_origin": "ast",
       "community": 36,
@@ -10831,10 +10831,10 @@
       "file_type": "rationale",
       "norm_label": "opening chunks of the most recent documents in scope, in reading order.",
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L54"
+      "source_location": "L58"
     },
     {
-      "id": "backend_app_services_retrieval_rationale_91",
+      "id": "backend_app_services_retrieval_rationale_95",
       "label": "OR-combine the question's words for websearch_to_tsquery. Stop words are\u2026",
       "_origin": "ast",
       "community": 36,
@@ -10842,7 +10842,7 @@
       "file_type": "rationale",
       "norm_label": "or-combine the question's words for websearch_to_tsquery. stop words are...",
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L91"
+      "source_location": "L95"
     },
     {
       "id": "backend_alembic_versions_7c0b8d0c9e1a_add_document_chunk_metadata",
@@ -12289,7 +12289,7 @@
       "source_location": "L56"
     },
     {
-      "id": "backend_app_services_retrieval_rationale_31",
+      "id": "backend_app_services_retrieval_rationale_35",
       "label": "Page numbers a question refers to (\"page 3\", \"p. 3\", \"pages 2-4\", \"pages 2 and\u2026",
       "_origin": "ast",
       "community": 79,
@@ -12297,7 +12297,7 @@
       "file_type": "rationale",
       "norm_label": "page numbers a question refers to (\"page 3\", \"p. 3\", \"pages 2-4\", \"pages 2 and...",
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L31"
+      "source_location": "L35"
     },
     {
       "id": "backend_test_rag_pipeline_rationale_1",
@@ -18215,7 +18215,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L113",
+      "source_location": "L117",
       "weight": 1.0
     },
     {
@@ -18227,7 +18227,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L117",
+      "source_location": "L121",
       "weight": 1.0
     },
     {
@@ -18239,7 +18239,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L187",
+      "source_location": "L191",
       "weight": 1.0
     },
     {
@@ -19931,7 +19931,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "backend/test_rag_pipeline.py",
-      "source_location": "L223",
+      "source_location": "L226",
       "weight": 1.0
     },
     {
@@ -36064,7 +36064,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L48",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -36076,7 +36076,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L101",
+      "source_location": "L105",
       "weight": 1.0
     },
     {
@@ -39399,7 +39399,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L101",
+      "source_location": "L105",
       "weight": 1.0
     },
     {
@@ -39410,7 +39410,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L30",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -39421,7 +39421,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L44",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -39432,7 +39432,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L48",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -39443,7 +39443,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L90",
+      "source_location": "L94",
       "weight": 1.0
     },
     {
@@ -44888,7 +44888,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/test_rag_pipeline.py",
-      "source_location": "L227",
+      "source_location": "L236",
       "weight": 1.0
     },
     {
@@ -45662,36 +45662,36 @@
       "weight": 1.0
     },
     {
-      "source": "backend_app_services_retrieval_rationale_31",
+      "source": "backend_app_services_retrieval_rationale_35",
       "target": "backend_app_services_retrieval_requested_pages",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L31",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
-      "source": "backend_app_services_retrieval_rationale_54",
+      "source": "backend_app_services_retrieval_rationale_58",
       "target": "backend_app_services_retrieval_overview_chunks",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L54",
+      "source_location": "L58",
       "weight": 1.0
     },
     {
-      "source": "backend_app_services_retrieval_rationale_91",
+      "source": "backend_app_services_retrieval_rationale_95",
       "target": "backend_app_services_retrieval_keyword_query",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L91",
+      "source_location": "L95",
       "weight": 1.0
     },
     {
@@ -47667,7 +47667,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L55",
+      "source_location": "L59",
       "weight": 0.8
     },
     {
@@ -47678,7 +47678,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L57",
+      "source_location": "L61",
       "weight": 0.8
     },
     {
@@ -47689,7 +47689,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L120",
+      "source_location": "L124",
       "weight": 0.8
     },
     {
@@ -47700,7 +47700,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.95,
       "source_file": "backend/app/services/retrieval.py",
-      "source_location": "L121",
+      "source_location": "L125",
       "weight": 0.8
     },
     {
@@ -48309,5 +48309,5 @@
       "source_file": "frontend/public/icons.svg"
     }
   ],
-  "built_at_commit": "6898754d64cc5081a7a22284bd8d886b07d131fe"
+  "built_at_commit": "e481ba96314d4ee221bfabb4d1e9ec208aa9cdac"
 }

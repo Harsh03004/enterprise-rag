@@ -1,7 +1,7 @@
 # Graph Report - enterprise-rag  (2026-11-24)
 
 ## Corpus Check
-- 155 files · ~76,944 words
+- 155 files · ~76,991 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 15 file(s) not represented in the graph (top: (none) 8, .css 2, .example 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6898754d`
+- Built from commit: `e481ba96`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -465,7 +465,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `User` connect `User` to `collections.py`, `calibrate_grounding.py`, `conversations.py`, `sqlalchemy`, `users.py`, `verify_password`, `test_hardening.py`, `ChatContractTests`, `documents.py`, `upload_document`, `corpus.py`, `crud/document.py`, `get_rag_config`?**
   _High betweenness centrality (0.034) - this node is a cross-community bridge._
 - **Why does `Document` connect `Document` to `search_similar_chunks`, `calibrate_grounding.py`, `rag.py`, `text_extraction.py`, `sqlalchemy`, `User`, `documents.py`, `upload_document`, `corpus.py`, `crud/document.py`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
 - **Are the 41 inferred relationships involving `User` (e.g. with `get_current_user()` and `admin_analytics()`) actually correct?**
   _`User` has 41 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 26 inferred relationships involving `Document` (e.g. with `admin_collections()` and `admin_delete_document()`) actually correct?**

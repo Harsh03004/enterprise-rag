@@ -486,9 +486,9 @@
     "semantic_hash": "8e62d2d88604daef7c565b5a2fcaf421"
   },
   "backend/app/services/retrieval.py": {
-    "mtime": 1795518386.8362067,
-    "seen": 1795518411.8191166,
-    "ast_hash": "62b4b5604f85ded560f70da455dc9592",
+    "mtime": 1795520131.676649,
+    "seen": 1795520156.4793203,
+    "ast_hash": "93a5d36b485cd388d171e8c92b7463b2",
     "semantic_hash": ""
   },
   "backend/app/services/text_extraction.py": {
@@ -594,10 +594,10 @@
     "semantic_hash": "61140abfdba5ba9568a972a63e4f1725"
   },
   "frontend/src/components/Header.tsx": {
-    "mtime": 1794652527.3264823,
-    "seen": 1795173785.4058108,
-    "ast_hash": "995846e8a722ce799159c22a7c7569bc",
-    "semantic_hash": "995846e8a722ce799159c22a7c7569bc"
+    "mtime": 1795520115.9050908,
+    "seen": 1795520156.4793444,
+    "ast_hash": "689f280ddff8a2d9113341112102ac96",
+    "semantic_hash": ""
   },
   "frontend/src/components/Layout.tsx": {
     "mtime": 1794652527.326624,
@@ -882,9 +882,9 @@
     "semantic_hash": "793d812dd7ef849beeb190074b971ae7"
   },
   "backend/test_rag_pipeline.py": {
-    "mtime": 1795518409.1064525,
-    "seen": 1795518411.8191302,
-    "ast_hash": "82854a3a2eca2d1bb8a7bb7036aff45c",
+    "mtime": 1795520154.9911404,
+    "seen": 1795520156.479334,
+    "ast_hash": "c9008df410a752d8ef7be2aef9156e34",
     "semantic_hash": ""
   },
   "scripts/run_evaluation.sh": {
@@ -978,10 +978,10 @@
     "semantic_hash": "c37222dacdc7fdddc81461135a683d44"
   },
   "frontend/src/components/AdminNav.tsx": {
-    "mtime": 1794652527.3262625,
-    "seen": 1795173785.4058082,
-    "ast_hash": "aa2695a6614337b36e50d60b590d83ee",
-    "semantic_hash": "aa2695a6614337b36e50d60b590d83ee"
+    "mtime": 1795520115.9049819,
+    "seen": 1795520156.479343,
+    "ast_hash": "73cf1cddc108f69561343367c34e0872",
+    "semantic_hash": ""
   },
   "frontend/src/pages/AdminContent.tsx": {
     "mtime": 1794652527.3273523,

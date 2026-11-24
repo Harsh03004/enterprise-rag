@@ -10,6 +10,7 @@ const LINKS = [
 export default function AdminNav({ active }: { active: string }) {
   return (
     <nav className="dashboard-nav" aria-label="Admin dashboards">
+      <Link to="/chat">&larr; Back to chat</Link>
       {LINKS.map((link) => (
         <Link key={link.to} to={link.to} className={link.to === active ? "dashboard-nav-active" : undefined}>
           {link.label}
